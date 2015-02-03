@@ -1,0 +1,213 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:id="@+id/container"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  tools:context=".MainActivity"
+			  tools:ignore="MergeRootFrame">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+
+		<RelativeLayout
+			android:layout_width="640dp"
+			android:layout_height="wrap_content">
+
+			<com.jjoe64.graphview.GraphView
+				android:id="@+id/main_ecg_graph"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/graph_height"/>
+
+			<com.jjoe64.graphview.GraphView
+				android:id="@+id/main_bp_graph"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/graph_height"
+				android:layout_below="@+id/main_ecg_graph"/>
+
+			<com.jjoe64.graphview.GraphView
+				android:id="@+id/main_o2_graph"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/graph_height"
+				android:layout_below="@+id/main_bp_graph"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_ecg_graph"
+				android:layout_alignTop="@id/main_ecg_graph"
+				android:padding="@dimen/padding_less"
+				android:text="ECG"/>
+
+			<TextView
+				android:id="@+id/main_ecg_con"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_ecg_graph"
+				android:layout_alignBottom="@id/main_ecg_graph"
+				android:padding="@dimen/padding_less"
+				tools:text="Not Connected!"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignEnd="@+id/main_ecg_graph"
+				android:layout_alignBottom="@id/main_ecg_graph"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:padding="@dimen/padding_less"
+				android:background="#80FFFFFF"
+				android:text="80"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_bp_graph"
+				android:layout_alignTop="@id/main_bp_graph"
+				android:padding="@dimen/padding_less"
+				android:text="NIBP"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_bp_graph"
+				android:layout_alignBottom="@id/main_bp_graph"
+				android:padding="@dimen/padding_less"
+				tools:text="Not Connected!"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignEnd="@+id/main_bp_graph"
+				android:layout_alignBottom="@id/main_bp_graph"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:padding="@dimen/padding_less"
+				android:background="#80FFFFFF"
+				android:text="120"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_o2_graph"
+				android:layout_alignTop="@id/main_o2_graph"
+				android:padding="@dimen/padding_less"
+				android:text="SpO2"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignStart="@id/main_o2_graph"
+				android:layout_alignBottom="@id/main_o2_graph"
+				android:padding="@dimen/padding_less"
+				tools:text="Not Connected!"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignEnd="@+id/main_o2_graph"
+				android:layout_alignBottom="@id/main_o2_graph"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:padding="@dimen/padding_less"
+				android:background="#80FFFFFF"
+				android:text="97"/>
+
+		</RelativeLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/padding_less"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="Patient"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:paddingBottom="@dimen/padding_less"
+				android:text="John Doe"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="PHN: Unknown"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="Age:"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="DOB:"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="...."/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:paddingTop="@dimen/padding_less"
+				android:text="Physician"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:paddingBottom="@dimen/padding_less"
+				android:text="Dr. John Hammond"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/padding_less"
+				android:paddingRight="@dimen/padding_less"
+				android:text="PH: 780 - 123 - 4567 (Ext: 890)"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<FrameLayout
+		android:id="@+id/main_frame"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<include layout="@layout/fragment_main"/>
+
+	</FrameLayout>
+
+</LinearLayout>
