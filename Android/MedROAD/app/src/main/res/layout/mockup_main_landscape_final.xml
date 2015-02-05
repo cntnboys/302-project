@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:id="@+id/container"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  tools:context=".MainActivity"
+			  tools:ignore="MergeRootFrame">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:background="#FF000000">
+
+		<com.jjoe64.graphview.GraphView
+			android:id="@+id/main_graph"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_toStartOf="@id/main_ecg_text"/>
+
+		<TextView
+			android:id="@+id/main_ecg_text"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:gravity="center_vertical"
+			android:layout_toStartOf="@id/main_o2_text"
+			android:padding="@dimen/padding"
+			android:textSize="100sp"
+			android:textColor="#FFFF0000"
+			tools:text="80"/>
+
+		<TextView
+			android:id="@+id/main_bp_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentTop="true"
+			android:padding="@dimen/padding"
+			android:textSize="50sp"
+			android:textColor="#FF00FF00"
+			tools:text="112"/>
+
+		<TextView
+			android:id="@+id/main_o2_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentBottom="true"
+			android:padding="@dimen/padding"
+			android:textSize="50sp"
+			android:textColor="#FF0000FF"
+			tools:text="99%"/>
+
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal">
+
+		<ListView
+			android:layout_width="240dp"
+			android:layout_height="wrap_content"
+			android:id="@+id/listView"/>
+
+		<FrameLayout
+			android:id="@+id/main_frame"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"/>
+
+	</LinearLayout>
+
+</LinearLayout>
