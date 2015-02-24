@@ -1,6 +1,7 @@
-package ca.ualberta.medroad;
+package ca.ualberta.medroad.view;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,11 +11,14 @@ import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 
+import ca.ualberta.medroad.R;
+
 
 public class MainActivity
 		extends Activity
 {
 	protected ViewHolder view;
+	protected FragmentManager fragmentManager;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -22,7 +26,11 @@ public class MainActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
+		fragmentManager = getFragmentManager();
+
 		view = new ViewHolder( this );
+
+		onMainMenuSelect( -1 );
 	}
 
 	@Override
@@ -42,6 +50,18 @@ public class MainActivity
 
 		default:
 			return super.onOptionsItemSelected( item );
+		}
+	}
+
+	private void onMainMenuSelect(int pos)
+	{
+		switch ( pos )
+		{
+		case -1:
+			fragmentManager.beginTransaction().replace( R.id.main_frame, PlaceholderFragment.newInstance() ).commit();
+
+		default:
+			// Do nothing!
 		}
 	}
 
