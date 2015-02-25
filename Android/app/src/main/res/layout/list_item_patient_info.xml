@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:padding="@dimen/margin">
+
+	<TextView
+		android:id="@+id/list_item_patient_info_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		tools:text="Title"/>
+
+	<TextView
+		android:id="@+id/list_item_patient_info_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		tools:text="January 1, 2000"/>
+
+	<TextView
+		android:id="@+id/list_item_patient_info_summary"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="A description of the item goes here."/>
+
+</LinearLayout>

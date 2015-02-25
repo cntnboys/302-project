@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,12 +14,16 @@ import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 
 import ca.ualberta.medroad.R;
+import ca.ualberta.medroad.auxiliary.AppState;
+import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
+import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
+import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
 
 
 public class MainActivity
 		extends Activity
 {
-	protected ViewHolder view;
+	protected ViewHolder      view;
 	protected FragmentManager fragmentManager;
 
 	@Override
@@ -26,11 +32,29 @@ public class MainActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
+		// Initialize the AppState
+		AppState.getState( getApplicationContext() );
+
 		fragmentManager = getFragmentManager();
 
 		view = new ViewHolder( this );
 
-		onMainMenuSelect( -1 );
+		setupMenu();
+
+		onMainMenuSelect( 0 );
+	}
+
+	private void setupMenu()
+	{
+		view.mainMenu.setAdapter( MainMenuAdapter.newInstance( this ) );
+		view.mainMenu.setOnItemClickListener( new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+			{
+				MainActivity.this.onMainMenuSelect( position );
+			}
+		} );
 	}
 
 	@Override
@@ -53,19 +77,29 @@ public class MainActivity
 		}
 	}
 
-	private void onMainMenuSelect(int pos)
+	private void onMainMenuSelect( int pos )
 	{
 		switch ( pos )
 		{
 		case -1:
-			fragmentManager.beginTransaction().replace( R.id.main_frame, PlaceholderFragment.newInstance() ).commit();
+			fragmentManager.beginTransaction()
+						   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+						   .commit();
+
+		case 0:
+			// Patient info
+			fragmentManager.beginTransaction()
+						   .replace( R.id.main_frame,
+									 PatientInfoFragment.newInstance( AppState.getState(
+											 getApplicationContext() ).getCurrentPatient() ) )
+						   .commit();
 
 		default:
 			// Do nothing!
 		}
 	}
 
-	public static class ViewHolder
+	protected static class ViewHolder
 	{
 		public GraphView   ecgGraph;
 		public TextView    ecgText;

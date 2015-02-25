@@ -1,4 +1,4 @@
-package ca.ualberta.medroad.view;
+package ca.ualberta.medroad.view.fragment;
 
 
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import ca.ualberta.medroad.R;
 
