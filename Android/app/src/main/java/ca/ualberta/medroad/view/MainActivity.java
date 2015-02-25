@@ -12,9 +12,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import ca.ualberta.medroad.R;
 import ca.ualberta.medroad.auxiliary.AppState;
+import ca.ualberta.medroad.interfaces.ECGProvider;
+import ca.ualberta.medroad.interfaces.MockECGProvider;
+import ca.ualberta.medroad.interfaces.MockRTDProvider;
+import ca.ualberta.medroad.interfaces.RealTimeDataProvider;
 import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
 import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
 import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
@@ -23,8 +29,14 @@ import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
 public class MainActivity
 		extends Activity
 {
-	protected ViewHolder      view;
-	protected FragmentManager fragmentManager;
+	public static final int NUM_UPDATER_WORKERS = 3;
+
+	protected ViewHolder           view;
+	protected FragmentManager      fragmentManager;
+	protected ECGProvider          ecgProvider;
+	protected RealTimeDataProvider o2Provider;
+	protected RealTimeDataProvider bpProvider;
+	protected RealTimeDataUpdater  updater;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -32,29 +44,35 @@ public class MainActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
+		// Initialize the data providers and updater
+		ecgProvider = new MockECGProvider();
+		o2Provider = new MockRTDProvider();
+		bpProvider = new MockRTDProvider();
+		updater = new RealTimeDataUpdater( this, ecgProvider, o2Provider, bpProvider );
+
 		// Initialize the AppState
 		AppState.getState( getApplicationContext() );
 
 		fragmentManager = getFragmentManager();
 
 		view = new ViewHolder( this );
-
-		setupMenu();
+		view.init();
 
 		onMainMenuSelect( 0 );
 	}
 
-	private void setupMenu()
+	@Override
+	protected void onStart()
 	{
-		view.mainMenu.setAdapter( MainMenuAdapter.newInstance( this ) );
-		view.mainMenu.setOnItemClickListener( new AdapterView.OnItemClickListener()
-		{
-			@Override
-			public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
-			{
-				MainActivity.this.onMainMenuSelect( position );
-			}
-		} );
+		super.onStart();
+		updater.start();
+	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		updater.stop();
 	}
 
 	@Override
@@ -75,6 +93,19 @@ public class MainActivity
 		default:
 			return super.onOptionsItemSelected( item );
 		}
+	}
+
+	private void setupMenu()
+	{
+		view.mainMenu.setAdapter( MainMenuAdapter.newInstance( this ) );
+		view.mainMenu.setOnItemClickListener( new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+			{
+				MainActivity.this.onMainMenuSelect( position );
+			}
+		} );
 	}
 
 	private void onMainMenuSelect( int pos )
@@ -108,6 +139,8 @@ public class MainActivity
 		public ListView    mainMenu;
 		public FrameLayout frame;
 
+		protected LineGraphSeries< DataPoint > ecgSeries;
+
 		public ViewHolder( MainActivity activity )
 		{
 			ecgGraph = (GraphView) activity.findViewById( R.id.main_ecg_graph );
@@ -116,6 +149,16 @@ public class MainActivity
 			o2Text = (TextView) activity.findViewById( R.id.main_o2_text );
 			mainMenu = (ListView) activity.findViewById( R.id.main_list_view );
 			frame = (FrameLayout) activity.findViewById( R.id.main_frame );
+		}
+
+		public void init()
+		{
+			// Initialize the graph(s)
+			ecgSeries = new LineGraphSeries<>();
+			ecgGraph.getViewport().setXAxisBoundsManual( true );
+			ecgGraph.getViewport().setMaxX( 100 );
+			ecgGraph.getViewport().setMinX( 0 );
+			ecgGraph.addSeries( ecgSeries );
 		}
 	}
 }

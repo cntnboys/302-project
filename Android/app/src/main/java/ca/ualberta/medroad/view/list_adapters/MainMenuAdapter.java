@@ -1,6 +1,7 @@
 package ca.ualberta.medroad.view.list_adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -35,9 +36,7 @@ public class MainMenuAdapter
 								 "Take diagnostic measurements, photos, and notes.",
 								 R.drawable.ic_placeholder_dark ) );
 
-		nData.add( new MenuItem( "Account",
-								 "",
-								 R.drawable.ic_placeholder_dark ) );
+		nData.add( new MenuItem( "Account", "", R.drawable.ic_placeholder_dark ) );
 
 		return new MainMenuAdapter( ctx, nData );
 	}
@@ -45,35 +44,51 @@ public class MainMenuAdapter
 	private MainMenuAdapter( Context context, List< MenuItem > data )
 	{
 		super( context, R.layout.list_item_main, R.id.list_item_main_title, data );
+		this.data = data;
 	}
 
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		ViewHolder viewHolder = new ViewHolder( convertView );
+		ViewHolder viewHolder = null;
+
+		if ( convertView == null )
+		{
+			LayoutInflater inflater = (LayoutInflater) super.getContext()
+															.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			convertView = inflater.inflate( R.layout.list_item_main, parent, false );
+
+			viewHolder = new ViewHolder( convertView );
+			convertView.setTag( viewHolder );
+		}
+		else
+		{
+			viewHolder = (ViewHolder) convertView.getTag();
+		}
+
 		viewHolder.init( data.get( position ) );
 		return convertView;
 	}
 
 	protected static class ViewHolder
 	{
-		public TextView  title;
-		public TextView  description;
-		public ImageView ico;
-		public ImageView alert;
+		public TextView  title    = null;
+		public TextView  subtitle = null;
+		public ImageView ico      = null;
+		public ImageView alert    = null;
 
 		public ViewHolder( View v )
 		{
 			title = (TextView) v.findViewById( R.id.list_item_main_title );
-			description = (TextView) v.findViewById( R.id.list_item_alert_description );
-			ico = (ImageView) v.findViewById( R.id.list_item_alert_ico );
+			subtitle = (TextView) v.findViewById( R.id.list_item_main_subtitle );
+			ico = (ImageView) v.findViewById( R.id.list_item_main_ico );
 			alert = (ImageView) v.findViewById( R.id.list_item_main_alert );
 		}
 
 		public void init( MenuItem item )
 		{
 			title.setText( item.title );
-			description.setText( item.description );
+			subtitle.setText( item.description );
 			ico.setImageResource( item.icoResId );
 		}
 	}

@@ -17,6 +17,28 @@ public class PatientNote
 	protected String description;
 	protected int    severity; // 1 is highest
 
+	public PatientNote(String title, String description, int severity)
+	{
+		this.title = title;
+		this.description = description;
+		this.severity = severity;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public int getSeverity()
+	{
+		return severity;
+	}
+
 	@Override
 	public int compareTo( @NonNull PatientNote another )
 	{

@@ -33,10 +33,10 @@
 					android:paddingStart="@dimen/margin"
 					android:paddingEnd="@dimen/margin"
 					android:text="@string/ahcn"
-					android:labelFor="@+id/f_patient_info_ahcn_1"/>
+					android:labelFor="@+id/f_patient_info_ahcn"/>
 
 				<EditText
-					android:id="@+id/f_patient_info_ahcn_1"
+					android:id="@+id/f_patient_info_ahcn"
 					android:inputType="number"
 					android:text="@string/dummy_ahcn"
 					android:padding="@dimen/margin_less"/>
@@ -57,6 +57,10 @@
 					android:inputType="date"
 					android:text="@string/unknown"
 					android:padding="@dimen/margin_less"/>
+
+				<TextView
+					android:id="@+id/f_patient_info_age"
+					tools:text="Age Unknown"/>
 
 			</TableRow>
 
@@ -85,6 +89,7 @@
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1"
+		android:divider="@null"
 		tools:listheader="@layout/list_item_alert"
 		tools:listitem="@layout/list_item_patient_info"/>
 
