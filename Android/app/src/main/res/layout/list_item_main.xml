@@ -7,7 +7,16 @@
 				android:padding="@dimen/margin_less">
 
 	<ImageView
+		android:id="@+id/list_item_main_alert"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_less"
+		android:visibility="gone"
+		android:src="@drawable/ic_exclaim_dark"/>
+
+	<ImageView
 		android:id="@+id/list_item_main_ico"
+		android:layout_toEndOf="@id/list_item_main_alert"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/margin_less"
