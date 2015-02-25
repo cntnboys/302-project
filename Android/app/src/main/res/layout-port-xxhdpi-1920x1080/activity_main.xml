@@ -92,6 +92,7 @@
 			android:layout_height="match_parent"
 			android:divider="@null"
 			android:dividerHeight="@dimen/margin_less"
+			android:visibility="gone"
 			tools:listitem="@layout/list_item_main"/>
 
 		<FrameLayout

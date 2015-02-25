@@ -2,12 +2,12 @@ package ca.ualberta.medroad.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by Yuey on 2015-02-25.
- *
+ * <p/>
  * Class representing a patient.
  */
 public class Patient
@@ -22,7 +22,7 @@ public class Patient
 
 	protected String                     name;
 	protected int                        ahcn;
-	protected Date                       dob;
+	protected Calendar                   dob;
 	protected Gender                     gender;
 	protected List< PatientNote >        notes;
 	protected List< PatientHistoryItem > historyItems;
@@ -53,12 +53,12 @@ public class Patient
 		this.ahcn = ahcn;
 	}
 
-	public Date getDob()
+	public Calendar getDob()
 	{
 		return dob;
 	}
 
-	public void setDob( Date dob )
+	public void setDob( Calendar dob )
 	{
 		this.dob = dob;
 	}
@@ -85,16 +85,23 @@ public class Patient
 
 	/**
 	 * Checks if the patient has any notes.
+	 *
 	 * @return 0 if the patient has no notes else the value of the highest severity note.
 	 */
 	public int hasNotes()
 	{
-		if ( notes.isEmpty() ) return 0;
+		if ( notes.isEmpty() )
+		{
+			return 0;
+		}
 
 		int result = 100;
-		for (PatientNote note : notes)
+		for ( PatientNote note : notes )
 		{
-			if ( note.severity < result ) result = note.severity;
+			if ( note.severity < result )
+			{
+				result = note.severity;
+			}
 		}
 
 		return result;
@@ -131,7 +138,7 @@ public class Patient
 			return Gender.Male;
 
 		case "female":
-		case  "f":
+		case "f":
 			return Gender.Female;
 
 		default:
