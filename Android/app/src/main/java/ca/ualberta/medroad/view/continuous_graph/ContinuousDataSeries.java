@@ -25,6 +25,7 @@ public class ContinuousDataSeries
 	{
 		this.size = size;
 		data = new LinkedList<>(  );
+		for ( int i = 0; i < 100; i++ ) data.add( new ContinuousDataPoint( 0 ) );
 	}
 
 	@Override

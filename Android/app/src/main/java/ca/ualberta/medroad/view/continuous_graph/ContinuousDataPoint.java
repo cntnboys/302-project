@@ -9,17 +9,20 @@ import com.jjoe64.graphview.series.DataPointInterface;
 public class ContinuousDataPoint
 	implements DataPointInterface
 {
+	protected static long counter = 0;
 	protected double value;
+	protected long xPos;
 
 	public ContinuousDataPoint(double value)
 	{
 		this.value = value;
+		this.xPos = ++counter;
 	}
 
 	@Override
 	public double getX()
 	{
-		return 0;
+		return xPos;
 	}
 
 	@Override
