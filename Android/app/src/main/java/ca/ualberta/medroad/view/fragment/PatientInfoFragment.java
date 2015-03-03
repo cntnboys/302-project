@@ -116,7 +116,6 @@ public class PatientInfoFragment
 				break;
 			}
 
-
 			setupEditors( data );
 		}
 
