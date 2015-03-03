@@ -44,9 +44,10 @@
 				android:layout_alignTop="@+id/main_bp_text"
 				android:layout_alignEnd="@+id/main_bp_text"/>
 
-
-			<!-- Ignore relative overlap since ECG, BP and O2 should never be
-			     more than 3 digits. -->
+			<!--
+				Ignore relative overlap since ECG, BP and O2 should never be
+				more than 3 digits.
+			-->
 			<TextView
 				android:id="@+id/main_bp_text"
 				android:layout_width="wrap_content"
@@ -76,7 +77,6 @@
 				style="@style/AppTheme.DisplayText.Small"/>
 
 		</RelativeLayout>
-
 
 	</LinearLayout>
 

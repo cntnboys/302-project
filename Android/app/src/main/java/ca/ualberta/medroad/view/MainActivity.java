@@ -63,6 +63,8 @@ public class MainActivity
 	protected           NoninOximeter        noninOximeter               = null;
 	protected           NoninOxometerHandler oxometerHandler             = null;
 
+	
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
