@@ -29,11 +29,13 @@ public class NoninOxometerHandler
 		case NoninOximeter.CONNECTED_BT: //
 			// if the connection succeeds and no successflag is given
 			// returns the bluetooth device as the message object
+			callbackTarget.onOxometerBtConnected( (BluetoothDevice) msg.obj );
 			break;
 
 		case NoninOximeter.CANNOT_CONNECT_BT:
 			// if the connection fails and no nosuccessflag is given
 			// returns the bluetooth device as the message object
+			callbackTarget.onOxometerBtDisconnected( (BluetoothDevice) msg.obj );
 			break;
 
 		case NoninOximeter.NONIN_GET_DATA:
