@@ -2,91 +2,92 @@
 			  xmlns:tools="http://schemas.android.com/tools"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
-			  android:orientation="horizontal"
+			  android:orientation="vertical"
 			  tools:context="ca.ualberta.medroad.view.fragment.PatientInfoFragment">
 
-	<LinearLayout
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="1"
-		android:padding="@dimen/margin"
-		android:orientation="vertical">
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:stretchColumns="true">
 
-		<TextView
-			android:id="@+id/f_patient_info_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="@string/dummy_name"/>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
-		<TableLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:stretchColumns="true">
+			<TextView
+				android:paddingStart="@dimen/margin"
+				android:paddingEnd="@dimen/margin"
+				android:text="@string/patient_name_label"
+				android:labelFor="@+id/f_patient_info_name"/>
 
-			<TableRow
-				android:padding="@dimen/margin_less">
+			<EditText
+				android:id="@+id/f_patient_info_name"
+				android:inputType="number"
+				android:text="@string/dummy_name"
+				android:padding="@dimen/margin_less"/>
 
-				<TextView
-					android:paddingStart="@dimen/margin"
-					android:paddingEnd="@dimen/margin"
-					android:text="@string/ahcn"
-					android:labelFor="@+id/f_patient_info_ahcn"/>
+		</TableRow>
 
-				<EditText
-					android:id="@+id/f_patient_info_ahcn"
-					android:inputType="number"
-					android:text="@string/dummy_ahcn"
-					android:padding="@dimen/margin_less"/>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
-			</TableRow>
+			<TextView
+				android:paddingStart="@dimen/margin"
+				android:paddingEnd="@dimen/margin"
+				android:text="@string/ahcn"
+				android:labelFor="@+id/f_patient_info_ahcn"/>
 
-			<TableRow
-				android:padding="@dimen/margin_less">
+			<EditText
+				android:id="@+id/f_patient_info_ahcn"
+				android:inputType="number"
+				android:text="@string/dummy_ahcn"
+				android:padding="@dimen/margin_less"/>
 
-				<TextView
-					android:paddingStart="@dimen/margin"
-					android:paddingEnd="@dimen/margin"
-					android:text="@string/date_of_birth"
-					android:labelFor="@+id/f_patient_info_dob"/>
+		</TableRow>
 
-				<EditText
-					android:id="@+id/f_patient_info_dob"
-					android:inputType="date"
-					android:text="@string/unknown"
-					android:padding="@dimen/margin_less"/>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
-				<TextView
-					android:id="@+id/f_patient_info_age"
-					tools:text="Age Unknown"/>
+			<TextView
+				android:paddingStart="@dimen/margin"
+				android:paddingEnd="@dimen/margin"
+				android:text="@string/date_of_birth"
+				android:labelFor="@+id/f_patient_info_dob"/>
 
-			</TableRow>
+			<EditText
+				android:id="@+id/f_patient_info_dob"
+				android:inputType="date"
+				android:text="@string/unknown"
+				android:padding="@dimen/margin_less"/>
 
-			<TableRow
-				android:padding="@dimen/margin_less">
+			<TextView
+				android:id="@+id/f_patient_info_age"
+				tools:text="Age Unknown"/>
 
-				<TextView
-					android:paddingStart="@dimen/margin"
-					android:paddingEnd="@dimen/margin"
-					android:text="@string/gender"
-					android:labelFor="@+id/f_patient_info_gender"/>
+		</TableRow>
 
-				<Spinner
-					android:entries="@array/Genders"
-					android:paddingTop="@dimen/margin_less"
-					android:paddingBottom="@dimen/margin_less"/>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
-			</TableRow>
+			<TextView
+				android:paddingStart="@dimen/margin"
+				android:paddingEnd="@dimen/margin"
+				android:text="@string/gender"
+				android:labelFor="@+id/f_patient_info_gender"/>
 
-		</TableLayout>
+			<Spinner
+				android:entries="@array/Genders"
+				android:paddingTop="@dimen/margin_less"
+				android:paddingBottom="@dimen/margin_less"/>
 
-	</LinearLayout>
+		</TableRow>
+
+	</TableLayout>
 
 	<ListView
 		android:id="@+id/f_patient_info_list"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
 		android:layout_weight="1"
 		android:divider="@null"
 		tools:listheader="@layout/list_item_alert"

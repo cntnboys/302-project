@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  tools:context="ca.ualberta.medroad.view.fragment.ConfigurationFragment">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text="Configuration"/>
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="@dimen/margin"
+		android:paddingRight="@dimen/margin">
+
+		<TableRow>
+
+			<TextView
+				android:padding="@dimen/margin_less"
+				android:layout_gravity="center"
+				android:text="ECG Device:"/>
+
+			<Spinner
+				android:id="@+id/f_config_ecg_device"/>
+
+		</TableRow>
+
+		<TableRow>
+
+			<TextView
+				android:padding="@dimen/margin_less"
+				android:layout_gravity="center"
+				android:text="NIBP Device:"/>
+
+			<Spinner
+				android:id="@+id/f_config_bp_device"/>
+
+		</TableRow>
+
+		<TableRow>
+
+			<TextView
+				android:padding="@dimen/margin_less"
+				android:layout_gravity="center"
+				android:text="SpO2 Device:"/>
+
+			<Spinner
+				android:id="@+id/f_config_o2_device"/>
+
+		</TableRow>
+
+	</TableLayout>
+
+</LinearLayout>
