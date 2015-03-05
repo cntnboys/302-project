@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import ca.ammi.medlib.BtHealthDevice;
 import ca.ammi.medlib.EmotionEcg;
 import ca.ammi.medlib.ForaBpGlucose;
 import ca.ammi.medlib.NoninOximeter;
@@ -52,7 +54,6 @@ public class MainActivity
 	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 100;
 	public static final int                  REQUEST_ENABLE_BT           = 1;
 	public static final String               ECG_BT_NAME                 = "AATOS-987";
-	public static final int                  ECG_PAIRING_CODE            = 3448;
 	public static       int                  ECG_SIGNAL_RESOLUTION       = 0; // note that signal resolution is actually /1000
 	public static       int                  ECG_HIGH_PASS_FILTER        = 0;
 	public static       int                  ECG_SAMPLING_FREQUENCY      = 1;
@@ -71,10 +72,10 @@ public class MainActivity
 	protected           BluetoothDevice      rawNoninOxometer            = null;
 	protected           NoninOximeter        noninOximeter               = null;
 	protected           NoninOxometerHandler oxometerHandler             = null;
+	@SuppressWarnings( "UnusedDeclaration" )
 	protected           MockDataGenerator    mockDataGenerator           = new MockDataGenerator();
 	private             long                 graphCounter                = 0;
 
-	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
@@ -105,7 +106,10 @@ public class MainActivity
 		view.ecgStatus.setLoading();
 		view.bpStatus.setLoading();
 		view.o2Status.setLoading();
-		mockDataGenerator.start();
+
+		getPairedBtDevices();
+
+		//mockDataGenerator.start();
 	}
 
 	@Override
@@ -114,7 +118,6 @@ public class MainActivity
 		super.onResume();
 
 		checkBtStatus();
-		getPairedBtDevices();
 		connectBtDevices();
 	}
 
@@ -129,7 +132,7 @@ public class MainActivity
 	{
 		super.onStop();
 
-		mockDataGenerator.stop();
+		//mockDataGenerator.stop();
 		idleBtDevices();
 	}
 
@@ -139,6 +142,18 @@ public class MainActivity
 		super.onDestroy();
 
 		disconnectAndCleanupBtDevices();
+	}
+
+	@Override
+	protected void onSaveInstanceState( @NonNull Bundle outState )
+	{
+		super.onSaveInstanceState( outState );
+	}
+
+	@Override
+	protected void onRestoreInstanceState( @NonNull Bundle savedInstanceState )
+	{
+		super.onRestoreInstanceState( savedInstanceState );
 	}
 
 	@Override
@@ -173,6 +188,10 @@ public class MainActivity
 
 	private void getPairedBtDevices()
 	{
+		/*
+			This method is really clunky. Might want to refactor it later.
+		 */
+
 		Set< BluetoothDevice > devices = mBluetoothAdapter.getBondedDevices();
 
 		/*
@@ -180,25 +199,42 @@ public class MainActivity
 		 */
 		for ( BluetoothDevice device : devices )
 		{
-			if ( device.getName().equals( ECG_BT_NAME ) )
+			if ( emotionEcg == null && device.getName().equals( ECG_BT_NAME ) )
 			{
 				rawEcgDevice = device;
 				emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
 				continue;
 			}
 
-			if ( device.getName().equals( BP_BT_NAME ) )
+			if ( foraBpGlucose == null && device.getName().equals( BP_BT_NAME ) )
 			{
 				rawGlucoseBpDevice = device;
-				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice, new Handler( bpGlucoseHandler ) );
+				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
+												   new Handler( bpGlucoseHandler ) );
 				continue;
 			}
 
-			if ( device.getName().equals( O2_BT_NAME ) )
+			if ( noninOximeter == null && device.getName().equals( O2_BT_NAME ) )
 			{
 				rawNoninOxometer = device;
-				noninOximeter = new NoninOximeter( rawNoninOxometer, new Handler( oxometerHandler ) );
+				noninOximeter = new NoninOximeter( rawNoninOxometer,
+												   new Handler( oxometerHandler ) );
 			}
+		}
+
+		if ( emotionEcg == null )
+		{
+			view.ecgStatus.setBad();
+		}
+
+		if ( foraBpGlucose == null )
+		{
+			view.bpStatus.setBad();
+		}
+
+		if ( noninOximeter == null )
+		{
+			view.o2Status.setBad();
 		}
 	}
 
@@ -512,6 +548,7 @@ public class MainActivity
 		}
 	}
 
+	@SuppressWarnings( "UnusedDeclaration" )
 	private class MockDataGenerator
 	{
 		public static final int                         NUM_WORKERS = 1;

@@ -10,9 +10,14 @@ import ca.ualberta.medroad.view.MainActivity;
 
 /**
  * Created by Yuey on 2015-03-02.
+ * <p/>
+ * Handler for incoming ForaBpGlucose messages. Also defines a callback interface for data
+ * consumers.
+ *
+ * @see ca.ualberta.medroad.auxiliary.EmotionEcgHandler
  */
 public class ForaBpGlucoseHandler
-	implements Handler.Callback
+		implements Handler.Callback
 {
 	BpGlucoseHandlerCallbacks callbackTarget;
 
