@@ -19,12 +19,12 @@ import ca.ualberta.medroad.model.PatientHistoryItem;
  * <p/>
  * Adapter class for a patient history.
  */
-public class PatientHistroyAdapter
+public class PatientHistoryAdapter
 		extends ArrayAdapter< PatientHistoryItem >
 {
 	protected List< PatientHistoryItem > data;
 
-	public PatientHistroyAdapter( Context context, List< PatientHistoryItem > objects )
+	public PatientHistoryAdapter( Context context, List< PatientHistoryItem > objects )
 	{
 		super( context,
 			   R.layout.list_item_patient_info,
@@ -36,11 +36,12 @@ public class PatientHistroyAdapter
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		ViewHolder viewHolder = null;
+		ViewHolder viewHolder;
 
 		if ( convertView == null )
 		{
-			LayoutInflater inflater = (LayoutInflater) super.getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			LayoutInflater inflater = (LayoutInflater) super.getContext()
+															.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 			convertView = inflater.inflate( R.layout.list_item_patient_info, parent, false );
 
 			viewHolder = new ViewHolder( convertView );

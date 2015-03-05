@@ -5,6 +5,8 @@
 			  android:orientation="vertical"
 			  tools:context=".MainActivity">
 
+	<!-- Ignore relative overlap for graph labels. Readouts should never be more than 3 digits. -->
+
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -17,14 +19,17 @@
 			android:layout_weight="1"/>
 
 		<RelativeLayout
-			android:layout_width="256dp"
+			android:layout_width="@dimen/graph_label_width"
 			android:layout_height="@dimen/graph_height"
-			android:padding="@dimen/margin">
+			android:padding="@dimen/margin"
+			tools:ignore="RelativeOverlap">
 
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/ecg_label"
+				android:textStyle="bold"
+				android:textColor="@color/green"
 				android:layout_alignTop="@+id/main_ecg_text"/>
 
 			<TextView
@@ -34,47 +39,203 @@
 				android:layout_centerVertical="true"
 				android:layout_alignParentStart="true"
 				android:padding="@dimen/margin"
+				android:textColor="@color/green_dark"
+				android:text="@string/placeholder_data_reading"
+				tools:text="80"
+				style="@style/AppTheme.DisplayText"/>
+
+			<ImageView
+				android:id="@+id/main_ecg_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/not_connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_bad"/>
+
+			<ImageView
+				android:id="@+id/main_ecg_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_good"/>
+
+			<ProgressBar
+				android:id="@+id/main_ecg_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"/>
+
+		</RelativeLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<com.jjoe64.graphview.GraphView
+			android:id="@+id/main_bp_graph"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/graph_height"
+			android:layout_weight="1"/>
+
+		<RelativeLayout
+			android:layout_width="@dimen/graph_label_width"
+			android:layout_height="@dimen/graph_height"
+			android:padding="@dimen/margin"
+			tools:ignore="RelativeOverlap">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/bp_mmhg_label"
+				android:textStyle="bold"
+				android:textColor="@color/red"
+				android:layout_alignTop="@+id/main_sbp_text"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/systolic"
+				android:textStyle="italic"
+				android:textColor="@color/red"
+				android:layout_alignBottom="@+id/main_sbp_text"
+				android:layout_alignStart="@+id/main_sbp_text"/>
+
+			<TextView
+				android:id="@+id/main_sbp_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_alignParentStart="true"
+				android:padding="@dimen/margin"
+				android:textColor="@color/red_dark"
+				android:text="@string/placeholder_data_reading"
 				tools:text="120"
 				style="@style/AppTheme.DisplayText"/>
 
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/bp_label"
-				android:layout_alignTop="@+id/main_bp_text"
-				android:layout_alignEnd="@+id/main_bp_text"/>
-
-			<!--
-				Ignore relative overlap since ECG, BP and O2 should never be
-				more than 3 digits.
-			-->
-			<TextView
-				android:id="@+id/main_bp_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_alignParentTop="true"
-				android:padding="@dimen/margin"
-				tools:text="120"
-				tools:ignore="RelativeOverlap"
-				style="@style/AppTheme.DisplayText.Small"/>
+				android:text="@string/diastolic"
+				android:textStyle="italic"
+				android:textColor="@color/orange"
+				android:layout_alignBottom="@+id/main_dbp_text"
+				android:layout_alignEnd="@+id/main_dbp_text"/>
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/spo2_label"
-				android:layout_alignBottom="@+id/main_o2_text"
-				android:layout_alignEnd="@+id/main_o2_text"/>
-
-			<TextView
-				android:id="@+id/main_o2_text"
+				android:id="@+id/main_dbp_text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_alignParentEnd="true"
 				android:layout_alignParentBottom="true"
 				android:padding="@dimen/margin"
-				tools:text="99%"
+				android:textColor="@color/orange_dark"
+				android:text="@string/placeholder_data_reading"
+				tools:text="80"
 				style="@style/AppTheme.DisplayText.Small"/>
+
+			<ImageView
+				android:id="@+id/main_bp_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/not_connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_bad"/>
+
+			<ImageView
+				android:id="@+id/main_bp_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_good"/>
+
+			<ProgressBar
+				android:id="@+id/main_bp_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"/>
+
+		</RelativeLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<com.jjoe64.graphview.GraphView
+			android:id="@+id/main_o2_graph"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/graph_height"
+			android:layout_weight="1"/>
+
+		<RelativeLayout
+			android:layout_width="@dimen/graph_label_width"
+			android:layout_height="@dimen/graph_height"
+			android:padding="@dimen/margin"
+			tools:ignore="RelativeOverlap">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/spo2_label"
+				android:textStyle="bold"
+				android:textColor="@color/blue"
+				android:layout_alignTop="@+id/main_o2_text"/>
+
+			<TextView
+				android:id="@+id/main_o2_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_alignParentStart="true"
+				android:padding="@dimen/margin"
+				android:textColor="@color/blue_dark"
+				android:text="@string/placeholder_data_reading"
+				tools:text="99%"
+				style="@style/AppTheme.DisplayText"/>
+
+			<ImageView
+				android:id="@+id/main_o2_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/not_connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_bad"/>
+
+			<ImageView
+				android:id="@+id/main_o2_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"
+				android:contentDescription="@string/connected"
+				android:visibility="gone"
+				android:src="@drawable/ic_good"/>
+
+			<ProgressBar
+				android:id="@+id/main_o2_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentEnd="true"/>
 
 		</RelativeLayout>
 

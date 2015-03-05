@@ -4,4 +4,13 @@
 	<color name="red">#FFFF4444</color>
 	<color name="red_dark">#FFCC0000</color>
 
+	<color name="blue">#FF33B5E5</color>
+	<color name="blue_dark">#FF0099CC</color>
+	
+	<color name="green">#FF99CC00</color>
+	<color name="green_dark">#FF669900</color>
+
+	<color name="orange">#FFFFBB33</color>
+	<color name="orange_dark">#FFFF8800</color>
+
 </resources>

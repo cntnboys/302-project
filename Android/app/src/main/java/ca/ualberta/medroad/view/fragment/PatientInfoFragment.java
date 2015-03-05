@@ -1,6 +1,7 @@
 package ca.ualberta.medroad.view.fragment;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -19,23 +20,25 @@ import java.util.Locale;
 
 import ca.ualberta.medroad.R;
 import ca.ualberta.medroad.model.Patient;
+import ca.ualberta.medroad.view.list_adapters.PatientHistoryAdapter;
 
 
 public class PatientInfoFragment
 		extends Fragment
 {
-	private static final String ARG_DATA = "patient";
+	public static final String ARG_DATA = "patient";
 
-	private Patient    data;
-	private ViewHolder view;
+	protected Patient               data;
+	protected ViewHolder            view;
+	protected PatientHistoryAdapter listAdapter;
 
 	public static PatientInfoFragment newInstance( Patient data )
 	{
 		PatientInfoFragment fragment = new PatientInfoFragment();
 
 		Bundle args = new Bundle();
-		args.putSerializable( ARG_DATA, data );
 		fragment.setArguments( args );
+		fragment.data = data;
 
 		return fragment;
 	}
@@ -57,6 +60,20 @@ public class PatientInfoFragment
 	}
 
 	@Override
+	public void onAttach( Activity activity )
+	{
+		super.onAttach( activity );
+		listAdapter = new PatientHistoryAdapter( activity, data.getHistoryItems() );
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+		listAdapter = null;
+	}
+
+	@Override
 	public View onCreateView( LayoutInflater inflater,
 							  ViewGroup container,
 							  Bundle savedInstanceState )
@@ -64,6 +81,8 @@ public class PatientInfoFragment
 		View resultView = inflater.inflate( R.layout.fragment_patient_info, container, false );
 
 		view = new ViewHolder( resultView );
+
+
 
 		return resultView;
 	}

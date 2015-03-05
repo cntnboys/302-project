@@ -29,11 +29,13 @@ public class ForaBpGlucoseHandler
 		case ForaBpGlucose.CONNECTED_BT:
 			// if the connection succeeds and no successflag is given
 			// returns the bluetooth device as the message object
+			callbackTarget.onBpGlucoseBtConnected( (BluetoothDevice) msg.obj );
 			break;
 
 		case ForaBpGlucose.CANNOT_CONNECT_BT:
 			// if the connection fails and no nosuccessflag is given
 			// returns the bluetooth device as the message object
+			callbackTarget.onBpGlucoseBtDisconnected( (BluetoothDevice) msg.obj );
 			break;
 
 		case ForaBpGlucose.FORA_GET_ALL_DATA:

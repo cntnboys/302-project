@@ -29,6 +29,7 @@ public class AppState
 	public AppState( Context ctx )
 	{
 		this.context = ctx;
+		this.currentPatient = new MockPatient();
 	}
 
 	public Patient getCurrentPatient()

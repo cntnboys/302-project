@@ -3,10 +3,8 @@
 
 	<string name="action_settings">Settings</string>
 	<string name="ecg_label">ECG</string>
-	<string name="bp_label">mmHg</string>
+	<string name="bp_mmhg_label">mmHg</string>
 	<string name="spo2_label">SpO2</string>
-
-<!-- TODO: Remove or change this placeholder text -->
 	<string name="hello_blank_fragment">Hello blank fragment</string>
 	<string name="date_of_birth">DOB:</string>
 	<string name="unknown">Unknown</string>
@@ -14,6 +12,11 @@
 	<string name="ahcn">AHCN:</string>
 	<string name="dummy_ahcn">12345 – 1234</string>
 	<string name="dummy_name">John Doe</string>
+	<string name="diastolic">Diastolic</string>
+	<string name="systolic">Systolic</string>
+	<string name="placeholder_data_reading">\u2014</string>
+	<string name="not_connected">Not connected!</string>
+	<string name="connected">Connected!</string>
 	<string-array name="Genders">
 		<item>Male</item>
 		<item>Female</item>
