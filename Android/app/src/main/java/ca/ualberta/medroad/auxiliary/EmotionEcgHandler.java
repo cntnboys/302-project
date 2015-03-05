@@ -10,13 +10,14 @@ import ca.ualberta.medroad.view.MainActivity;
 
 /**
  * Created by Yuey on 2015-02-26.
+ * <p/>
+ * Handler for incoming EmotionEcg messages. The class also defines a callback interface for some
+ * events. A class that wishes to consume incoming events simply needs to implement its interface
+ * and pass itself in as a constructor argument.
  */
-
 public class EmotionEcgHandler
 		implements Handler.Callback
 {
-	public static final int MV_DATA_ARY_SIZE = 25;
-
 	protected EcgHandlerCallbacks callbackTarget;
 
 	public EmotionEcgHandler( EcgHandlerCallbacks callbackTarget )
