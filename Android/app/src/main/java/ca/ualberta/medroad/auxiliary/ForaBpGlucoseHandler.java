@@ -45,6 +45,7 @@ public class ForaBpGlucoseHandler
 
 		case ForaBpGlucose.FORA_GET_ALL_DATA:
 			// for EACH data item found
+			callbackTarget.onBpGlucosePacketReceive( (ForaBpGlucose.ForaData) msg.obj );
 			break;
 
 		case ForaBpGlucose.FORA_GET_LATEST_DATA:

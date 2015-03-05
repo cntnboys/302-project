@@ -20,8 +20,10 @@ public class PlaceholderFragment
 	public static PlaceholderFragment newInstance( )
 	{
 		PlaceholderFragment fragment = new PlaceholderFragment();
+
 		Bundle args = new Bundle();
 		fragment.setArguments( args );
+
 		return fragment;
 	}
 
@@ -43,6 +45,4 @@ public class PlaceholderFragment
 	{
 		return inflater.inflate( R.layout.placeholder, container, false );
 	}
-
-
 }

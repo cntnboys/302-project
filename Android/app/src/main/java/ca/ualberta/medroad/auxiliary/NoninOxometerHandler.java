@@ -55,10 +55,12 @@ public class NoninOxometerHandler
 						(only available for format 13)
 				Note that this object may be null
 			*/
+			callbackTarget.onOxometerPacketReceive( (NoninOximeter.NoninData) msg.obj );
 			break;
 
 		case NoninOximeter.NONIN_STOP_DATA:
 			// if something other than a call to stopData() makes it stop reading
+			callbackTarget.onOxometerBtDisconnected( null );
 			break;
 
 		case NoninOximeter.NO_RESPONSE:
