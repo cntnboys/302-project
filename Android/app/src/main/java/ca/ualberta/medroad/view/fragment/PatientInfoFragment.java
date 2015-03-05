@@ -2,6 +2,8 @@ package ca.ualberta.medroad.view.fragment;
 
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -63,7 +66,6 @@ public class PatientInfoFragment
 	public void onAttach( Activity activity )
 	{
 		super.onAttach( activity );
-		listAdapter = new PatientHistoryAdapter( activity, data.getHistoryItems() );
 	}
 
 	@Override
@@ -82,21 +84,19 @@ public class PatientInfoFragment
 
 		view = new ViewHolder( resultView );
 
-
-
 		return resultView;
 	}
 
-	protected static class ViewHolder
+	protected class ViewHolder
 	{
-		public static SimpleDateFormat sdf     = new SimpleDateFormat( "MMM d, yy",
-																	   Locale.getDefault() );
-		public        TextView         name    = null;
-		public        EditText         ahcn    = null;
-		public        EditText         dob     = null;
-		public        TextView         age     = null;
-		public        Spinner          gender  = null;
-		public        ListView         history = null;
+		public final SimpleDateFormat sdf     = new SimpleDateFormat( "MMM d, yy",
+																	  Locale.getDefault() );
+		public       TextView         name    = null;
+		public       EditText         ahcn    = null;
+		public       EditText         dob     = null;
+		public       TextView         age     = null;
+		public       Spinner          gender  = null;
+		public       ListView         history = null;
 
 		public ViewHolder( View v )
 		{
@@ -113,11 +113,13 @@ public class PatientInfoFragment
 			name.setText( data.getName() );
 			ahcn.setText( data.getAhcn() );
 			dob.setText( sdf.format( data.getDob() ) );
+			listAdapter = new PatientHistoryAdapter( getActivity(), data.getHistoryItems() );
+			history.setAdapter( listAdapter );
 
 			int yearsOld = Calendar.getInstance().get( Calendar.YEAR ) - // This year
 						   data.getDob().get( Calendar.YEAR ); // DOB year
 
-			age.setText( "Age " );
+			age.setText( "Age " + yearsOld );
 
 			switch ( data.getGender() )
 			{
@@ -140,6 +142,16 @@ public class PatientInfoFragment
 
 		private void setupEditors( final Patient data )
 		{
+			dob.setOnClickListener( new View.OnClickListener()
+			{
+				@Override
+				public void onClick( View v )
+				{
+					DatePickerFragment datePicker = new DatePickerFragment();
+					datePicker.show( getChildFragmentManager(), "datePicker" );
+				}
+			} );
+
 			gender.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
 			{
 				@Override
@@ -158,6 +170,24 @@ public class PatientInfoFragment
 					// Do nothing!
 				}
 			} );
+		}
+	}
+
+	public static class DatePickerFragment
+			extends DialogFragment
+			implements DatePickerDialog.OnDateSetListener
+	{
+		@Override
+		public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth )
+		{
+			Calendar c = Calendar.getInstance();
+			c.set( Calendar.SECOND, 0 );
+			c.set( Calendar.MINUTE, 0 );
+			c.set( Calendar.HOUR, 0 );
+			c.set( Calendar.DAY_OF_MONTH, dayOfMonth );
+			c.set( Calendar.MONTH, monthOfYear );
+			c.set( Calendar.YEAR, year );
+
 		}
 	}
 }

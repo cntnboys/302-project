@@ -13,4 +13,6 @@
 	<color name="orange">#FFFFBB33</color>
 	<color name="orange_dark">#FFFF8800</color>
 
+	<color name="graphBG">#FF101010</color>
+
 </resources>

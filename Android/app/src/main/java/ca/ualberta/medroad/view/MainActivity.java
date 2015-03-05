@@ -32,7 +32,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ca.ammi.medlib.BtHealthDevice;
 import ca.ammi.medlib.EmotionEcg;
 import ca.ammi.medlib.ForaBpGlucose;
 import ca.ammi.medlib.NoninOximeter;
@@ -41,11 +40,14 @@ import ca.ualberta.medroad.auxiliary.AppState;
 import ca.ualberta.medroad.auxiliary.EmotionEcgHandler;
 import ca.ualberta.medroad.auxiliary.ForaBpGlucoseHandler;
 import ca.ualberta.medroad.auxiliary.NoninOxometerHandler;
+import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
 import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
 import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
 import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
 
-
+/**
+ * The startup activity. This activity coordinates the view for the entire app.
+ */
 public class MainActivity
 		extends Activity
 		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks
@@ -60,6 +62,7 @@ public class MainActivity
 	public static final String               BP_BT_NAME                  = "BP_BT_DEVICE_NAME";
 	public static final String               O2_BT_NAME                  = "O2_BT_DEVICE_NAME";
 	protected           ViewHolder           view                        = null;
+	protected           MainMenuAdapter      menuAdapter                 = null;
 	protected           FragmentManager      fragmentManager             = null;
 	protected           BluetoothManager     bluetoothManager            = null;
 	protected           BluetoothAdapter     mBluetoothAdapter           = null;
@@ -72,7 +75,7 @@ public class MainActivity
 	protected           BluetoothDevice      rawNoninOxometer            = null;
 	protected           NoninOximeter        noninOximeter               = null;
 	protected           NoninOxometerHandler oxometerHandler             = null;
-	@SuppressWarnings( "UnusedDeclaration" )
+	@SuppressWarnings("UnusedDeclaration")
 	protected           MockDataGenerator    mockDataGenerator           = new MockDataGenerator();
 	private             long                 graphCounter                = 0;
 
@@ -109,7 +112,7 @@ public class MainActivity
 
 		getPairedBtDevices();
 
-		//mockDataGenerator.start();
+		mockDataGenerator.start();
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class MainActivity
 	{
 		super.onStop();
 
-		//mockDataGenerator.stop();
+		mockDataGenerator.stop();
 		idleBtDevices();
 	}
 
@@ -299,20 +302,36 @@ public class MainActivity
 
 	private void onMainMenuSelect( int pos )
 	{
-		switch ( pos )
+		switch ( (int) menuAdapter.getItemId( pos ) )
 		{
 		case -1:
+			// Placeholder
 			fragmentManager.beginTransaction()
 						   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
 						   .commit();
+			break;
 
-		case 0:
-			// Patient info
+		case MainMenuAdapter.ID_PATIENT_INFO:
 			fragmentManager.beginTransaction()
 						   .replace( R.id.main_frame,
 									 PatientInfoFragment.newInstance( AppState.getState(
 											 getApplicationContext() ).getCurrentPatient() ) )
 						   .commit();
+			break;
+
+		case MainMenuAdapter.ID_DIAGNOSTICS:
+
+			break;
+
+		case MainMenuAdapter.ID_ALARMS:
+
+			break;
+
+		case MainMenuAdapter.ID_CONFIG:
+			fragmentManager.beginTransaction()
+						   .replace( R.id.main_frame, ConfigurationFragment.newInstance() )
+						   .commit();
+			break;
 
 		default:
 			// Do nothing!
@@ -418,6 +437,7 @@ public class MainActivity
 		public    GraphView                    bpGraph;
 		public    TextView                     sbpText;
 		public    TextView                     dbpText;
+		public    TextView                     mapText;
 		public    DataStatusIndicator          bpStatus;
 		public    GraphView                    o2Graph;
 		public    TextView                     o2Text;
@@ -426,7 +446,7 @@ public class MainActivity
 		public    FrameLayout                  frame;
 		protected LineGraphSeries< DataPoint > ecgSeries;
 		protected LineGraphSeries< DataPoint > sbpSeries;
-		protected LineGraphSeries< DataPoint > dbpSeries;
+		protected LineGraphSeries< DataPoint > mapSeries;
 		protected LineGraphSeries< DataPoint > o2xSeries;
 
 		public ViewHolder( MainActivity activity )
@@ -441,6 +461,7 @@ public class MainActivity
 			bpGraph = (GraphView) activity.findViewById( R.id.main_bp_graph );
 			sbpText = (TextView) activity.findViewById( R.id.main_sbp_text );
 			dbpText = (TextView) activity.findViewById( R.id.main_dbp_text );
+			mapText = (TextView) activity.findViewById( R.id.main_map_text );
 			bpStatus = new DataStatusIndicator( activity,
 												R.id.main_bp_ic_good,
 												R.id.main_bp_ic_bad,
@@ -467,14 +488,14 @@ public class MainActivity
 		{
 			ecgSeries = new LineGraphSeries<>();
 			sbpSeries = new LineGraphSeries<>();
-			dbpSeries = new LineGraphSeries<>();
+			mapSeries = new LineGraphSeries<>();
 			o2xSeries = new LineGraphSeries<>();
 
 			Resources res = getResources();
 
 			ecgSeries.setColor( res.getColor( R.color.green_dark ) );
 			sbpSeries.setColor( res.getColor( R.color.red_dark ) );
-			dbpSeries.setColor( res.getColor( R.color.orange_dark ) );
+			mapSeries.setColor( res.getColor( R.color.orange_dark ) );
 			o2xSeries.setColor( res.getColor( R.color.blue_dark ) );
 
 			formatGraph( ecgGraph );
@@ -483,7 +504,7 @@ public class MainActivity
 
 			ecgGraph.addSeries( ecgSeries );
 			bpGraph.addSeries( sbpSeries );
-			bpGraph.addSeries( dbpSeries );
+			bpGraph.addSeries( mapSeries );
 			o2Graph.addSeries( o2xSeries );
 		}
 
@@ -498,7 +519,8 @@ public class MainActivity
 
 		private void setupMenu()
 		{
-			mainMenu.setAdapter( MainMenuAdapter.newInstance( MainActivity.this ) );
+			menuAdapter = MainMenuAdapter.newInstance( MainActivity.this );
+			mainMenu.setAdapter( menuAdapter );
 			mainMenu.setOnItemClickListener( new AdapterView.OnItemClickListener()
 			{
 				@Override
@@ -548,7 +570,7 @@ public class MainActivity
 		}
 	}
 
-	@SuppressWarnings( "UnusedDeclaration" )
+	@SuppressWarnings("UnusedDeclaration")
 	private class MockDataGenerator
 	{
 		public static final int                         NUM_WORKERS = 1;
@@ -566,7 +588,7 @@ public class MainActivity
 			{
 				worker = workerPool.scheduleAtFixedRate( new Worker( view ),
 														 0,   /* Initial delay */
-														 100, /* Period */
+														 150, /* Period */
 														 TimeUnit.MILLISECONDS );
 			}
 		}
@@ -603,10 +625,16 @@ public class MainActivity
 				final String ssbp = String.valueOf( sbp );
 
 				final int dbp = 80 + ( rng.nextInt( 3 ) - 1 );
-				final String sdbp = String.valueOf( dbp );
+				final String sdbp = String.valueOf( "/" + dbp );
 
 				final int spo2 = 95 + ( rng.nextInt( 5 ) - 2 );
-				final String sspo2 = String.valueOf( spo2 );
+				final String sspo2 = String.valueOf( spo2 + "%" );
+
+				/* Mean Arterial Pressure
+				* http://en.wikipedia.org/wiki/Mean_arterial_pressure
+				* */
+				final int map = (int) ( ( ( 2.0 / 3.0 ) * dbp ) + ( ( 1.0 / 3.0 ) * sbp ) );
+				final String smap = String.valueOf( map );
 
 				/* UI updates must be run on the UI thread */
 				runOnUiThread( new Runnable()
@@ -617,6 +645,7 @@ public class MainActivity
 						view.ecgText.setText( pulse );
 						view.sbpText.setText( ssbp );
 						view.dbpText.setText( sdbp );
+						view.mapText.setText( smap );
 						view.o2Text.setText( sspo2 );
 
 						/* This bogs down the UI thread a lot. May need to find an alternative... */
@@ -626,7 +655,7 @@ public class MainActivity
 						view.sbpSeries.appendData( new DataPoint( graphCounter, sbp ),
 												   true,
 												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.dbpSeries.appendData( new DataPoint( graphCounter, dbp ),
+						view.mapSeries.appendData( new DataPoint( graphCounter, map ),
 												   true,
 												   GRAPH_HORIZONTAL_RESOLUTION );
 						view.o2xSeries.appendData( new DataPoint( graphCounter, spo2 ),

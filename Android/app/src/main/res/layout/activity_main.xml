@@ -10,7 +10,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:background="@color/graphBG">
 
 		<com.jjoe64.graphview.GraphView
 			android:id="@+id/main_ecg_graph"
@@ -78,7 +79,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:background="@color/graphBG">
 
 		<com.jjoe64.graphview.GraphView
 			android:id="@+id/main_bp_graph"
@@ -101,45 +103,51 @@
 				android:layout_alignTop="@+id/main_sbp_text"/>
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/systolic"
-				android:textStyle="italic"
-				android:textColor="@color/red"
-				android:layout_alignBottom="@+id/main_sbp_text"
-				android:layout_alignStart="@+id/main_sbp_text"/>
-
-			<TextView
 				android:id="@+id/main_sbp_text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerVertical="true"
 				android:layout_alignParentStart="true"
-				android:padding="@dimen/margin"
+				android:paddingStart="@dimen/margin"
+				android:paddingTop="@dimen/margin"
+				android:paddingBottom="@dimen/margin"
 				android:textColor="@color/red_dark"
 				android:text="@string/placeholder_data_reading"
 				tools:text="120"
+				tools:ignore="RtlSymmetry"
 				style="@style/AppTheme.DisplayText"/>
 
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/diastolic"
+				android:text="@string/map_label"
+				android:paddingBottom="@dimen/margin"
 				android:textStyle="italic"
 				android:textColor="@color/orange"
-				android:layout_alignBottom="@+id/main_dbp_text"
-				android:layout_alignEnd="@+id/main_dbp_text"/>
+				android:layout_alignBottom="@+id/main_map_text"
+				android:layout_alignParentEnd="true"/>
+
+			<TextView
+				android:id="@+id/main_map_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentEnd="true"
+				android:paddingBottom="@dimen/margin_more"
+				android:textColor="@color/orange_dark"
+				android:text="@string/placeholder_data_reading"
+				tools:text="93"
+				style="@style/AppTheme.DisplayText.Small"/>
+
 
 			<TextView
 				android:id="@+id/main_dbp_text"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_alignParentBottom="true"
-				android:padding="@dimen/margin"
-				android:textColor="@color/orange_dark"
-				android:text="@string/placeholder_data_reading"
-				tools:text="80"
+				android:layout_toEndOf="@id/main_sbp_text"
+				android:paddingTop="@dimen/margin_more"
+				android:textColor="@color/red_dark"
+				tools:text="/80"
 				style="@style/AppTheme.DisplayText.Small"/>
 
 			<ImageView
@@ -176,7 +184,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:background="@color/graphBG">
 
 		<com.jjoe64.graphview.GraphView
 			android:id="@+id/main_o2_graph"
@@ -207,7 +216,7 @@
 				android:padding="@dimen/margin"
 				android:textColor="@color/blue_dark"
 				android:text="@string/placeholder_data_reading"
-				tools:text="99%"
+				tools:text="99"
 				style="@style/AppTheme.DisplayText"/>
 
 			<ImageView

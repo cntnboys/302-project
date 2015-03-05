@@ -22,23 +22,44 @@ import ca.ualberta.medroad.R;
 public class MainMenuAdapter
 		extends ArrayAdapter< MainMenuAdapter.MenuItem >
 {
+	public static final int ID_PATIENT_INFO = 1;
+	public static final int ID_DIAGNOSTICS  = 2;
+	public static final int ID_ALARMS       = 3;
+	public static final int ID_CONFIG       = 100;
+
 	protected List< MenuItem > data;
 
 	public static MainMenuAdapter newInstance( Context ctx )
 	{
 		List< MenuItem > nData = new ArrayList<>();
 
-		nData.add( new MenuItem( "Patient Info",
+		nData.add( new MenuItem( ID_PATIENT_INFO,
+								 "Patient Info",
 								 "View patient information.",
 								 R.drawable.ic_placeholder_dark ) );
 
-		nData.add( new MenuItem( "Diagnostics",
-								 "Take diagnostic measurements, photos, and notes.",
+		nData.add( new MenuItem( ID_DIAGNOSTICS,
+								 "Diagnostics",
+								 "Take measurements, photos and notes",
 								 R.drawable.ic_placeholder_dark ) );
 
-		nData.add( new MenuItem( "Account", "", R.drawable.ic_placeholder_dark ) );
+		nData.add( new MenuItem( ID_ALARMS,
+								 "Alarms",
+								 "Configure alarms",
+								 R.drawable.ic_placeholder_dark ) );
+
+		nData.add( new MenuItem( ID_CONFIG,
+								 "Configure",
+								 "Set up bluetooth",
+								 R.drawable.ic_placeholder_dark ) );
 
 		return new MainMenuAdapter( ctx, nData );
+	}
+
+	@Override
+	public long getItemId( int position )
+	{
+		return data.get( position ).ID;
 	}
 
 	private MainMenuAdapter( Context context, List< MenuItem > data )
@@ -95,12 +116,14 @@ public class MainMenuAdapter
 
 	public static class MenuItem
 	{
-		public String title;
-		public String description;
-		public int    icoResId;
+		public final long   ID;
+		public       String title;
+		public       String description;
+		public       int    icoResId;
 
-		public MenuItem( String title, String desc, int ico )
+		public MenuItem( long ID, String title, String desc, int ico )
 		{
+			this.ID = ID;
 			this.title = title;
 			this.description = desc;
 			this.icoResId = ico;
