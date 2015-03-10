@@ -1,0 +1,51 @@
+
+
+ul li{
+	margin: 20px 20px 20px 20p; 
+}
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding:0;
+}
+
+a:link, a:visited {
+	display: block;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #98bf21;
+	width: 120px;
+	text-align: center;
+	padding: 4px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+a:hover, a:active {
+background-color: #7A991A;
+}
+
+#top {
+	    background-color:white;
+	    color:black;
+	    text-align:right;
+		padding:1px;
+}
+button{
+	background-color:#A8A8A8;
+}
+button a:link, a:visited {
+	display: block;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #A8A8A8;
+	width: 120px;
+	text-align: center;
+	padding: 4px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+button a:hover, a:active {
+	background-color: grey;
+}
+
