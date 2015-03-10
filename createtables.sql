@@ -2,39 +2,43 @@ create table patient(
 	name		varchar(10),
 	ahcn		char(9),
 	dob		date,
-	primary key (healthno)
+	livestatus	boolean,
+	doctor	varchar(15),
+	pid		char(10),
+	primary key (pid),
+	unique key (ahcn)
 )
 create table ecg(
-	ahcn		char(9),
-	mv		int,
-	pulse		int,
-	o2		int,
-	diabp		int,
-	sysbp		int,
-	map		int,
-	timestamp	time,
-	ses_no	int,
-	devicetype	char(10),
-	primary key (ahcn)
+	pid			char(10),
+	mv			int,
+	pulse			int,
+	o2			int,
+	diastolicbp	int,
+	systolicbp		int,
+	map			int,
+	timestamp		time,
+	session_id		int,
+	devicetype		char(10),
+	primary key (pid)
 )
 create table oximiter(
-	ahcn		char(9),
+	pid		char(10),
 	pulse		int,
-	o2		int,
+	oxygen	int,
 	timestamp	time,
-	ses_no	int,
+	session_id	int,
 	devicetype	char(10),
-	primary key (ahcn)
+	primary key (pid)
 )
 create table bpressure(
-	ahcn		char(9),
-	diabp		int,
-	sysbp		int,
-	map		int,
-	timestamp	time,
-	ses_no	int,
-	devicetype	char(10),
-	primary key (ahcn)
+	pid			char(10),
+	diastolicbp	int,
+	systolicbp		int,
+	map			int,
+	timestamp		time,
+	session_id		int,
+	devicetype		char(10),
+	primary key (pid)
 )
 create table account(
 	username	varchar(10),
