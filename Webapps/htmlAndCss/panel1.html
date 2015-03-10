@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html>
+<head>
 	<link type="text/css" rel="stylesheet" href="panel1.css"/>
-	<head>
+		<!-- Latest compiled and minified CSS -->
+
+	
+	
+	
 		
 		
 	</head>
@@ -12,7 +17,7 @@
 				<button type="button"><a href="file:///cshome/dbsigurd/302project/Login.html">Log out</a></button>
 			
 		</div>
-
+		<div id ="panel">
 		<ul>
 			<li><a href="#home">Patient Status</a></li>
 			<li><a href="#news">ECG</a></li>
@@ -20,5 +25,47 @@
 			<li><a href="#about">X-Ray</a></li>
 			<li><a href="#search">Patient Search</a></li>
 		</ul>
+		</div>
+		<div id = "ecg">
+			<canvas id="demo" width=500 height=300></canvas>
+		</div>
 	</body>
+	<!-- script taken from http://jsfiddle.net/AbdiasSoftware/tFn66/ -->
+	<script>
+	var ctx = demo.getContext('2d'),
+	    w = demo.width,
+	    h = demo.height,
+	    px = 0, opx = 0, speed = 3,
+	    py = h * 0.8, opy = py,
+	    scanBarWidth = 20;
+	
+	ctx.strokeStyle = '#00bd00';
+	ctx.lineWidth = 3;
+	
+	demo.onmousemove = function(e) {
+	    var r = demo.getBoundingClientRect();
+	    py = e.clientY - r.top;
+	}
+	loop();
+	
+	function loop() {
+	
+	    px += speed;
+	    
+	    ctx.clearRect(px,0, scanBarWidth, h);
+	    ctx.beginPath();
+	    ctx.moveTo(opx, opy);
+	    ctx.lineTo(px, py);
+	    ctx.stroke();
+	    
+	    opx = px;
+	    opy = py;
+	    
+	    if (opx > w) {
+	        px = opx = -speed;
+	    }
+	    
+	    requestAnimationFrame(loop);
+	}
+	</script>
 </html>
