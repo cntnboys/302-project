@@ -18,8 +18,11 @@ var ctx = demo.getContext('2d'),
 	loop();
 	
 	function loop() {
-	
-	    px += speed;
+		var hr = document.getElementById('hr').value;
+	    
+		var newhr= parseInt(hr,10)+1;
+	    document.getElementById('hr').value = newhr;
+		px += speed;
 	    
 	    ctx.clearRect(px,0, scanBarWidth, h);
 	    ctx.beginPath();

@@ -23,16 +23,29 @@ ul {
 	float:left;
 	width:13%;
 }
-.heartRate{
-	text-align: center;
-	float:left;
-	width:23%;
-	padding-bottom: 24px;
-	background-color: black;
+div .ecgbox{
+	background:black;
+	height: 300px;
+	width= 1000;
 }
-#ecg{
-	float:left;
-	width:60%;
+div .ecgbox .ecg{
+	background:black; 
+	float: left; 
+	height: 100%; 
+	width: auto; 
+}
+div .heartRate{
+	background:black; 
+	height: 100%; 
+	text-align: center;
+}
+
+div.clear { 
+	clear: both;
+	height: 1px;
+	overflow: hidden; 
+	font-size:0pt;
+	margin-top: -1px; 
 }
 
 .heartRate #hr{
