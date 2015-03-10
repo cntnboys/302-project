@@ -14,6 +14,7 @@ create table ecg(
 	map		int,
 	timestamp	time,
 	ses_no	int,
+	devicetype	char(10),
 	primary key (ahcn)
 )
 create table oximiter(
@@ -22,6 +23,7 @@ create table oximiter(
 	o2		int,
 	timestamp	time,
 	ses_no	int,
+	devicetype	char(10),
 	primary key (ahcn)
 )
 create table bpressure(
@@ -31,9 +33,15 @@ create table bpressure(
 	map		int,
 	timestamp	time,
 	ses_no	int,
+	devicetype	char(10),
 	primary key (ahcn)
 )
-(The tables during planning had variables 'type	ecg', 'type	o2', 'type	bpressure'	on the bottom of the 3 reading tables.  I am not sure if these are relevant to the tables or database.  Notify if they are important to add).
+create table account(
+	username	varchar(10),
+	password	varchar(20),
+	primary key (username)
+)	
+
 
 (Unsure if session is relevant or not.  Feel free to ignore or delete it if necessary.)
 create table session(
@@ -49,8 +57,3 @@ create table session(
 	datestamp	date,
 	primary key (timestamp)
 )
-create table account(
-	username	varchar(10),
-	password	varchar(20),
-	primary key (password)
-)	
