@@ -88,7 +88,7 @@ def logout(request):
 
     context = RequestContext(request)
     auth_logout(request)
-    return redirect(indexPage)
+    return redirect(loginPage)
 
 
 # Searching User Page is a function currently unimplemented. This will be a fuction
