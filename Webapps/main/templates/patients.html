@@ -1,71 +1,180 @@
-<!-- taken from https://datatables.net/examples/advanced_init/html5-data-attributes.html -->
 
-<SCRIPT LANGUAGE-"JavaScript" src="https://code.jquery.com/jquery-1.11.1.min.js"></SCRIPT>
-<SCRIPT LANGUAGE-"JavaScript" src ="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" >
-	$(document).ready(function() {
-		$('#example').DataTable();
-	} );
-	
-	
-	
-	
-</SCRIPT>
+<!DOCTYPE html>
 <html>
-	<head>
-		<link type="text/css" rel="stylesheet" href="patients.css"/>
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css">
+
+	<!-- taken from https://datatables.net/examples/advanced_init/html5-data-attributes.html -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src ="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src ="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+	<script type="text/javascript" >
+		$(document).ready(function() {
+			$('#example').DataTable();
+		});
+	</script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $(".clickable-row").click(function() {
+	        window.document.location = $(this).data("href");
+	    });
+	});
+	</script>
+
+	
+	
+</head>
+
+
+
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-right">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Logout</a>
+    </div>
+
+   
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+	
+
+
+
+
+
+	<div class="container">
 		<h1>Patients</h1>
-		<table id="example" class="display" cellspacing="0" width="100%" border="1">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Patient Number</th>
-						<th>Last Visit</th>
-						<th>Age</th>
-						<th>Notes</th>
-						<th>Assigned/status</th>
-					</tr>
-				</thead>
-		 
-				<tfoot>
-					<tr>
-						<th>Name</th>
-						<th>Patient Number</th>
-						<th>Last Visit</th>
-						<th>Age</th>
-						<th>Notes</th>
-						<th>Assigned/status</th>
-					</tr>
-				</tfoot>
-		 
-				<tbody>
-					<tr>
-						<td data-search="Tiger Nixon">T. Nixon</td>
-						<td>000001</td>
-						<td data-order="1303686000">Mon 25th Apr 11</td>
-						<td>61</td>
-						<td>doing well</td>
-						<td data-order="seen">seen</td>
-					</tr>
-					<tr>
-						<td data-search="Garrett Winters">G. Winters</td>
-						<td>000002</td>
-						<td data-order="1311548400">Mon 25th Jul 11</td>
-						<td>63</td>
-						<td>sick</td>
-						<td data-order="unassigned">unassigned</td>
-					</tr>
-					<tr>
-						<td data-search="Ashton Cox">A. Cox</td>
-						<td>000003</td>
-						<td data-order="1231718400">Mon 12th Jan 09</td>
-						 <td>66</td>
-						<td>keep for observations</td>
-						<td data-order="unassigned">waiting</td>
-					</tr>
-				 
-					
-				</tbody>
-			</table>
-		</head>
-	</html>
+		<table id="example" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Patient Number</th>
+					<th>Last Visit</th>
+					<th>Age</th>
+					<th>Notes</th>
+					<th>Assigned/status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class='clickable-row' data-href='panel1.html'>
+				
+					<td data-search="Tiger Nixon"><a href='file:///cshome/dbsigurd/Downloads/panel1.html'>T. Nixon</a></td>
+					<td>000001</td>
+					<td data-order="1303686000">Mon 25th Apr 11</td>
+					<td>61</td>
+					<td>doing well</td>
+					<td data-order="seen">seen</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Garrett Winters">G. Winters</td>
+					<td>000002</td>
+					<td data-order="1311548400">Mon 25th Jul 11</td>
+					<td>63</td>
+					<td>sick</td>
+					<td data-order="unassigned">unassigned</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Ashton Cox">A. Cox</td>
+					<td>000003</td>
+					<td data-order="1231718400">Mon 12th Jan 09</td>
+					 <td>66</td>
+					<td>keep for observations</td>
+					<td data-order="unassigned">waiting</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Devon sig">D. Sig</td>
+					<td>000004</td>
+					<td data-order="1303686000">Mon 25th Apr 11</td>
+					<td>16</td>
+					<td>doing well</td>
+					<td data-order="seen">seen</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Henry Dylan">h. Dylan</td>
+					<td>000005</td>
+					<td data-order="1311548400">Mon 25th Jul 11</td>
+					<td>63</td>
+					<td>sick</td>
+					<td data-order="unassigned">unassigned</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Airi Satou">A. Satou</td>
+					<td>000006</td>
+					<td data-order="1227830400">Fri 28th Nov 08</td>
+					 <td>66</td>
+					<td>keep for observations</td>
+					<td data-order="unassigned">waiting</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					 <td data-search="Brielle Williamson">B. Williamson</td>
+					<td>000007</td>
+					<td data-order="1354406400">Sun 2nd Dec 12</td>
+					<td>61</td>
+					<td>doing well</td>
+					<td data-order="seen">seen</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Herrod Chandler">H. Chandler</td>
+					<td>000002</td>
+					<td data-order="1344207600">Mon 6th Aug 12</td>
+					<td>63</td>
+					<td>sick</td>
+					<td data-order="unassigned">unassigned</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					 <td data-search="Colleen Hurst">C. Hurst</td>
+					<td>000003</td>
+					<td data-order="1231718400">Mon 12th Jan 09</td>
+					 <td>31</td>
+					<td>keep for observations</td>
+					<td data-order="unassigned">waiting</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					 <td data-search="Rhona Davidson">R. Davidson</td>
+					<td>000001</td>
+					<td data-order="1287010800">Thu 14th Oct 10</td>
+					<td>11</td>
+					<td>doing well</td>
+					<td data-order="seen">seen</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Jena Gaines">J. Gaines</td>
+					<td>000002</td>
+					<td data-order="1229644800">Fri 19th Dec 08</td>
+					<td>23</td>
+					<td>sick</td>
+					<td data-order="unassigned">unassigned</td>
+				</tr>
+				<tr class='clickable-row' data-href='panel1.html'>
+					<td data-search="Quinn Flynn">Q. Flynn</td>
+					<td>000003</td>
+					<td data-order="1362268800">Sun 3rd Mar 13</td>
+					<td>46</td>
+					<td>keep for observations</td>
+					<td data-order="unassigned">waiting</td>
+				</tr>
+			</tbody>
+			
+			
+			
+		</table>
+	</div>
+</body>
+</html>
+
