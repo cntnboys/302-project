@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from django.db import models
 from django.db import connection
+from django.contrib.auth.models import UserManager
 
 class Patient(models.Model):
     patient_id = models.AutoField(primary_key = True)

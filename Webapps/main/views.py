@@ -22,9 +22,20 @@ import json
 
 
 
-
+#grab patient information
 def patientPage(request):
-    return render(request, "patients.html")
+
+    context = RequestContext(request)
+    if request.user.is_authenticated():
+
+        new_patient = Patient.objects.get_or_create(ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+
+        items = []
+        if request.method == "GET":
+            for x in Patient.objects.all():
+                items.insert(0,x)
+
+        return render(request, "patients.html", {'items' : items})
 
 # Log in Page function is a check for authenticated author log in
 # If author inputs incorrect or non exisiting things in the fields,
