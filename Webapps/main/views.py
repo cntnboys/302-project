@@ -10,11 +10,8 @@ from django.shortcuts import render, redirect, get_object_or_404, render_to_resp
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
 
-import uuid
-import Post
-import Comment
 
-from main.models import Patient, ECG, Oximeter, BloodPressure
+from main.models import Patient, ECG
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
