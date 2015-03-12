@@ -14,7 +14,7 @@ import uuid
 import Post
 import Comment
 
-from main.models import Authors, Friends, Posts, Comments, GithubStreams, TwitterStreams, FacebookStreams
+from main.models import Patient, ECG, Oximeter, BloodPressure
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
