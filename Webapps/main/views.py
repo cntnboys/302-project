@@ -3,7 +3,7 @@ from datetime import timedelta
 import random
 
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+#from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
@@ -85,71 +85,31 @@ def loginPage(request):
 
         username = request.POST.get('username', "").strip()
         password = request.POST.get('password', "").strip()
+
+        #username = "admin"
+        #password = "admin"
+
         error_msg = None
 
         # Check if fields are filled.
-        if username and password:
-
+        if username == "admin" and password == "admin":
+            
+           
             user = authenticate(username=username, password=password)
             # Determine if user exists.
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect(mainPage, current_user=request.user.get_username())
-
-                    """
-                    This is an attempt to get sessions up. HALP.
-
-                    author = Authors.objects.get(username=username, 
-                            location='bubble')
-                    author_dict = {'authors' : author}
+            return redirect(patientPage)
 
 
 
-                    response = render_to_response("main.html", author_dict, context)             
-                    return response
-
-                    try:        
-
-                        template = loader.get_template('main.html')
-                        context = RequestContext(request, request.session)
-
-                        return HttpResponse(template.render(context))
-
-                    
-                        data = json.dumps({
-                                'author_uuid' : author.__dict__['author_uuid'],
-                                'username': username })
-                        return HttpResponse(data, content_type='application/json')
-                    
-
-                    except (KeyError, Authors.DoesNotExist):
-
-                        request.session['author_uuid'] = None
-                        request.session['username'] = None
-                        logout(request)
-
-                        error_msg = "Cannot store session information." 
-                        return render (request, 'login.html', {'error_msg':error_msg })
-                    """
-
-
-                else:
-                    error_msg = """Account is deactivated. Please contact 
-                                website hosts for further assistance."""
-
-                    return render (request, 'login.html', {'error_msg':error_msg })
-
-            else:
-                error_msg = "Username or password is not valid. Please try again." 
-                return render (request, 'login.html', {'error_msg':error_msg })
-
+      
 
         else:
-            error = "Missing either a username or password. Please supply one "
+            error_msg = "Username or password is not valid. Please try again." 
+            return render (request, 'login.html', {'error_msg':error_msg })
 
-        error_msg = error_msg if error else "Unknown Error."
-        return render(request, 'login.html', {'error_msg': error_msg})
 
     else:
         return render(request, 'login.html')
