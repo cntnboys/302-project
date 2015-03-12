@@ -13,7 +13,7 @@
     <link href="{{ STATIC_URL }}/css/login.css" rel="stylesheet">
     <br>
 </head>
-{% endblock %}
+
 <body>
  
 

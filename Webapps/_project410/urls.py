@@ -15,12 +15,11 @@ urlpatterns = patterns('',
 
     url(r'^$', main.views.loginPage, name='LoginPage'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^friends/', main.views.friends, name='friends'),
     url(r'^main/', include('main.urls')),
-    url(r'^friendrequest/', main.views.friendRequest, name='friendRequest'),
-    url(r'^searchPage/', main.views.searchPage, name='SearchPage'),
-    url(r'^friends/(?P<userid1>\w{0,50})/(?P<userid2>\w{0,50})$', main.views.foaf, name='foaf'),
+  
     
+    
+   
 )+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
