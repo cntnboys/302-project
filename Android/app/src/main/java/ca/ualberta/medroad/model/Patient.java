@@ -13,6 +13,19 @@ import java.util.List;
 public class Patient
 		implements Serializable
 {
+	private String id;
+	private String physician;
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public String getPhysician()
+	{
+		return physician;
+	}
+
 	public enum Gender
 	{
 		Male,
@@ -21,7 +34,7 @@ public class Patient
 	}
 
 	protected String                     name;
-	protected int                        ahcn;
+	protected String                     ahcn;
 	protected Calendar                   dob;
 	protected Gender                     gender;
 	protected List< PatientNote >        notes;
@@ -43,12 +56,12 @@ public class Patient
 		this.name = name;
 	}
 
-	public int getAhcn()
+	public String getAhcn()
 	{
 		return ahcn;
 	}
 
-	public void setAhcn( int ahcn )
+	public void setAhcn( String ahcn )
 	{
 		this.ahcn = ahcn;
 	}
