@@ -1,5 +1,5 @@
 """
-Django settings for _project410 project.
+Django settings for Project302 project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -73,9 +73,9 @@ TEMPLATE_CONTEXT_PROCESSOR = (
 #]
 
 
-ROOT_URLCONF = '_project410.urls'
+ROOT_URLCONF = 'Project302.urls'
 
-WSGI_APPLICATION = '_project410.wsgi.application'
+WSGI_APPLICATION = 'Project302.wsgi.application'
 
 
 # Database
