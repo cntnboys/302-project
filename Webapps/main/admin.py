@@ -1,13 +1,9 @@
 from django.contrib import admin
 
-from main.models import Authors, Friends, Posts, Comments, GithubStreams, TwitterStreams, FacebookStreams
-
+from main.models import Patient, ECG, Oximeter, BloodPressure
 # Register your models here.
 
-admin.site.register(Authors)
-admin.site.register(Friends)
-admin.site.register(Posts)
-admin.site.register(Comments)
-admin.site.register(GithubStreams)
-admin.site.register(TwitterStreams)
-admin.site.register(FacebookStreams)
+admin.site.register(Patient)
+admin.site.register(ECG)
+admin.site.register(Oximeter)
+admin.site.register(BloodPressure)
