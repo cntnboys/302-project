@@ -1,23 +1,58 @@
+{% extends "navbar.html" %}
+
+{% block head %}
+
 <!DOCTYPE html>
-<html>
-	<head>
-		<link type="text/css" rel="stylesheet" href="Loginstylesheet.css"/>
-		
-		<title>Table Time</title>
-	</head>
-	<body>
-		<h1>Login to MedROAD</h1>
-		<div class="relative1">
-		<form>
-			
-		User Name:<br>
-		<input type="text" name="UserName"  >
-		<br>
-		<br>
-		Password:  <br>
-		<input type="password" name="Password" >
-		</form>
-		<button type="button"><a href="file:///cshome/dbsigurd/302project/302-project/Webapps/htmlAndCss/patients%20(1).html">Login</a></button>
-		</div>
-	</body>
+<html lang="en">
+
+<head>
+
+    <title>Thought-Bubble Login</title>
+    <!-- Bootstrap example from http://bootsnipp.com/snippets/featured/login-screen-with-background-->
+    <link href="{{ STATIC_URL }}/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{ STATIC_URL }}/css/small-business.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css">
+    <link href="{{ STATIC_URL }}/css/login.css" rel="stylesheet">
+    <br>
+</head>
+{% endblock %}
+<body>
+ 
+
+<div class="container">
+    {% block nav %}
+        {{ block.super }}
+    {% endblock %}
+    {% block body %} 
+    <!-- http://bootsnipp.com/snippets/featured/google-style-login-extended -->
+	<form id="login" class="form-signin" action="" method="POST">
+		<img class="profile-img" src="{{ STATIC_URL }}/images/plaeholder_icon.png" style="width:75%">
+		{% csrf_token %}
+		<h1 class="form-signin-heading">Sign In</h1>
+		<br/>
+		<input type="text" class="form-control" placeholder="Username" required="" autofocus="" name=username>
+		<input type="password" class="form-control" placeholder="Password" required="" name=password>
+		</br>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">
+			Sign In
+		</button>
+        {% if success %}
+        <br/>
+        <h4 id="center" class="animated flash" style="background-color:rgba(0,0,0,0)">{{ success }}</h4>
+
+        {% endif %}
+        {% if error_msg %}
+        <br/>
+        <h4 id="center" class="animated flash" style="background-color:rgba(0,0,0,0)">{{ error_msg }}</h4>
+        {% endif %}
+	</form>
+
+
+
+</div>
+</body>
 </html>
+{% endblock %}
+

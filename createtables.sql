@@ -19,16 +19,18 @@ create table ecg(
 	timestamp		time,
 	session_id		int,
 	devicetype		char(10),
-	primary key (pid)
+	primary key (pid),
+	foreign key (pid) references patient
 )
 create table oximiter(
-	pid		char(10),
-	pulse		int,
-	oxygen	int,
-	timestamp	time,
-	session_id	int,
-	devicetype	char(10),
-	primary key (pid)
+	pid			char(10),
+	pulse			int,
+	oxygen		int,
+	timestamp		time,
+	session_id		int,
+	devicetype		char(10),
+	primary key (pid),
+	foreign key (pid) references patient
 )
 create table bpressure(
 	pid			char(10),
@@ -38,7 +40,8 @@ create table bpressure(
 	timestamp		time,
 	session_id		int,
 	devicetype		char(10),
-	primary key (pid)
+	primary key (pid),
+	foreign key (pid) references patient
 )
 create table account(
 	username	varchar(10),
