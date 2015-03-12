@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     # url(r'^$', '_project410.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^$', main.views.redirectIndex, name='IndexPage'),
+    url(r'^$', main.views.loginPage, name='LoginPage'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^friends/', main.views.friends, name='friends'),
     url(r'^main/', include('main.urls')),

@@ -18,32 +18,9 @@ from main.models import Patient, ECG, Oximeter, BloodPressure
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
-
 import json
 
-# Index Page function is used to traverse to our introduction page
-# if you are not logged in as a user
-# If you are logged in as a user, you will be redirected to the
-# stream page with posts.
-def indexPage(request):
-    context = RequestContext(request)
-    if request.user.is_authenticated():
 
-        items = []
-        if request.method == "GET":
-            for x in Posts.objects.all().order_by("date"):
-               items.insert(0,x)
-
-
-        current_user = request.user.get_username()
-        author = Authors.objects.get(username=current_user)
-        return render(request, "main.html", {'items' : items, 'author': author })
-    else:
-        return render(request, 'login.html', request.session)
-
-# Redirect Index function just redirects back into the index page
-def redirectIndex(request):
-    return redirect(indexPage)
 
 
 def patientPage(request):
