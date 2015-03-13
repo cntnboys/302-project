@@ -48,7 +48,7 @@ def patientDisplay(request, patient_id):
 
 
             #geting that patients sessions by checking ECG objects
-            new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
+            #new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
             sessions = []
             Ecgobj = ECG.objects.get(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -165,8 +165,17 @@ def getPatient(request):
 def getMedData(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        print 'Raw Data: "%s"' % request.body 
-
+        print 'Raw Data: "%s"' % request.body
+        p_id = data["patient_id"]
+        mv1 = data["mv"]
+        oxygen1 = data["oxygen"]
+        diastolicbp1 = data["diastolicbp"]
+        systolicbp1 = data["systolicbp"]
+        map21 = data["map2"]
+        timestamp1 = data["timestamp"]
+        session_id1 = data["session_id"]
+        
+        patient_data = ECG.objects.get_or_create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
 
      #get what feild you need from json object example
      #custom_decks = data['custom_decks']
