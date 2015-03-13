@@ -67,21 +67,44 @@
 					<th>Name</th>
 					<th>Patient Number</th>
 					<th>Last Visit</th>
-					<th>Age</th>
-					<th>Notes</th>
+					<th>DOB</th>
+					<th>AHCN</th>
 					<th>Assigned/status</th>
 				</tr>
 			</thead>
 			<tbody>
+
+
+				<!-- get all patients --> 
+
+				{% for link in items %}
+
+
 				<tr class='clickable-row' data-href='panel1.html'>
 				
-					<td data-search="Tiger Nixon"><a href='file:///cshome/dbsigurd/Downloads/panel1.html'>T. Nixon</a></td>
-					<td>000001</td>
-					<td data-order="1303686000">Mon 25th Apr 11</td>
-					<td>61</td>
-					<td>doing well</td>
-					<td data-order="seen">seen</td>
+					<td data-search="{{ link.name }}"><a href='#'>{{ link.name }}</a></td>
+					<td>{{ link.patient_id }}</td>
+					<td data-order="1303686000"></td>
+					<td>{{ link.dob }}</td>
+					<td>{{ link.ahcn }}</td>
+					
+					{% if link.liveStatus == True %}
+
+					<td data-order="seen">Active</td>
+
+					{% endif %}
+
+					{% if link.liveStatus == False %}
+	
+					<td data-order="seen">Inactive</td>
+
+					{% endif %}
+			
 				</tr>
+
+				{% endfor %}
+
+				
 				<tr class='clickable-row' data-href='panel1.html'>
 					<td data-search="Garrett Winters">G. Winters</td>
 					<td>000002</td>
