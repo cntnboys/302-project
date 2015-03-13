@@ -34,6 +34,17 @@ def patientPage(request):
 
         return render(request, "patients.html", {'items' : items})
 
+
+def patientDisplay(request, patient_id):
+    if request.method == "GET":
+        context = RequestContext(request)
+        if request.user.is_authenticated():
+            items = []
+            patient = Patient.objects.get(patient_id = patient_id)
+            items.append(patient)
+
+    return render(request, "panel1.html", {'items' : items})
+
 # Log in Page function is a check for authenticated author log in
 # If author inputs incorrect or non exisiting things in the fields,
 # then author will be prompted that either the input was incorrect or

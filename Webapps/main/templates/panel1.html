@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link type="text/css" rel="stylesheet" href="/cshome/dbsigurd/302-project/Webapps/main/static/css/panel1.css"/>
+	<link type="text/css" rel="stylesheet" href="../../static/css/panel1.css"/>
 		<!-- Latest compiled and minified CSS -->
 	
 	</head>
@@ -17,17 +17,40 @@
 					<tr >
 						<th style="padding:0 15px 0 15px;">Patients Name:</th>
 						<th style="padding:0 15px 0 15px;">DOB:</th>
-						<th style="padding:0 15px 0 15px;">SEX:</th>
+						
 						<th style="padding:0 15px 0 15px;">Patients ID:</th>
+						<th style="padding:0 15px 0 15px;">Status:</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr >
-						<td style="padding:0 15px 0 15px;">John Smith </td>
-						<td style="padding:0 15px 0 15px;">Jan 30, 1960 </td>
-						<td style="padding:0 15px 0 15px;">Male </td>
-						<td style="padding:0 15px 0 15px;">000000123224 </td>
+					{% for link in items %}
+					<tr>
+						<td style="padding:0 15px 0 15px;">{{ link.name }} </td>
+						<td style="padding:0 15px 0 15px;">{{ link.dob }} </td>
+						
+						<td style="padding:0 15px 0 15px;">{{ link.patient_id }}  </td>
+
+
+
+						{% if link.liveStatus == True %}
+
+						<td style="padding:0 15px 0 15px;">Active  </td>
+
+						{% endif %}
+
+						{% if link.liveStatus == False %}
+	
+						<td style="padding:0 15px 0 15px;"> Inactive  </td>
+
+						{% endif %}
+	
+
+
+
 					</tr>
+
+
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>

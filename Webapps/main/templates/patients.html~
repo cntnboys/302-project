@@ -15,6 +15,10 @@
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src ="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src ="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+	
+
+
+
 	<script type="text/javascript" >
 		$(document).ready(function() {
 			$('#example').DataTable();
@@ -80,9 +84,9 @@
 				{% for link in items %}
 
 
-				<tr class='clickable-row' data-href='panel1.html'>
+				<tr class='clickable-row' data-href= {% url "patientDisplay" pid=link.patient_id %}>
 				
-					<td data-search="{{ link.name }}"><a href='#'>{{ link.name }}</a></td>
+					<td data-search="{{ link.name }}">{{ link.name }}</a></td>
 					<td>{{ link.patient_id }}</td>
 					<td data-order="1303686000"></td>
 					<td>{{ link.dob }}</td>
@@ -90,13 +94,13 @@
 					
 					{% if link.liveStatus == True %}
 
-					<td data-order="seen">Live</td>
+					<td data-order="seen">Active</td>
 
 					{% endif %}
 
 					{% if link.liveStatus == False %}
 	
-					<td data-order="seen">Live</td>
+					<td data-order="seen">Inactive</td>
 
 					{% endif %}
 			
@@ -104,95 +108,6 @@
 
 				{% endfor %}
 
-				
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Garrett Winters">G. Winters</td>
-					<td>000002</td>
-					<td data-order="1311548400">Mon 25th Jul 11</td>
-					<td>63</td>
-					<td>sick</td>
-					<td data-order="unassigned">unassigned</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Ashton Cox">A. Cox</td>
-					<td>000003</td>
-					<td data-order="1231718400">Mon 12th Jan 09</td>
-					 <td>66</td>
-					<td>keep for observations</td>
-					<td data-order="unassigned">waiting</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Devon sig">D. Sig</td>
-					<td>000004</td>
-					<td data-order="1303686000">Mon 25th Apr 11</td>
-					<td>16</td>
-					<td>doing well</td>
-					<td data-order="seen">seen</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Henry Dylan">h. Dylan</td>
-					<td>000005</td>
-					<td data-order="1311548400">Mon 25th Jul 11</td>
-					<td>63</td>
-					<td>sick</td>
-					<td data-order="unassigned">unassigned</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Airi Satou">A. Satou</td>
-					<td>000006</td>
-					<td data-order="1227830400">Fri 28th Nov 08</td>
-					 <td>66</td>
-					<td>keep for observations</td>
-					<td data-order="unassigned">waiting</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					 <td data-search="Brielle Williamson">B. Williamson</td>
-					<td>000007</td>
-					<td data-order="1354406400">Sun 2nd Dec 12</td>
-					<td>61</td>
-					<td>doing well</td>
-					<td data-order="seen">seen</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Herrod Chandler">H. Chandler</td>
-					<td>000002</td>
-					<td data-order="1344207600">Mon 6th Aug 12</td>
-					<td>63</td>
-					<td>sick</td>
-					<td data-order="unassigned">unassigned</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					 <td data-search="Colleen Hurst">C. Hurst</td>
-					<td>000003</td>
-					<td data-order="1231718400">Mon 12th Jan 09</td>
-					 <td>31</td>
-					<td>keep for observations</td>
-					<td data-order="unassigned">waiting</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					 <td data-search="Rhona Davidson">R. Davidson</td>
-					<td>000001</td>
-					<td data-order="1287010800">Thu 14th Oct 10</td>
-					<td>11</td>
-					<td>doing well</td>
-					<td data-order="seen">seen</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Jena Gaines">J. Gaines</td>
-					<td>000002</td>
-					<td data-order="1229644800">Fri 19th Dec 08</td>
-					<td>23</td>
-					<td>sick</td>
-					<td data-order="unassigned">unassigned</td>
-				</tr>
-				<tr class='clickable-row' data-href='panel1.html'>
-					<td data-search="Quinn Flynn">Q. Flynn</td>
-					<td>000003</td>
-					<td data-order="1362268800">Sun 3rd Mar 13</td>
-					<td>46</td>
-					<td>keep for observations</td>
-					<td data-order="unassigned">waiting</td>
-				</tr>
 			</tbody>
 			
 			
