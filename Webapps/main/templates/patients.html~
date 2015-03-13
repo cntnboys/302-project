@@ -70,7 +70,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Patient Number</th>
-					<th>Last Visit</th>
+					
 					<th>DOB</th>
 					<th>AHCN</th>
 					<th>Assigned/status</th>
@@ -84,11 +84,11 @@
 				{% for link in items %}
 
 
-				<tr class='clickable-row' data-href= {% url "patientDisplay" pid=link.patient_id %}>
+				<tr class='clickable-row' data-href= {% url "patientDisplay" patient_id=link.patient_id %}>
 				
 					<td data-search="{{ link.name }}">{{ link.name }}</a></td>
 					<td>{{ link.patient_id }}</td>
-					<td data-order="1303686000"></td>
+					
 					<td>{{ link.dob }}</td>
 					<td>{{ link.ahcn }}</td>
 					
