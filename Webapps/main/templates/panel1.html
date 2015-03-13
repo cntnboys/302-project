@@ -1,33 +1,120 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link type="text/css" rel="stylesheet" href="/cshome/dbsigurd/302-project/Webapps/main/static/css/panel1.css"/>
+
+
+
+
+
+
+	<link type="text/css" rel="stylesheet" href="../../static/css/panel1.css"/>
 		<!-- Latest compiled and minified CSS -->
+
+	
+
+
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css">
+
+	<!-- taken from https://datatables.net/examples/advanced_init/html5-data-attributes.html -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src ="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src ="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+	
+
+	<script type="text/javascript" >
+		$(document).ready(function() {
+			$('#example').DataTable();
+		});
+	</script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $(".clickable-row").click(function() {
+	        window.document.location = $(this).data("href");
+	    });
+	});
+	</script>
+
+
+
+
+
 	
 	</head>
 	<body>
-		<div id ="logout">
-			 
-				Dr. xxxx 
-				<button type="button"><a href="file:///cshome/dbsigurd/302project/Login.html">Log out</a></button>	
-		</div>
+
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-right">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'logout' %}">Logout</a>
+    </div>
+
+   
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+	
+		
+
+
+<!-- TOP ---->
+<div class="container">
 		<div id = "patientInfo">
 			<table id="pTable" class="table table-striped" >
 				<thead>
 					<tr >
 						<th style="padding:0 15px 0 15px;">Patients Name:</th>
 						<th style="padding:0 15px 0 15px;">DOB:</th>
-						<th style="padding:0 15px 0 15px;">SEX:</th>
+						<th style="padding:0 15px 0 15px;">AHCN:</th>
 						<th style="padding:0 15px 0 15px;">Patients ID:</th>
+						<th style="padding:0 15px 0 15px;">Status:</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr >
-						<td style="padding:0 15px 0 15px;">John Smith </td>
-						<td style="padding:0 15px 0 15px;">Jan 30, 1960 </td>
-						<td style="padding:0 15px 0 15px;">Male </td>
-						<td style="padding:0 15px 0 15px;">000000123224 </td>
+					{% for link in items %}
+					<tr>
+						<td style="padding:0 15px 0 15px;">{{ link.name }} </td>
+						<td style="padding:0 15px 0 15px;">{{ link.dob }} </td>
+						<td style="padding:0 15px 0 15px;">{{ link.ahcn }} </td>
+						<td style="padding:0 15px 0 15px;">{{ link.patient_id }}  </td>
+
+
+
+						{% if link.liveStatus == True %}
+
+						<td style="padding:0 15px 0 15px;">Active  </td>
+
+						{% endif %}
+
+						{% if link.liveStatus == False %}
+	
+						<td style="padding:0 15px 0 15px;"> Inactive  </td>
+
+						{% endif %}
+	
+
+
+
 					</tr>
+
+
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
@@ -55,6 +142,55 @@
 				<div class="clear">
 			</div>
 		</div>
+
+
+</div>
+
+<!-- Session Table -->
+</br></br>
+</br>
+
+
+		<div class="container">
+		<h1>Patient Testing History</h1>
+		<table id="example" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Session #</th>
+					
+					
+					
+					
+					<th>Assigned/status</th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				<!-- get all patients --> 
+
+				{% for link in sessions %}
+
+
+				<tr class='clickable-row' data-href= #>
+				
+					<td data-search="{{ link.session_id }}">{{ link.session_id }}</a></td>
+					
+																				
+					<td data-order="seen">Inactive</td>
+
+					
+			
+				</tr>
+
+				{% endfor %}
+
+			</tbody>
+			
+			
+			
+		</table>
+	</div>
 		
 	</body>
 	<!-- script taken from http://jsfiddle.net/AbdiasSoftware/tFn66/ -->

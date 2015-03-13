@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^senddata/$', views.getMedData, name='getMedData'),                   
     url(r'^login/$', views.loginPage, name='LoginPage'),
     url(r'^logout/$', views.logout, name="logout"),
+    url(r'^(?P<patient_id>.+?)/$', views.patientDisplay, name='patientDisplay'),
     
     
    
