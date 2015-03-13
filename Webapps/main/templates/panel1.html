@@ -10,7 +10,7 @@
 	<link type="text/css" rel="stylesheet" href="../../static/css/panel1.css"/>
 		<!-- Latest compiled and minified CSS -->
 
-
+	
 
 
 
@@ -48,6 +48,28 @@
 	
 	</head>
 	<body>
+
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-right">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'logout' %}">Logout</a>
+    </div>
+
+   
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+	
 		
 
 
@@ -135,10 +157,10 @@
 			<thead>
 				<tr>
 					<th>Session #</th>
-					<th>Patient Number</th>
 					
 					
-					<th>AHCN</th>
+					
+					
 					<th>Assigned/status</th>
 				</tr>
 			</thead>
@@ -147,28 +169,17 @@
 
 				<!-- get all patients --> 
 
-				{% for link in items %}
+				{% for link in sessions %}
 
 
-				<tr class='clickable-row' data-href= {% url "patientDisplay" patient_id=link.patient_id %}>
+				<tr class='clickable-row' data-href= #>
 				
-					<td data-search="{{ link.name }}">{{ link.name }}</a></td>
-					<td>{{ link.patient_id }}</td>
+					<td data-search="{{ link.session_id }}">{{ link.session_id }}</a></td>
 					
-					
-					<td>{{ link.ahcn }}</td>
-					
-					{% if link.liveStatus == True %}
-
-					<td data-order="seen">Active</td>
-
-					{% endif %}
-
-					{% if link.liveStatus == False %}
-	
+																				
 					<td data-order="seen">Inactive</td>
 
-					{% endif %}
+					
 			
 				</tr>
 

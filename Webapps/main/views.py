@@ -43,7 +43,17 @@ def patientDisplay(request, patient_id):
             patient = Patient.objects.get(patient_id = patient_id)
             items.append(patient)
 
-    return render(request, "panel1.html", {'items' : items})
+
+
+
+            #geting that patients sessions by checking ECG objects
+            new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
+            sessions = []
+            Ecgobj = ECG.objects.get(patient_id = patient_id)
+            sessions.append(Ecgobj)
+        
+
+    return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
 # Log in Page function is a check for authenticated author log in
 # If author inputs incorrect or non exisiting things in the fields,
