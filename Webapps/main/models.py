@@ -7,7 +7,7 @@ from django.db import connection
 from django.contrib.auth.models import UserManager
 
 class Patient(models.Model):
-    patient_id = models.AutoField(primary_key = True)
+    patient_id = models.IntegerField(primary_key = True, null=False)
     ahcn = models.CharField(max_length=9, null=True, unique=True)
     dob = models.DateField()
     liveStatus = models.BooleanField(default = False)
