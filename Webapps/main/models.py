@@ -22,8 +22,7 @@ class Patient(models.Model):
         return "patient_id: " + str(self.patient_id) + " ahcn: " + str(self.ahcn) + " dob: " + str(self.dob) + " liveStatus: " + str(self.liveStatus) + " doctor: " + str(self.doctor) + " name: " + str(self.name)
 
 class ECG(models.Model):
-    #patient_id = models.ForeignKey(Patient, db_column="patient_id", null=False, primary_key=True)
-    patient_id = models.IntegerField(primary_key = True)
+    patient_id = models.ForeignKey(Patient, db_column="patient_id", null=False, primary_key=True)
     mv = models.IntegerField()
     pulse = models.IntegerField()
     oxygen = models.IntegerField()
@@ -32,7 +31,6 @@ class ECG(models.Model):
     map2 = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True,null=False)
     session_id = models.IntegerField(unique=True, null=False)
-    deviceType = models.CharField(max_length=10, null=True)
     
     class Meta:
         db_table = "ecg"

@@ -48,7 +48,7 @@ def patientDisplay(request, patient_id):
 
 
             #geting that patients sessions by checking ECG objects
-            new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
+            #new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
             sessions = []
             Ecgobj = ECG.objects.get(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -156,7 +156,7 @@ def getMedData(request):
     if request.method == "POST":
         data = json.loads(request.body)
         print 'Raw Data: "%s"' % request.body 
-
+        
 
      #get what feild you need from json object example
      #custom_decks = data['custom_decks']
