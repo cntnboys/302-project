@@ -10,8 +10,8 @@ from main import views
 urlpatterns = patterns('',
     url(r'^$', views.loginPage, name='LoginPage'),
     url(r'^patientPage/$', views.patientPage, name='patientPage'),
-
-                       
+    url(r'^sendpatient/$', views.getPatient, name='getPatient'),
+    url(r'^senddata/$', views.getMedData, name='getMedData'),                   
     url(r'^login/$', views.loginPage, name='LoginPage'),
     url(r'^logout/$', views.logout, name="logout"),
     
