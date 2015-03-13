@@ -6,8 +6,6 @@ from django.conf.urls.static import static
 import main.views
 
 
-from rest_framework import routers, serializers, viewsets
-
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', '_project410.views.home', name='home'),

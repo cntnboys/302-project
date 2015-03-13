@@ -52,7 +52,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -110,17 +109,31 @@ STATIC_URL = '/static/'
 
 #ADDEDEDD THE FOLLLOWWINGGG TO DEAAALLLL WITHTHTHT DB ERRORS WHEN LOCAL
 
-if DEBUG:
-     DATABASES = {
-         'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-         'USER': '',
-         'PASSWORD': '',
-         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-         'PORT': '',
-     }
+ON_HEROKU = os.environ.get('ON_HEROKU')
+HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dajjoh8e7rs5id',
+        'HOST': 'ec2-107-20-177-12.compute-1.amazonaws.com',
+        'USER': 'ybsohsxdsrrhde',
+        'PASSWORD' : 'j1WWdzoSyUF9bfBk-uSeEL1liy',
+        'PORT' : '5432',
+
 }
+}
+#if DEBUG:
+#    DATABASES = {
+#        'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#        'USER': '',
+#        'PASSWORD': '',
+#        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#        'PORT': '',
+#    }
+#}
 # else:
 #     DATABASES = {
 #         'default': {
@@ -155,7 +168,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SETTINGS_DIR = os.path.dirname(__file__)
 PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROJECT_PATH = os.path.abspath(PROJECT_PATH)
-TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, '/author/templates'), )
+TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, '/main/templates'), )
 STATIC_ROOT = "/static/images"
 
 STATICFILES_DIRS = (

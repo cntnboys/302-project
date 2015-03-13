@@ -5,7 +5,7 @@ import random
 from django.contrib import messages
 #from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
@@ -25,7 +25,7 @@ def patientPage(request):
     context = RequestContext(request)
     if request.user.is_authenticated():
 
-        new_patient = Patient.objects.get_or_create(ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+        new_patient = Patient.objects.get_or_create(patient_id = "1", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
 
         items = []
         if request.method == "GET":
