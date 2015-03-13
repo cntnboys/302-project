@@ -143,6 +143,16 @@ def getPatient(request):
         data = json.loads(request.body)
         print 'Patient Data: "%s"' % request.body 
 
+        patient_id = data['patient_id']
+        ahcn = data['ahcn']
+        dob = data['dob']
+        liveStatus = data['liveStatus']
+        doctor = data['doctor']
+        name = data['name']
+
+        new_patient = Patient.objects.get_or_create(patient_id = patient_id, ahcn= ahcn, dob= dob, liveStatus= liveStatus, doctor= doctor, name=name)
+        
+
 
     #get what feild you need from json object example
     #custom_decks = data['custom_decks']
