@@ -113,3 +113,28 @@ def searchPage(request):
 
     return render(request, 'search.html',{'items':items})
       
+
+#getapatient to initiliaze or update:
+def getPatient(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print 'Patient Data: "%s"' % request.body 
+
+
+    #get what feild you need from json object example
+    #custom_decks = data['custom_decks']
+    
+    return HttpResponse("OK")
+  
+
+#getting in data from android app:
+def getMedData(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print 'Raw Data: "%s"' % request.body 
+
+
+     #get what feild you need from json object example
+     #custom_decks = data['custom_decks']
+     
+    return HttpResponse("OK")
