@@ -4,7 +4,7 @@ var ctx = demo.getContext('2d'),
             px = 0, opx = 0, speed = 5,
             py = h * .5, opy = py,
             scanBarWidth = 20,
-                bpmList=[57,60,61,60,61,61,59,58,57,57,58,60],
+                bpmList=[57,60,61,60,61,61,59,58,57,57,58,60,60,60,59,58,57,56,55,55,55,53,52,51,50,],
                 hrList=[3,4,5,6,7.1,6,5,4,3,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,7,6,4,2,5,5,5,6,6,6,6,7,7.1,7,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
                 beats=0;
         // for(i=0;i<10;i++){
@@ -16,14 +16,22 @@ var ctx = demo.getContext('2d'),
         ctx.lineWidth = 3;
        
         loop();
-        var i=0,j=0;
+        var i=0,j=0,k=0;
         function loop() {
                 if(j==bpmList.length){
                                 j=0;
                 }
                 var hr = document.getElementById('hr');
-                hr.innerHTML=bpmList[j];
-               
+				hr.innerHTML=bpmList[j]+4;
+                k=bpmList[j]+4;
+				if (k<60){
+					
+					hr.innerHTML=bpmList[j]+4;
+					hr.style.color="red";
+				}else{
+					hr.innerHTML=bpmList[j]+4;
+					hr.style.color="#00bd00"
+				}
                
                 if(i==hrList.length){
                                 i=0;
