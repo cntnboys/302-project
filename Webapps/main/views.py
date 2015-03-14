@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
-#from django.views.decorators.csrf import csrf_exempt
+
 
 
 from main.models import Patient, ECG
@@ -152,7 +152,7 @@ def create_pat(patient_id2, ahcn2, dob2, liveStatus2, doctor2, name2):
      
 
 #getapatient to initiliaze or update:
-#@csrf_exempt
+
 def getPatient(request):
     context = RequestContext(request)
     if request.method == "POST":
@@ -171,9 +171,9 @@ def getPatient(request):
         print(doctor2)
         name2 = str(data['name'])
         print(name2)
-       # create_pat(patient_id2, ahcn2, dob2, liveStatus2, doctor2, name2)
-       # created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
-       # new_patient = Patient.objects.get_or_create(patient_id = "234222", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+      
+        created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+       
         print("hey")
 
 
@@ -185,7 +185,7 @@ def getPatient(request):
   
 
 #getting in data from android app:
-#@csrf_exempt
+
 def getMedData(request):
     if request.method == "POST":
         data = json.loads(request.body)
