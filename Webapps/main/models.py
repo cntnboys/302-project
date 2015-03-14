@@ -30,7 +30,7 @@ class ECG(models.Model):
     systolicbp = models.IntegerField()
     map2 = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True,null=False)
-    session_id = models.IntegerField(unique=True, null=False)
+    session_id = models.IntegerField(null=False)
     
     class Meta:
         db_table = "ecg"

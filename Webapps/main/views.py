@@ -1,6 +1,7 @@
 import calendar
 from datetime import timedelta
 import random
+import django
 
 from django.contrib import messages
 #from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -9,9 +10,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
+<<<<<<< HEAD
 from django.views.decorators.csrf import csrf_exempt
 
 
+=======
+#from django.middleware import csrf
+from django.views.decorators.csrf import csrf_exempt
+>>>>>>> 31ddc4d771f9eb5d32c512a7f3ac4dac36577087
 
 from main.models import Patient, ECG
 from django.contrib.auth.models import User
@@ -52,10 +58,10 @@ def patientDisplay(request, patient_id):
             patient = Patient.objects.get(patient_id = patient_id)
             items.append(patient)
 
-
+            print patient.patient_id
 
             #geting that patients sessions by checking ECG objects
-            #new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
+            new_Ecg = ECG.objects.get_or_create(patient_id = patient.patient_id, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
             sessions = []
             Ecgobj = ECG.objects.get(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -162,11 +168,15 @@ def create_pat(hey1, hey2, hey3, hey4, hey5, hey6):
      
 
 #getapatient to initiliaze or update:
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 31ddc4d771f9eb5d32c512a7f3ac4dac36577087
 @csrf_exempt
 def getPatient(request):
     context = RequestContext(request)
+
     if request.method == "POST":
         data = json.loads(request.body)
         print 'Patient Data: "%s"' % request.body 
@@ -190,8 +200,12 @@ def getPatient(request):
         hey6 = name2
         print(name2)
       
+<<<<<<< HEAD
        # created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
         create_pat(hey1,hey2,hey3,hey4,hey5,hey6)
+=======
+      #created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+>>>>>>> 31ddc4d771f9eb5d32c512a7f3ac4dac36577087
        
 
     #get what feild you need from json object example
@@ -202,7 +216,7 @@ def getPatient(request):
   
 
 #getting in data from android app:
-
+@csrf_exempt
 def getMedData(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -216,7 +230,11 @@ def getMedData(request):
         timestamp1 = data["timestamp"]
         session_id1 = data["session_id"]
         
+<<<<<<< HEAD
        # patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
+=======
+        #patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
+>>>>>>> 31ddc4d771f9eb5d32c512a7f3ac4dac36577087
 
      #get what feild you need from json object example
      #custom_decks = data['custom_decks']
