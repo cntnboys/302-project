@@ -46,7 +46,6 @@ def patientDisplay(request, patient_id):
 
 
 
-
             #geting that patients sessions by checking ECG objects
             #new_Ecg = ECG.objects.get_or_create(patient_id = "1", mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123, deviceType = "meddev")
             sessions = []
@@ -55,6 +54,14 @@ def patientDisplay(request, patient_id):
         
 
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
+
+
+
+#redirect to home page
+def redirecthome(request):
+    redirect(patientPage)
+
+
 
 # Log in Page function is a check for authenticated author log in
 # If author inputs incorrect or non exisiting things in the fields,
@@ -134,30 +141,47 @@ def searchPage(request):
                     items.append(a)
 
     return render(request, 'search.html',{'items':items})
-      
+ 
+
+
+
+def create_pat(patient_id2, ahcn2, dob2, liveStatus2, doctor2, name2):
+    created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+    
+
+     
 
 #getapatient to initiliaze or update:
 #@csrf_exempt
 def getPatient(request):
+    context = RequestContext(request)
     if request.method == "POST":
         data = json.loads(request.body)
         print 'Patient Data: "%s"' % request.body 
 
-        patient_id = data['patient_id']
-        ahcn = data['ahcn']
-        dob = data['dob']
-        liveStatus = data['liveStatus']
-        doctor = data['doctor']
-        name = data['name']
-
-        new_patient = Patient.objects.get_or_create(patient_id = patient_id, ahcn= ahcn, dob= dob, liveStatus= liveStatus, doctor= doctor, name=name)
-        
+        patient_id2 = str(data['patient_id'])
+        print(patient_id2)
+        ahcn2 = str(data['ahcn'])
+        print(ahcn2)
+        dob2 = str(data['dob'])
+        print(dob2)
+        liveStatus2 = str(data['liveStatus'])
+        print(liveStatus2)
+        doctor2 = str(data['doctor'])
+        print(doctor2)
+        name2 = str(data['name'])
+        print(name2)
+       # create_pat(patient_id2, ahcn2, dob2, liveStatus2, doctor2, name2)
+       # created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+       # new_patient = Patient.objects.get_or_create(patient_id = "234222", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+        print("hey")
 
 
     #get what feild you need from json object example
     #custom_decks = data['custom_decks']
     
     return HttpResponse("OK")
+  
   
 
 #getting in data from android app:
@@ -175,7 +199,7 @@ def getMedData(request):
         timestamp1 = data["timestamp"]
         session_id1 = data["session_id"]
         
-        patient_data = ECG.objects.get_or_create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
+        patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
 
      #get what feild you need from json object example
      #custom_decks = data['custom_decks']
