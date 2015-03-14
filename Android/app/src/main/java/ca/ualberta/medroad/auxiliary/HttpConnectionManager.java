@@ -20,42 +20,48 @@ import ca.ualberta.medroad.view.MainActivity;
  */
 public class HttpConnectionManager
 {
-	public static final String            DEFAULT_SERVER_URL = "foo";
-	protected           URL               serverURL          = null;
-	protected           HttpURLConnection con                = null;
-	protected           OutputStream      outputStream       = null;
-	protected           boolean           good               = false;
+	public static final String            DEFAULT_PATIENT_URL = "foo";
+	public static final String            DEFAULT_DATA_URL    = "bar";
+	protected           URL               patientURL          = null;
+	protected           URL               dataURL             = null;
+	protected           HttpURLConnection con                 = null;
+	protected           OutputStream      dataOutputStream    = null;
+	protected           boolean           good                = false;
 
 	public HttpConnectionManager()
 	{
 		try
 		{
-			serverURL = new URL( DEFAULT_SERVER_URL );
+			patientURL = new URL( DEFAULT_PATIENT_URL );
+			dataURL = new URL( DEFAULT_DATA_URL );
 		}
 		catch ( MalformedURLException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "Server URL could not be created from the default URL: " + e.getMessage() + "\nDefault URL = " + DEFAULT_SERVER_URL );
+				   "Server URL could not be created from the default URL: " + e.getMessage() + "\nDefault URL = " + DEFAULT_PATIENT_URL );
+			Log.e( MainActivity.LOG_TAG,
+				   "Server URL could not be created from the default URL: " + e.getMessage() + "\nDefault URL = " + DEFAULT_PATIENT_URL );
 		}
 	}
 
-	public HttpConnectionManager( String url )
+	public HttpConnectionManager( String patientUrl, String dataUrl )
 			throws MalformedURLException
 	{
-		serverURL = new URL( url );
+		patientURL = new URL( patientUrl );
+		dataURL = new URL( dataUrl );
 	}
 
-	public void open()
+	public void openDataStream()
 	{
 		try
 		{
-			con = (HttpURLConnection) serverURL.openConnection();
+			con = (HttpURLConnection) dataURL.openConnection();
 
 			con.setDoOutput( true );
 			con.setChunkedStreamingMode( 0 );
 			// con.setFixedLengthStreamingMode(  ); // Set if content-length is known.
 
-			outputStream = new BufferedOutputStream( con.getOutputStream() );
+			dataOutputStream = new BufferedOutputStream( con.getOutputStream() );
 
 			good = true;
 		}
@@ -66,23 +72,22 @@ public class HttpConnectionManager
 		}
 	}
 
-	public void writePatientRow(PatientRow row)
+	public void writePatientRow( PatientRow row )
+	{
+
+	}
+
+	public void writeDataRow( DataRow row )
 			throws IOException, IllegalStateException
 	{
 		if ( good )
 		{
-			// TODO
-			outputStream.write( new byte[ 0 ] );
+			dataOutputStream.write( DataRow.directToByte( row ) );
 		}
 		else
 		{
-			throw new IllegalStateException();
+			throw new IllegalStateException(  );
 		}
-	}
-
-	public void writeDataRow(DataRow row)
-	{
-
 	}
 
 	public boolean isGood()
@@ -90,7 +95,7 @@ public class HttpConnectionManager
 		return good;
 	}
 
-	public void close()
+	public void closeDataStream()
 	{
 		good = false;
 		con.disconnect();

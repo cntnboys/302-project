@@ -34,7 +34,7 @@ public class DataRow
 		this.sessionID = sessionID;
 	}
 
-	public byte[] directToByte( DataRow row )
+	public static byte[] directToByte( DataRow row )
 	{
 		Gson gson = new Gson();
 		String jsonPayload = gson.toJson( row );
