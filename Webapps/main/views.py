@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -19,6 +20,13 @@ from django.contrib.auth import logout as auth_logout
 import json
 
 
+
+hey1 = None
+hey2 = None
+hey3 = None
+hey4 = None
+hey5 = None
+hey6 = None
 
 #grab patient information
 def patientPage(request):
@@ -145,14 +153,18 @@ def searchPage(request):
 
 
 
-def create_pat(patient_id2, ahcn2, dob2, liveStatus2, doctor2, name2):
-    created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+def create_pat(hey1, hey2, hey3, hey4, hey5, hey6):
+     print("patient created")
+     
+     created = Patient.objects.get_or_create(patient_id = hey1, ahcn= hey2, dob= hey3, liveStatus= hey4, doctor= hey5, name=hey6)
     
 
      
 
 #getapatient to initiliaze or update:
 
+
+@csrf_exempt
 def getPatient(request):
     context = RequestContext(request)
     if request.method == "POST":
@@ -160,22 +172,27 @@ def getPatient(request):
         print 'Patient Data: "%s"' % request.body 
 
         patient_id2 = str(data['patient_id'])
+        hey1 = patient_id2
         print(patient_id2)
         ahcn2 = str(data['ahcn'])
+        hey2 = ahcn2
         print(ahcn2)
         dob2 = str(data['dob'])
+        hey3 = dob2
         print(dob2)
         liveStatus2 = str(data['liveStatus'])
+        hey4 = liveStatus2
         print(liveStatus2)
         doctor2 = str(data['doctor'])
+        hey5 = doctor2
         print(doctor2)
         name2 = str(data['name'])
+        hey6 = name2
         print(name2)
       
-        created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+       # created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
+        create_pat(hey1,hey2,hey3,hey4,hey5,hey6)
        
-        print("hey")
-
 
     #get what feild you need from json object example
     #custom_decks = data['custom_decks']
@@ -199,7 +216,7 @@ def getMedData(request):
         timestamp1 = data["timestamp"]
         session_id1 = data["session_id"]
         
-        patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
+       # patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
 
      #get what feild you need from json object example
      #custom_decks = data['custom_decks']
