@@ -10,7 +10,7 @@ class Patient(models.Model):
     patient_id = models.IntegerField(primary_key = True, null=False)
     ahcn = models.CharField(max_length=9, null=True, unique=True)
     dob = models.DateField()
-    liveStatus = models.BooleanField(default=False)
+    liveStatus = models.CharField(max_length=3, null=True)
     doctor = models.CharField(max_length=5, null = True)
     name = models.CharField(max_length=10, null = True)
 
