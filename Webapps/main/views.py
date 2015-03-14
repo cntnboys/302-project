@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext, loader
 from django.core.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 
 
 from main.models import Patient, ECG
@@ -137,7 +137,7 @@ def searchPage(request):
       
 
 #getapatient to initiliaze or update:
-@csrf_exempt
+#@csrf_exempt
 def getPatient(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -161,7 +161,7 @@ def getPatient(request):
   
 
 #getting in data from android app:
-@csrf_exempt
+#@csrf_exempt
 def getMedData(request):
     if request.method == "POST":
         data = json.loads(request.body)
