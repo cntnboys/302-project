@@ -22,12 +22,12 @@ import json
 
 
 
-hey1 = None
-hey2 = None
-hey3 = None
-hey4 = None
-hey5 = None
-hey6 = None
+idpat = None
+ahcn = None
+dob = None
+liveStatus = None
+doctor = None
+name = None
 
 #grab patient information
 def patientPage(request):
@@ -153,12 +153,18 @@ def searchPage(request):
  
 
 
-
-def create_pat(hey1, hey2, hey3, hey4, hey5, hey6):
+#create patient or update patient 
+def create_pat(idpat, ahcn, dob, liveStatus, doctor, name):
      print("patient created")
      
-     created = Patient.objects.get_or_create(patient_id = hey1, ahcn= hey2, dob= hey3, liveStatus= hey4, doctor= hey5, name=hey6)
-    
+     if liveStatus == "n":
+
+         Patient.objects.filter(patient_id = idpat).update(liveStatus="n")
+
+     else:
+        
+         created = Patient.objects.get_or_create(patient_id = idpat, ahcn= ahcn, dob= dob, liveStatus= liveStatus, doctor= doctor, name= name)
+     
 
      
 
@@ -173,27 +179,44 @@ def getPatient(request):
         print 'Patient Data: "%s"' % request.body 
 
         patient_id2 = str(data['patient_id'])
-        hey1 = patient_id2
+
+        idpat = patient_id2
+
         print(patient_id2)
+
         ahcn2 = str(data['ahcn'])
-        hey2 = ahcn2
+
+        ahcn = ahcn2
+
         print(ahcn2)
+
         dob2 = str(data['dob'])
-        hey3 = dob2
+
+        dob = dob2
+
         print(dob2)
+
         liveStatus2 = str(data['liveStatus'])
-        hey4 = liveStatus2
+
+        liveStatus = liveStatus2
+
         print(liveStatus2)
+
         doctor2 = str(data['doctor'])
-        hey5 = doctor2
+
+        doctor = doctor2
+
         print(doctor2)
+
         name2 = str(data['name'])
-        hey6 = name2
+
+        name = name2
+
         print(name2)
       
 
        # created = Patient.objects.get_or_create(patient_id = patient_id2, ahcn= ahcn, dob= dob2, liveStatus= liveStatus2, doctor= doctor2, name=name2)
-        create_pat(hey1,hey2,hey3,hey4,hey5,hey6)
+        create_pat(idpat,ahcn,dob,liveStatus,doctor,name)
 
        
 
