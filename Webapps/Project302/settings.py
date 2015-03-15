@@ -112,28 +112,28 @@ STATIC_URL = '/static/'
 ON_HEROKU = os.environ.get('ON_HEROKU')
 HEROKU_SERVER = os.environ.get('HEROKU_SERVER')
 
-#DATABASES = {
-#   'default': {
-#   'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#   'NAME': 'dajjoh8e7rs5id',
-#   'HOST': 'ec2-107-20-177-12.compute-1.amazonaws.com',
-#   'USER': 'ybsohsxdsrrhde',
-#    'PASSWORD' : 'j1WWdzoSyUF9bfBk-uSeEL1liy',
-#    'PORT' : '5432',
-
-#}
-#}
-
 DATABASES = {
    'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-       'USER': '',
-       'PASSWORD': '',
-       'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-      'PORT': '',
-       }
-   }
+   'ENGINE': 'django.db.backends.postgresql_psycopg2',
+   'NAME': 'dajjoh8e7rs5id',
+   'HOST': 'ec2-107-20-177-12.compute-1.amazonaws.com',
+   'USER': 'ybsohsxdsrrhde',
+    'PASSWORD' : 'j1WWdzoSyUF9bfBk-uSeEL1liy',
+    'PORT' : '5432',
+
+}
+}
+
+#DATABASES = {
+#  'default': {
+#      'ENGINE': 'django.db.backends.sqlite3',
+#      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#       'USER': '',
+#       'PASSWORD': '',
+#      'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#     'PORT': '',
+#      }
+#  }
 # else:
 #     DATABASES = {
 #         'default': {

@@ -40,7 +40,7 @@
 	    });
 	});
 	</script>
-
+    <!--
 	<script type="text/javascript">
         //httpGet("hello");
 	function httpGet(theUrl) {
@@ -52,7 +52,7 @@
 
 	
 	</script>
-
+-->
 
 
 	
@@ -105,17 +105,17 @@
 						<td style="padding:0 15px 0 15px;">{{ link.name }} </td>
 						<td style="padding:0 15px 0 15px;">{{ link.dob }} </td>
 						<td style="padding:0 15px 0 15px;">{{ link.ahcn }} </td>
-						<td style="padding:0 15px 0 15px;">{{ link.patient_id }}  </td>
+						<td style="padding:0 15px 0 15px;" id ="pId">{{ link.patient_id }}  </td>
 
 
 
-						{% if link.liveStatus == True %}
+						{% if link.liveStatus == "True" %}
 
 						<td style="padding:0 15px 0 15px;">Active  </td>
 
 						{% endif %}
 
-						{% if link.liveStatus == False %}
+						{% if link.liveStatus == "False" %}
 	
 						<td style="padding:0 15px 0 15px;"> Inactive  </td>
 
@@ -212,4 +212,5 @@
 	</body>
 	<!-- script taken from http://jsfiddle.net/AbdiasSoftware/tFn66/ -->
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/panelScript.js"></script>
+
 </html>

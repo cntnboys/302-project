@@ -71,7 +71,7 @@ def patientDisplay(request, patient_id):
 
 
             #geting that patients sessions by checking ECG objects
-            new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 40, pulse = 40, oxygen = 40, diastolicbp= 40, systolicbp = 40, map2 = 40, session_id= 123)
+            #new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 40, pulse = 40, oxygen = 40, diastolicbp= 40, systolicbp = 40, map2 = 40, session_id= 123)
             sessions = []
             Ecgobj = ECG.objects.filter(patient_id = patient_id)
             sessions.append(Ecgobj)
