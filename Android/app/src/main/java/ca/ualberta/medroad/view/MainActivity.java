@@ -132,27 +132,6 @@ public class MainActivity
 
 		checkBtStatus();
 		connectBtDevices();
-
-		PatientRow patientRow = new PatientRow( 6001,
-												"6001",
-												Calendar.getInstance()
-														.getTime(),
-												false,
-												"DrFoo",
-												"John Doe" );
-
-		DataRow dataRow = new DataRow( 6000,
-									   75,
-									   75,
-									   75,
-									   75,
-									   75,
-									   75,
-									   Calendar.getInstance().getTime(),
-									   6000 );
-
-		//HttpRequestManager.sendPatient( patientRow );
-		HttpRequestManager.sendData( dataRow );
 	}
 
 	@Override

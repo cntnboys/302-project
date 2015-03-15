@@ -17,6 +17,7 @@ public class DataRow
 			"yyyy-MM-dd HH:mm:ss",
 			Locale.getDefault() );
 
+	/*  */
 	public String patient_id;
 	public String mv;
 	public String pulse;
@@ -43,13 +44,12 @@ public class DataRow
 	public static byte[] directToByte( DataRow row )
 	{
 		Gson gson = new Gson();
-		String jsonPayload = gson.toJson( row );
-		return Encrypter.encryptToByteArray( jsonPayload );
+		return Encrypter.encryptToByteArray( gson.toJson( row ) );
 	}
 
 	public static String getJSON( DataRow row )
 	{
 		Gson gson = new Gson();
-		return gson.toJson( row );
+		return Encrypter.encryptToString( gson.toJson( row ) );
 	}
 }

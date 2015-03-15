@@ -60,7 +60,7 @@ public class PatientRow
 	public static String getJSON(PatientRow row)
 	{
 		Gson gson = new Gson();
-		return gson.toJson( row );
+		return Encrypter.encryptToString( gson.toJson( row ) );
 	}
 
 	public static byte[] directToByte( PatientRow row )
