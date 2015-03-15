@@ -2,8 +2,11 @@ package ca.ualberta.medroad.model.raw_table_rows;
 
 import com.google.gson.Gson;
 
+import org.apache.http.NameValuePair;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ca.ualberta.medroad.auxiliary.Encrypter;
@@ -30,22 +33,34 @@ public class PatientRow
 		this.patient_id = String.valueOf( id );
 		this.ahcn = ahcn;
 		this.dob = sdf.format( dob );
-		this.liveStatus = String.valueOf( live );
+		//this.liveStatus = String.valueOf( live );
 		this.doctor = physician;
 		this.name = name;
 
-		liveStatus = liveStatus.replace( 't', 'T' );
-		liveStatus = liveStatus.replace( 'f', 'F' );
+		if ( live )
+		{
+			liveStatus = "y";
+		}
+		else
+		{
+			liveStatus = "n";
+		}
 	}
 
-	public PatientRow( Patient patient )
+	public PatientRow( Patient patient, boolean live )
 	{
 		this( patient.getId(),
 			  patient.getAhcn(),
 			  patient.getDob().getTime(),
-			  true,
+			  live,
 			  patient.getPhysician(),
 			  patient.getName() );
+	}
+
+	public static String getJSON(PatientRow row)
+	{
+		Gson gson = new Gson();
+		return gson.toJson( row );
 	}
 
 	public static byte[] directToByte( PatientRow row )

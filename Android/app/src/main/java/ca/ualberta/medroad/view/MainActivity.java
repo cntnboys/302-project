@@ -26,7 +26,6 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.Set;
@@ -42,6 +41,7 @@ import ca.ualberta.medroad.auxiliary.AppState;
 import ca.ualberta.medroad.auxiliary.EmotionEcgHandler;
 import ca.ualberta.medroad.auxiliary.ForaBpGlucoseHandler;
 import ca.ualberta.medroad.auxiliary.HttpConnectionManager;
+import ca.ualberta.medroad.auxiliary.HttpRequestManager;
 import ca.ualberta.medroad.auxiliary.NoninOxometerHandler;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
@@ -120,8 +120,6 @@ public class MainActivity
 		view.bpStatus.setLoading();
 		view.o2Status.setLoading();
 
-		connectionManager.openDataStream();
-
 		getPairedBtDevices();
 
 		//mockDataGenerator.start();
@@ -134,6 +132,27 @@ public class MainActivity
 
 		checkBtStatus();
 		connectBtDevices();
+
+		PatientRow patientRow = new PatientRow( 6001,
+												"6001",
+												Calendar.getInstance()
+														.getTime(),
+												false,
+												"DrFoo",
+												"John Doe" );
+
+		DataRow dataRow = new DataRow( 6000,
+									   75,
+									   75,
+									   75,
+									   75,
+									   75,
+									   75,
+									   Calendar.getInstance().getTime(),
+									   6000 );
+
+		//HttpRequestManager.sendPatient( patientRow );
+		HttpRequestManager.sendData( dataRow );
 	}
 
 	@Override
@@ -146,10 +165,8 @@ public class MainActivity
 	protected void onStop()
 	{
 		super.onStop();
-
-		connectionManager.closeDataStream();
-
 		mockDataGenerator.stop();
+
 		idleBtDevices();
 	}
 
@@ -554,33 +571,7 @@ public class MainActivity
 	@Override
 	public void onDataStreamConnected()
 	{
-		DataRow row = new DataRow( 2000,
-								   50,
-								   50,
-								   50,
-								   50,
-								   50,
-								   50,
-								   Calendar.getInstance().getTime(),
-								   9001 );
 
-		PatientRow patientRow = new PatientRow( 5005,
-												"5005",
-												Calendar.getInstance()
-														.getTime(),
-												true,
-												"DrFoo",
-												"John Doe" );
-
-		try
-		{
-			//connectionManager.writeDataRow( row );
-			connectionManager.writePatientRow( patientRow );
-		}
-		catch ( IOException e )
-		{
-			Log.e( LOG_TAG, "Failed to send a data row over the network: " );
-		}
 	}
 
 	protected class ViewHolder

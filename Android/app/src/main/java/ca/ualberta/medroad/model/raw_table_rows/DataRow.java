@@ -33,6 +33,7 @@ public class DataRow
 		this.mv = String.valueOf( mv );
 		this.pulse = String.valueOf( pulse );
 		this.oxygen = String.valueOf( o2 );
+		this.diastolicbp = String.valueOf( dbp );
 		this.systolicbp = String.valueOf( sbp );
 		this.map2 = String.valueOf( bpmap );
 		this.timestamp = sdf.format( timestamp );
@@ -44,5 +45,11 @@ public class DataRow
 		Gson gson = new Gson();
 		String jsonPayload = gson.toJson( row );
 		return Encrypter.encryptToByteArray( jsonPayload );
+	}
+
+	public static String getJSON( DataRow row )
+	{
+		Gson gson = new Gson();
+		return gson.toJson( row );
 	}
 }

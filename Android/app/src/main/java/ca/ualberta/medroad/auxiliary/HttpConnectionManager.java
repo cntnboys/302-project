@@ -19,6 +19,8 @@ import ca.ualberta.medroad.view.MainActivity;
  * Created by Yuey on 2015-03-12.
  * <p/>
  * A wrapper for an HttpURLConnection. The class manages opening, closing and writing to the con.
+ * NB: This class does not work with our current server implementation. Refer to HttpRequestManager instead.
+ * @see ca.ualberta.medroad.auxiliary.HttpRequestManager
  */
 public class HttpConnectionManager
 {
@@ -48,9 +50,7 @@ public class HttpConnectionManager
 		catch ( MalformedURLException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "Server URL could not be created from the default URL: " + e.getMessage() + "\nDefault URL = " + DEFAULT_PATIENT_URL );
-			Log.e( MainActivity.LOG_TAG,
-				   "Server URL could not be created from the default URL: " + e.getMessage() + "\nDefault URL = " + DEFAULT_PATIENT_URL );
+				   "Server URL could not be created from the default URL: " + e.getMessage() );
 		}
 	}
 
@@ -149,9 +149,11 @@ public class HttpConnectionManager
 	private void formatConnectionRequest( HttpsURLConnection dataConnection )
 	{
 		dataConnection.setDoOutput( true );
-		dataConnection.setChunkedStreamingMode( 0 );
+		//dataConnection.setChunkedStreamingMode( 0 );
+		dataConnection.setRequestProperty( "Host", HOST );
 		dataConnection.setRequestProperty( "Accept", "*/*" );
 		dataConnection.setRequestProperty( "Content-Type", "application/json" );
+		dataConnection.setRequestProperty( "Cache-Control", "no-cache" );
 
 		Log.d( MainActivity.LOG_TAG, "Connection formatted with headers: " );
 		for ( String prop : dataConnection.getRequestProperties().keySet() )
