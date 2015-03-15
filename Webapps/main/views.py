@@ -82,7 +82,7 @@ def getPatientdata(request):
     ecgobject = []
     Ecgobj = ECG.objects.filter().order_by('timestamp')
     ecgobject.append(Ecgobj)
-    return HttpResponse("OK")
+    return HttpResponse(json.dumps(ecgobject), content_type = "application/json")
 
 
 #redirect to home page
