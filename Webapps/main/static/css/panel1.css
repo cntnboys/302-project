@@ -19,6 +19,36 @@ ul {
     -moz-column-gap: 40px; /* Firefox */
 	coloumn-gap:50px;
 }
+div .bloodPressure{
+	background:black; 
+	height: 100%; 
+	
+}
+div .bloodPressure .oximeter{
+	display:inline;
+	
+}
+div .bloodPressure .oximeter #oxim{
+	text-align: right;
+	color:orange;
+}
+div .bloodPressure h3, p{
+	display:inline;
+}
+div .bloodPressure h3{
+	font-size:1.5em;
+	color:#E0E0E0;
+}
+div .bloodPressure p {
+	display:inline;
+	font-size:4em;
+}
+div .bloodPressure #dia{
+	color:#46b1f9;
+}
+div .bloodPressure #sys{
+	color:#ff00ff;
+}
 #panel{
 	float:left;
 	width:13%;
