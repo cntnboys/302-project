@@ -70,7 +70,7 @@ def patientDisplay(request, patient_id):
 
 
             #geting that patients sessions by checking ECG objects
-            #            new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
+            # new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
             sessions = []
             Ecgobj = ECG.objects.filter(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -79,8 +79,8 @@ def patientDisplay(request, patient_id):
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
 def getPatientdata(request, patient_id):
+    print("hello")
     if request.method == "GET":
-        context = RequestContext(request)
         if request.user.is_authenticated():
             ecgobject = []
             Ecgobj = ECG.objects.filter(patient_id = patient_id).order_by('timestamp')

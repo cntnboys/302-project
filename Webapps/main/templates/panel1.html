@@ -7,7 +7,7 @@
 
 
 
-	<link type="text/css" rel="stylesheet" href="../static/css/panel1.css"/>
+	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/css/panel1.css"/>
 		<!-- Latest compiled and minified CSS -->
 
 	
@@ -42,13 +42,54 @@
 	</script>
 
 	<script type="text/javascript">
+        httpGet("hello");
 	function httpGet(theUrl) {
-		var xmlHttp = null;
+        $.ajax({
+               //The URL to process the request
+               'url' : 'http://127.0.0.1:8000/main/sendPatientdata/{{items.0.patient_id}}',
+               //The type of request, also known as the "method" in HTML forms
+               //Can be 'GET' or 'POST'
+               'type' : 'GET',
+               //Any post-data/get-data parameters
+               //This is optional
+               //'data' : {
+               //'patient_id' : 'value',
+               //},
+               //The response from the server
+               'success' : function(data) {
+               //You can use any jQuery/JavaScript here!!!
+               if (data == "success") {
+               alert('request sent!');
+               }
+               }
+               });
+        //var xhr = new XMLHttpRequest();
+        //xhr.open('GET', 'http://www.slashdot.org/');
+        // This is a call back
+       // xhr.onreadystatechange = function(){
+            // readystate tells you how the transfer is going
+            // 4 is done
+         //   if( xhr.readyState === 4 ){
+                // This is the HTTP Code
+           //     if(xhr.status === 200){
+               //     xhr.send(null)
+             //       alert(xhr.responseText);
+                //} else {
+                //    alert("There was an error " + xhr.status);
+                //}
+            //}
+        //};
+        
+        // finally send it
+        //xhr.send(null);
+		//var xmlHttp = null;
 
-		xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", theUrl, false);
-		xmlHttp.send(null);
-		return xmlHttp.responseText;
+		//xmlHttp = new XMLHttpRequest();
+        //xmlHttp.open("GET", "{{items.0.patient_id}}", false);
+		//xmlHttp.send(null);
+       // window.alert("hello");
+		//return xmlHttp.responseText;
+        
 	}
 	callLoop();
 	function callLoop() {
@@ -215,5 +256,5 @@
 		
 	</body>
 	<!-- script taken from http://jsfiddle.net/AbdiasSoftware/tFn66/ -->
-	<script type="text/javascript" src="../static/js/panelScript.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/panelScript.js"></script>
 </html>
