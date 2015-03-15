@@ -22,7 +22,7 @@ class Patient(models.Model):
         return "patient_id: " + str(self.patient_id) + " ahcn: " + str(self.ahcn) + " dob: " + str(self.dob) + " liveStatus: " + str(self.liveStatus) + " doctor: " + str(self.doctor) + " name: " + str(self.name)
 
 class ECG(models.Model):
-    patient_id = models.IntegerField(primary_key = True, null=False)
+    patient_id = models.IntegerField(null=False)
     mv = models.IntegerField()
     pulse = models.IntegerField()
     oxygen = models.IntegerField()
