@@ -37,6 +37,6 @@ class ECG(models.Model):
         verbose_name = "ECG"
 
     def __str__(self):
-        return "patient_id: " + str(self.patient_id) + " mv: " + str(self.mv) + " pulse: " + str(self.pulse) + " oxygen: " + str(self.oxygen) + " diastolicbp: " + str(self.diastolicbp) + "systolicbp: " + str(self.systolicbp) + "map: " + str(self.map) + "timestamp: " + str(self.timestamp) + "session_id: " + str(self.session_id) + "deviceType: " + str(self.deviceType)
+        return "patient_id: " + str(self.patient_id) + " mv: " + str(self.mv) + " pulse: " + str(self.pulse) + " oxygen: " + str(self.oxygen) + " diastolicbp: " + str(self.diastolicbp) + "systolicbp: " + str(self.systolicbp) + "map: " + str(self.map2) + "timestamp: " + str(self.timestamp) + "session_id: " + str(self.session_id) 
 
 
