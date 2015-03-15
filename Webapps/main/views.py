@@ -3,6 +3,7 @@ from datetime import timedelta
 import random
 import django
 
+
 from django.contrib import messages
 #from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Count
@@ -63,13 +64,13 @@ def patientDisplay(request, patient_id):
         context = RequestContext(request)
         if request.user.is_authenticated():
             items = []
-            patient = Patient.objects.get(patient_id = patient_id)
+            patient = Patient.objects.filter(patient_id = patient_id)
             items.append(patient)
 
             print patient.patient_id
 
             #geting that patients sessions by checking ECG objects
-            new_Ecg = ECG.objects.get_or_create(patient_id = patient.patient_id, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
+            #new_Ecg = ECG.objects.get_or_create(patient_id = patient.patient_id, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
             sessions = []
             Ecgobj = ECG.objects.get(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -77,6 +78,14 @@ def patientDisplay(request, patient_id):
 
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
+def getPatientdata(request, patient_id):
+    if request.method == "GET":
+        context = RequestContext(request)
+        if request.user.is_authenticated():
+            ecgobject = []
+            Ecgobj = ECG.objects.filter(patient_id = patient_id).order_by('timestamp')
+            ecgobject.append(Ecgobj)
+    return HttpResponse(json.dumps(ecgobject), content_type = "application/json")
 
 
 #redirect to home page
