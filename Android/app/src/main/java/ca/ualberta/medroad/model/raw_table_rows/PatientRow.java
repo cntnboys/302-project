@@ -2,7 +2,9 @@ package ca.ualberta.medroad.model.raw_table_rows;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import ca.ualberta.medroad.auxiliary.Encrypter;
 import ca.ualberta.medroad.model.Patient;
@@ -12,18 +14,22 @@ import ca.ualberta.medroad.model.Patient;
  */
 public class PatientRow
 {
+	public static final SimpleDateFormat sdf = new SimpleDateFormat(
+			"yyyy-MM-dd",
+			Locale.getDefault() );
+
 	public String  id;
 	public String  ahcn;
-	public Date    dob;
+	public String  dob;
 	public boolean live;
 	public String  physician;
 	public String  name;
 
-	public PatientRow( String id, String ahcn, Date dob, String physician, String name )
+	public PatientRow( String id, String ahcn, Date dob, boolean live, String physician, String name )
 	{
 		this.id = id;
 		this.ahcn = ahcn;
-		this.dob = dob;
+		this.dob = sdf.format( dob );
 		this.live = true;
 		this.physician = physician;
 		this.name = name;
@@ -34,6 +40,7 @@ public class PatientRow
 		this( patient.getId(),
 			  patient.getAhcn(),
 			  patient.getDob().getTime(),
+			  true,
 			  patient.getPhysician(),
 			  patient.getName() );
 	}

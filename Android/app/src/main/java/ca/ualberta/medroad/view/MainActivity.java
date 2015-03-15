@@ -26,6 +26,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
@@ -39,7 +41,9 @@ import ca.ualberta.medroad.R;
 import ca.ualberta.medroad.auxiliary.AppState;
 import ca.ualberta.medroad.auxiliary.EmotionEcgHandler;
 import ca.ualberta.medroad.auxiliary.ForaBpGlucoseHandler;
+import ca.ualberta.medroad.auxiliary.HttpConnectionManager;
 import ca.ualberta.medroad.auxiliary.NoninOxometerHandler;
+import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
 import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
 import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
@@ -50,36 +54,61 @@ import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
  */
 public class MainActivity
 		extends Activity
-		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks
+		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks, HttpConnectionManager.ConManagerCallbacks
 {
-	public static final String               LOG_TAG                     = "MedROAD";
-	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 100;
-	public static final int                  REQUEST_ENABLE_BT           = 1;
-	public static final String               ECG_BT_NAME                 = "AATOS-987";
-	public static       int                  ECG_SIGNAL_RESOLUTION       = 0; // note that signal resolution is actually /1000
-	public static       int                  ECG_HIGH_PASS_FILTER        = 0;
-	public static       int                  ECG_SAMPLING_FREQUENCY      = 1;
-	public static final String               BP_BT_NAME                  = "TaiDoc-BTM";
-	public static final String               O2_BT_NAME                  = "Nonin_Medical_Inc._802706";
-	protected           ViewHolder           view                        = null;
-	protected           MainMenuAdapter      menuAdapter                 = null;
-	protected           FragmentManager      fragmentManager             = null;
-	protected           BluetoothManager     bluetoothManager            = null;
-	protected           BluetoothAdapter     mBluetoothAdapter           = null;
-	protected           BluetoothDevice      rawEcgDevice                = null;
-	protected           EmotionEcg           emotionEcg                  = null;
-	protected           EmotionEcgHandler    ecgHandler                  = null;
-	protected           BluetoothDevice      rawGlucoseBpDevice          = null;
-	protected           ForaBpGlucose        foraBpGlucose               = null;
-	protected           ForaBpGlucoseHandler bpGlucoseHandler            = null;
-	protected           BluetoothDevice      rawNoninOxometer            = null;
-	protected           NoninOximeter        noninOximeter               = null;
-	protected           NoninOxometerHandler oxometerHandler             = null;
-	@SuppressWarnings( "UnusedDeclaration" )
-	protected           MockDataGenerator    mockDataGenerator           = new MockDataGenerator();
-	private             long                 ecgGraphCounter             = 0;
-	private             long                 bpGraphCounter              = 0;
-	private             long                 o2GraphCounter              = 0;
+	public static final String                LOG_TAG                     = "MedROAD";
+	public static final int                   GRAPH_HORIZONTAL_RESOLUTION = 100;
+	public static final int                   REQUEST_ENABLE_BT           = 1;
+	public static final String                ECG_BT_NAME                 = "AATOS-987";
+	public static       int                   ECG_SIGNAL_RESOLUTION       = 0; // note that signal resolution is actually /1000
+	public static       int                   ECG_HIGH_PASS_FILTER        = 0;
+	public static       int                   ECG_SAMPLING_FREQUENCY      = 1;
+	public static final String                BP_BT_NAME                  = "TaiDoc-BTM";
+	public static final String                O2_BT_NAME                  = "Nonin_Medical_Inc._802706";
+	protected           ViewHolder            view                        = null;
+	protected           MainMenuAdapter       menuAdapter                 = null;
+	protected           FragmentManager       fragmentManager             = null;
+	protected           BluetoothManager      bluetoothManager            = null;
+	protected           BluetoothAdapter      mBluetoothAdapter           = null;
+	protected           BluetoothDevice       rawEcgDevice                = null;
+	protected           EmotionEcg            emotionEcg                  = null;
+	protected           EmotionEcgHandler     ecgHandler                  = null;
+	protected           BluetoothDevice       rawGlucoseBpDevice          = null;
+	protected           ForaBpGlucose         foraBpGlucose               = null;
+	protected           ForaBpGlucoseHandler  bpGlucoseHandler            = null;
+	protected           BluetoothDevice       rawNoninOxometer            = null;
+	protected           NoninOximeter         noninOximeter               = null;
+	protected           NoninOxometerHandler  oxometerHandler             = null;
+	@SuppressWarnings("UnusedDeclaration")
+	protected           MockDataGenerator     mockDataGenerator           = new MockDataGenerator();
+	protected           HttpConnectionManager connectionManager           = new HttpConnectionManager(
+			this );
+	private             long                  ecgGraphCounter             = 0;
+	private             long                  bpGraphCounter              = 0;
+	private             long                  o2GraphCounter              = 0;
+
+	@Override
+	public void onDataStreamConnected()
+	{
+		DataRow row = new DataRow( "TEST_1",
+								   50,
+								   50,
+								   50,
+								   50,
+								   50,
+								   50,
+								   Calendar.getInstance().getTime(),
+								   "TEST_SESSION" );
+		try
+		{
+			connectionManager.writeDataRow( row );
+			Log.d( LOG_TAG, "Row sent." );
+		}
+		catch ( IOException e )
+		{
+			Log.e( LOG_TAG, "Failed to send a data row over the network: " );
+		}
+	}
 
 	protected void onCreate( Bundle savedInstanceState )
 	{
@@ -111,6 +140,8 @@ public class MainActivity
 		view.ecgStatus.setLoading();
 		view.bpStatus.setLoading();
 		view.o2Status.setLoading();
+
+		connectionManager.openDataStream();
 
 		getPairedBtDevices();
 
@@ -207,11 +238,13 @@ public class MainActivity
 			if ( emotionEcg == null && device.getName().equals( ECG_BT_NAME ) )
 			{
 				rawEcgDevice = device;
-				emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
+				emotionEcg = new EmotionEcg( rawEcgDevice,
+											 new Handler( ecgHandler ) );
 				continue;
 			}
 
-			if ( foraBpGlucose == null && device.getName().equals( BP_BT_NAME ) )
+			if ( foraBpGlucose == null && device.getName()
+												.equals( BP_BT_NAME ) )
 			{
 				rawGlucoseBpDevice = device;
 				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
@@ -219,7 +252,8 @@ public class MainActivity
 				continue;
 			}
 
-			if ( noninOximeter == null && device.getName().equals( O2_BT_NAME ) )
+			if ( noninOximeter == null && device.getName()
+												.equals( O2_BT_NAME ) )
 			{
 				rawNoninOxometer = device;
 				noninOximeter = new NoninOximeter( rawNoninOxometer,
@@ -309,7 +343,8 @@ public class MainActivity
 		case -1:
 			// Placeholder
 			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+						   .replace( R.id.main_frame,
+									 PlaceholderFragment.newInstance() )
 						   .commit();
 			break;
 
@@ -317,7 +352,8 @@ public class MainActivity
 			fragmentManager.beginTransaction()
 						   .replace( R.id.main_frame,
 									 PatientInfoFragment.newInstance( AppState.getState(
-											 getApplicationContext() ).getCurrentPatient() ) )
+											 getApplicationContext() )
+																			  .getCurrentPatient() ) )
 						   .commit();
 			break;
 
@@ -330,14 +366,15 @@ public class MainActivity
 			break;
 
 		case MainMenuAdapter.ID_LOGIN:
-			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, null ) // Replace null with LoginFragment.newInstance()
-						   .commit();
+			fragmentManager.beginTransaction().replace( R.id.main_frame,
+														null ) // Replace null with LoginFragment.newInstance()
+					.commit();
 			break;
 
 		case MainMenuAdapter.ID_CONFIG:
 			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, ConfigurationFragment.newInstance() )
+						   .replace( R.id.main_frame,
+									 ConfigurationFragment.newInstance() )
 						   .commit();
 			break;
 
@@ -349,7 +386,8 @@ public class MainActivity
 	@Override
 	public void onEcgBtConnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onEcgBtConnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onEcgBtConnected called" );
 
 		if ( emotionEcg != null )
 		{
@@ -362,7 +400,8 @@ public class MainActivity
 		}
 		else
 		{
-			Log.e( LOG_TAG, "Tried to start reading ECG data, but the object handle was null" );
+			Log.e( LOG_TAG,
+				   "Tried to start reading ECG data, but the object handle was null" );
 			view.ecgStatus.setBad();
 		}
 	}
@@ -370,14 +409,16 @@ public class MainActivity
 	@Override
 	public void onEcgBtDisconnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onEcgBtDisconnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onEcgBtDisconnected called" );
 		view.ecgStatus.setBad();
 	}
 
 	@Override
 	public void onEcgPacketReceive( final EmotionEcg.EcgData data )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onEcgPacketReceive called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onEcgPacketReceive called" );
 		if ( data == null )
 		{
 			return;
@@ -393,7 +434,8 @@ public class MainActivity
 
 				for ( int datum : ecgData )
 				{
-					view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter, datum ),
+					view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter,
+															  datum ),
 											   true,
 											   GRAPH_HORIZONTAL_RESOLUTION );
 				}
@@ -404,7 +446,8 @@ public class MainActivity
 	@Override
 	public void onBpGlucoseBtConnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onBpGlucoseBtConnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onBpGlucoseBtConnected called" );
 		if ( foraBpGlucose != null )
 		{
 			foraBpGlucose.getData();
@@ -419,14 +462,16 @@ public class MainActivity
 	@Override
 	public void onBpGlucoseBtDisconnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onBpGlucoseBtDisconnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onBpGlucoseBtDisconnected called" );
 		view.bpStatus.setBad();
 	}
 
 	@Override
 	public void onBpGlucosePacketReceive( final ForaBpGlucose.ForaData data )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onBpGlucosePacketReceive called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onBpGlucosePacketReceive called" );
 		if ( data == null )
 		{
 			return;
@@ -452,10 +497,12 @@ public class MainActivity
 					view.sbpText.setText( strSystolic );
 					view.dbpText.setText( strDiastolic );
 					view.mapText.setText( strMap );
-					view.sbpSeries.appendData( new DataPoint( bpGraphCounter, systolic ),
+					view.sbpSeries.appendData( new DataPoint( bpGraphCounter,
+															  systolic ),
 											   true,
 											   GRAPH_HORIZONTAL_RESOLUTION );
-					view.mapSeries.appendData( new DataPoint( bpGraphCounter, map ),
+					view.mapSeries.appendData( new DataPoint( bpGraphCounter,
+															  map ),
 											   true,
 											   GRAPH_HORIZONTAL_RESOLUTION );
 				}
@@ -471,7 +518,8 @@ public class MainActivity
 	@Override
 	public void onOxometerBtConnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onOxometerBtConnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onOxometerBtConnected called" );
 		if ( noninOximeter != null )
 		{
 			noninOximeter.getData();
@@ -486,14 +534,16 @@ public class MainActivity
 	@Override
 	public void onOxometerBtDisconnected( BluetoothDevice device )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onOxometerBtDisconnected called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onOxometerBtDisconnected called" );
 		view.o2Status.setBad();
 	}
 
 	@Override
 	public void onOxometerPacketReceive( NoninOximeter.NoninData data )
 	{
-		Log.d( LOG_TAG, "ca.ualberta.medroad.view.MainActivity#onOxometerPacketReceive called" );
+		Log.d( LOG_TAG,
+			   "ca.ualberta.medroad.view.MainActivity#onOxometerPacketReceive called" );
 		if ( data == null )
 		{
 			return;
@@ -512,7 +562,8 @@ public class MainActivity
 			{
 				view.ecgText.setText( strPulse );
 				view.o2Text.setText( strSpo2 );
-				view.o2xSeries.appendData( new DataPoint( ++o2GraphCounter, spo2 ),
+				view.o2xSeries.appendData( new DataPoint( ++o2GraphCounter,
+														  spo2 ),
 										   true,
 										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
@@ -627,10 +678,7 @@ public class MainActivity
 			public ImageView   good;
 			public ProgressBar loading;
 
-			public DataStatusIndicator( MainActivity activity,
-										int goodResID,
-										int badResID,
-										int loadingResId )
+			public DataStatusIndicator( MainActivity activity, int goodResID, int badResID, int loadingResId )
 			{
 				bad = (ImageView) activity.findViewById( badResID );
 				good = (ImageView) activity.findViewById( goodResID );
@@ -660,7 +708,7 @@ public class MainActivity
 		}
 	}
 
-	@SuppressWarnings( "UnusedDeclaration" )
+	@SuppressWarnings("UnusedDeclaration")
 	private class MockDataGenerator
 	{
 		public static final int                         NUM_WORKERS = 1;
@@ -739,18 +787,18 @@ public class MainActivity
 						view.o2Text.setText( sspo2 );
 
 						/* This bogs down the UI thread a lot. May need to find an alternative... */
-						view.ecgSeries.appendData( new DataPoint( ecgGraphCounter, ecg ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.sbpSeries.appendData( new DataPoint( ecgGraphCounter, sbp ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.mapSeries.appendData( new DataPoint( ecgGraphCounter, map ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.o2xSeries.appendData( new DataPoint( ecgGraphCounter, spo2 ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
+						view.ecgSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								ecg ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.sbpSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								sbp ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.mapSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								map ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.o2xSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								spo2 ), true, GRAPH_HORIZONTAL_RESOLUTION );
 					}
 				} );
 			}

@@ -17,7 +17,7 @@ public class MockPatient
 		super();
 
 		name = "John Doe";
-		ahcn = 123456789;
+		ahcn = "123456789";
 
 		Calendar birthday = Calendar.getInstance();
 		birthday.add( Calendar.YEAR, -18 );
