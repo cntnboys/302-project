@@ -13,17 +13,17 @@ import java.util.List;
 public class Patient
 		implements Serializable
 {
-	private String id;
+	private int id;
 	private String physician;
-
-	public String getId()
-	{
-		return id;
-	}
 
 	public String getPhysician()
 	{
 		return physician;
+	}
+
+	public int getId()
+	{
+		return id;
 	}
 
 	public enum Gender

@@ -44,6 +44,7 @@ import ca.ualberta.medroad.auxiliary.ForaBpGlucoseHandler;
 import ca.ualberta.medroad.auxiliary.HttpConnectionManager;
 import ca.ualberta.medroad.auxiliary.NoninOxometerHandler;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
+import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
 import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
 import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
@@ -88,28 +89,6 @@ public class MainActivity
 	private             long                  o2GraphCounter              = 0;
 
 	@Override
-	public void onDataStreamConnected()
-	{
-		DataRow row = new DataRow( "TEST_1",
-								   50,
-								   50,
-								   50,
-								   50,
-								   50,
-								   50,
-								   Calendar.getInstance().getTime(),
-								   "TEST_SESSION" );
-		try
-		{
-			connectionManager.writeDataRow( row );
-			Log.d( LOG_TAG, "Row sent." );
-		}
-		catch ( IOException e )
-		{
-			Log.e( LOG_TAG, "Failed to send a data row over the network: " );
-		}
-	}
-
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
@@ -167,6 +146,8 @@ public class MainActivity
 	protected void onStop()
 	{
 		super.onStop();
+
+		connectionManager.closeDataStream();
 
 		mockDataGenerator.stop();
 		idleBtDevices();
@@ -568,6 +549,38 @@ public class MainActivity
 										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
 		} );
+	}
+
+	@Override
+	public void onDataStreamConnected()
+	{
+		DataRow row = new DataRow( 2000,
+								   50,
+								   50,
+								   50,
+								   50,
+								   50,
+								   50,
+								   Calendar.getInstance().getTime(),
+								   9001 );
+
+		PatientRow patientRow = new PatientRow( 5005,
+												"5005",
+												Calendar.getInstance()
+														.getTime(),
+												true,
+												"DrFoo",
+												"John Doe" );
+
+		try
+		{
+			//connectionManager.writeDataRow( row );
+			connectionManager.writePatientRow( patientRow );
+		}
+		catch ( IOException e )
+		{
+			Log.e( LOG_TAG, "Failed to send a data row over the network: " );
+		}
 	}
 
 	protected class ViewHolder

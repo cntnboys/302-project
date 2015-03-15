@@ -18,21 +18,24 @@ public class PatientRow
 			"yyyy-MM-dd",
 			Locale.getDefault() );
 
-	public String  id;
-	public String  ahcn;
-	public String  dob;
-	public boolean live;
-	public String  physician;
-	public String  name;
+	public String patient_id;
+	public String ahcn;
+	public String dob;
+	public String liveStatus;
+	public String doctor;
+	public String name;
 
-	public PatientRow( String id, String ahcn, Date dob, boolean live, String physician, String name )
+	public PatientRow( int id, String ahcn, Date dob, boolean live, String physician, String name )
 	{
-		this.id = id;
+		this.patient_id = String.valueOf( id );
 		this.ahcn = ahcn;
 		this.dob = sdf.format( dob );
-		this.live = true;
-		this.physician = physician;
+		this.liveStatus = String.valueOf( live );
+		this.doctor = physician;
 		this.name = name;
+
+		liveStatus = liveStatus.replace( 't', 'T' );
+		liveStatus = liveStatus.replace( 'f', 'F' );
 	}
 
 	public PatientRow( Patient patient )
@@ -45,7 +48,7 @@ public class PatientRow
 			  patient.getName() );
 	}
 
-	public byte[] directToByte( PatientRow row )
+	public static byte[] directToByte( PatientRow row )
 	{
 		Gson gson = new Gson();
 		String jsonPayload = gson.toJson( row );

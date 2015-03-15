@@ -15,6 +15,8 @@ public class Encrypter
 
 	public static byte[] encryptToByteArray( String s )
 	{
+		Log.d( MainActivity.LOG_TAG, "Encrypting: " + s );
+
 		byte[] rawBytes;
 
 		try

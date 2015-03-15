@@ -17,27 +17,26 @@ public class DataRow
 			"yyyy-MM-dd HH:mm:ss",
 			Locale.getDefault() );
 
-	public String id;
-	public int    mv;
-	public int    pulse;
-	public int    o2;
-	public int    dbp;
-	public int    sbp;
-	public int    bpmap;
+	public String patient_id;
+	public String mv;
+	public String pulse;
+	public String oxygen;
+	public String diastolicbp;
+	public String systolicbp;
+	public String map2;
 	public String timestamp;
-	public String sessionID;
+	public String session_id;
 
-	public DataRow( String id, int mv, int pulse, int o2, int dbp, int sbp, int bpmap, Date timestamp, String sessionID )
+	public DataRow( int id, int mv, int pulse, int o2, int dbp, int sbp, int bpmap, Date timestamp, int sessionID )
 	{
-		this.id = id;
-		this.mv = mv;
-		this.pulse = pulse;
-		this.o2 = o2;
-		this.dbp = dbp;
-		this.sbp = sbp;
-		this.bpmap = bpmap;
+		this.patient_id = String.valueOf( id );
+		this.mv = String.valueOf( mv );
+		this.pulse = String.valueOf( pulse );
+		this.oxygen = String.valueOf( o2 );
+		this.systolicbp = String.valueOf( sbp );
+		this.map2 = String.valueOf( bpmap );
 		this.timestamp = sdf.format( timestamp );
-		this.sessionID = sessionID;
+		this.session_id = String.valueOf( sessionID );
 	}
 
 	public static byte[] directToByte( DataRow row )
