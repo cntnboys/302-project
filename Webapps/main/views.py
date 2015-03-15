@@ -78,9 +78,9 @@ def patientDisplay(request, patient_id):
 
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
-def getPatientdata(request, patient_id):
+def getPatientdata(request, p_id):
     ecgobject = []
-    Ecgobj = ECG.objects.filter(patient_id = patient_id).order_by('timestamp')
+    Ecgobj = ECG.objects.filter(patient_id = p_id).order_by('timestamp')
     ecgobject.append(Ecgobj)
     return HttpResponse("OK")
 

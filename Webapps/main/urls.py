@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^login/$', views.loginPage, name='LoginPage'),
     url(r'^logout/$', views.logout, name="logout"),
     url(r'^(?P<patient_id>.+?)/$', views.patientDisplay, name='patientDisplay'),
-    url(r'^(?P<patient_id>.+?)/$', views.getPatientdata, name='getPatientdata'),
+    url(r'^(?P<p_id>.+?)/$', views.getPatientdata, name='getPatientdata'),
    
     
     
