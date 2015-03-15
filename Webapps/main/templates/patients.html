@@ -92,13 +92,13 @@
 					<td>{{ link.dob }}</td>
 					<td>{{ link.ahcn }}</td>
 					
-					{% if link.liveStatus == True %}
+					{% if link.liveStatus == "y" %}
 
 					<td data-order="seen">Active</td>
 
 					{% endif %}
 
-					{% if link.liveStatus == False %}
+					{% if link.liveStatus == "n" %}
 	
 					<td data-order="seen">Inactive</td>
 

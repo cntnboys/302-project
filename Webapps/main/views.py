@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as auth_logout
 import json
+import json as simplejson
 
 
 #variables for creating/updating a patient from HTTP requests
@@ -49,7 +50,7 @@ def patientPage(request):
     context = RequestContext(request)
     if request.user.is_authenticated():
 
-        new_patient = Patient.objects.get_or_create(patient_id = "1", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+        new_patient = Patient.objects.get_or_create(patient_id = "2", ahcn="99-99-79", dob="2009-10-03", liveStatus="y", doctor="DocNa", name="Cameron")
 
         items = []
         if request.method == "GET":
@@ -82,7 +83,8 @@ def getPatientdata(request):
     ecgobject = []
     Ecgobj = ECG.objects.all()
     ecgobject.append(Ecgobj)
-    return HttpResponse({'ecgobject':ecgobject}, content_type = "application/json")
+    return HttpResponse(simplejson.dumps(str({'ecgobject' : ecgobject})))
+    
 
 
 #redirect to home page
