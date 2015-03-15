@@ -41,7 +41,21 @@
 	});
 	</script>
 
+	<script type="text/javascript">
+	function httpGet(theUrl) {
+		var xmlHttp = null;
 
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", theUrl, false);
+		xmlHttp.send(null);
+		return xmlHttp.responseText;
+	}
+	callLoop();
+	function callLoop() {
+
+		requestAnimationFrame(callLoop);
+	}
+	</script>
 
 
 
@@ -62,7 +76,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-       <a class="navbar-brand" href="../patientPage/">Home</a>
+       <a class="navbar-brand" href="../templates/patients.html">Home</a>
       <a class="navbar-brand" href="{% url 'logout' %}">Logout</a>
      
      
