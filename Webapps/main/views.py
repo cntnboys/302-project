@@ -49,7 +49,7 @@ def patientPage(request):
     context = RequestContext(request)
     if request.user.is_authenticated():
 
-        new_patient = Patient.objects.get_or_create(patient_id = "1", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
+#new_patient = Patient.objects.get_or_create(patient_id = "1", ahcn="99-99-99", dob="2009-10-03", liveStatus="True", doctor="DocNa", name="Cameron")
 
         items = []
         if request.method == "GET":
@@ -64,15 +64,15 @@ def patientDisplay(request, patient_id):
         context = RequestContext(request)
         if request.user.is_authenticated():
             items = []
-            patient = Patient.objects.filter(patient_id = patient_id)
+            patient = Patient.objects.get(patient_id = patient_id)
             items.append(patient)
 
-            print patient.patient_id
+
 
             #geting that patients sessions by checking ECG objects
-            #new_Ecg = ECG.objects.get_or_create(patient_id = patient.patient_id, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
+            #            new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
             sessions = []
-            Ecgobj = ECG.objects.get(patient_id = patient_id)
+            Ecgobj = ECG.objects.filter(patient_id = patient_id)
             sessions.append(Ecgobj)
         
 
