@@ -183,7 +183,7 @@ def create_pat(idpat, ahcn, dob, liveStatus, doctor, name):
 #function for adding in Data
 def add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21,session_id1):
     print("data added")
-    ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, session_id=session_id1 )
+    ECG.objects.get_or_create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, session_id=session_id1 )
 
 
      
