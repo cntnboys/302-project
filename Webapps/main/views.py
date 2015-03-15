@@ -21,13 +21,25 @@ from django.contrib.auth import logout as auth_logout
 import json
 
 
-
+#variables for creating/updating a patient from HTTP requests
 idpat = None
 ahcn = None
 dob = None
 liveStatus = None
 doctor = None
 name = None
+
+
+#variables for creating/newdata from HTTP requests
+p_id = None
+mv1 = None
+oxygen1 = None
+diastolicbp1 = None
+systolicbp1 = None
+map21 = None
+timestamp1 = None 
+session_id1 = None
+
 
 #grab patient information
 def patientPage(request):
@@ -166,6 +178,14 @@ def create_pat(idpat, ahcn, dob, liveStatus, doctor, name):
          created = Patient.objects.get_or_create(patient_id = idpat, ahcn= ahcn, dob= dob, liveStatus= liveStatus, doctor= doctor, name= name)
      
 
+
+
+#function for adding in Data
+def add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21,timestamp1,session_id1):
+    print("data added")
+    ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 ) 
+
+
      
 
 #getapatient to initiliaze or update:
@@ -242,6 +262,9 @@ def getMedData(request):
         timestamp1 = data["timestamp"]
         session_id1 = data["session_id"]
         
+
+        add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21,timestamp1,session_id1)
+
        # patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
         #patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
 
