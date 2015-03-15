@@ -50,7 +50,7 @@ def patientPage(request):
     context = RequestContext(request)
     if request.user.is_authenticated():
 
-        new_patient = Patient.objects.get_or_create(patient_id = "2", ahcn="99-99-79", dob="2009-10-03", liveStatus="y", doctor="DocNa", name="Cameron")
+#new_patient = Patient.objects.get_or_create(patient_id = "2", ahcn="99-99-79", dob="2009-10-03", liveStatus="y", doctor="DocNa", name="Cameron")
 
         items = []
         if request.method == "GET":
@@ -71,7 +71,7 @@ def patientDisplay(request, patient_id):
 
 
             #geting that patients sessions by checking ECG objects
-            new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 12, pulse = 12, oxygen = 12, diastolicbp= 12, systolicbp = 12, map2 = 12, session_id= 123)
+            new_Ecg = ECG.objects.get_or_create(patient_id = 1, mv = 40, pulse = 40, oxygen = 40, diastolicbp= 40, systolicbp = 40, map2 = 40, session_id= 123)
             sessions = []
             Ecgobj = ECG.objects.filter(patient_id = patient_id)
             sessions.append(Ecgobj)
@@ -79,11 +79,11 @@ def patientDisplay(request, patient_id):
 
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
-def getPatientdata(request):
+def getPatientdata(request, p_id):
     ecgobject = []
-    Ecgobj = ECG.objects.all()
-    ecgobject.append(Ecgobj)
-    return HttpResponse(simplejson.dumps(str({'ecgobject' : ecgobject})))
+    for x in ECG.objects.filter(patient_id=p_id).order_by('timestamp'):
+        ecgobject.append(x)
+    return HttpResponse(simplejson.dumps(str({'ecgobject' : ecgobject[-1]})))
     
 
 
