@@ -29,7 +29,7 @@ class ECG(models.Model):
     diastolicbp = models.IntegerField()
     systolicbp = models.IntegerField()
     map2 = models.IntegerField()
-    timestamp = models.DateTimeField(auto_now_add=True,null=False)
+    timestamp = models.DateTimeField(primary_key = True, auto_now_add=True,null=False)
     session_id = models.IntegerField(null=False)
     
     class Meta:
