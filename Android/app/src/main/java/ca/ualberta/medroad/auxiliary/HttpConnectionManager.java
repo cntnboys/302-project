@@ -10,7 +10,9 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -27,15 +29,15 @@ import ca.ualberta.medroad.view.MainActivity;
  */
 public class HttpConnectionManager
 {
-	protected static String              DEFAULT_PATIENT_URL = "https://project302.herokuapp.com/main/sendpatient/";
-	protected static String              DEFAULT_DATA_URL    = "https://project302.herokuapp.com/main/senddata/";
-	protected        ConManagerCallbacks callbackTarget      = null;
-	protected        URL                 patientURL          = null;
-	protected        URL                 dataURL             = null;
-	protected        HttpURLConnection   con                 = null;
-	protected        OutputStream        dataOutputStream    = null;
-	protected        boolean             good                = false;
-	private          String              csrfToken           = "";
+	protected static String DEFAULT_PATIENT_URL         = "https://project302.herokuapp.com/main/sendpatient/";
+	protected static String DEFAULT_DATA_URL            = "https://project302.herokuapp.com/main/senddata/";
+	protected        ConManagerCallbacks callbackTarget = null;
+	protected        URL patientURL                     = null;
+	protected        URL dataURL                        = null;
+	protected        HttpURLConnection con              = null;
+	protected        OutputStream dataOutputStream      = null;
+	protected        boolean good                       = false;
+	private          String csrfToken                   = "";
 
 	public HttpConnectionManager( ConManagerCallbacks callbackTarget )
 	{
@@ -116,10 +118,37 @@ public class HttpConnectionManager
 			try
 			{
 				HttpResponse response = client.execute( getReq );
-				Log.d( MainActivity.LOG_TAG, "Server responded with " + response.getStatusLine().getReasonPhrase() + ":");
+				Log.d( MainActivity.LOG_TAG,
+					   "Server responded with " + response.getStatusLine()
+														  .getReasonPhrase() + " with content length " + response
+							   .getEntity()
+							   .getContentLength() );
+
+
+				StringBuilder sb = new StringBuilder();
+				try
+				{
+					BufferedReader reader = new BufferedReader( new InputStreamReader(
+							response.getEntity().getContent() ), 65728 );
+
+					String line = null;
+
+					while ( ( line = reader.readLine() ) != null )
+					{
+						sb.append( line );
+					}
+				}
+				catch ( Exception e )
+				{
+					Log.e( MainActivity.LOG_TAG, "Unable to read the HTTP response body: " + e.getMessage() );
+				}
+
+				Log.d( MainActivity.LOG_TAG, sb.toString() );
+
 				for ( Header header : response.getAllHeaders() )
 				{
-					Log.d( MainActivity.LOG_TAG, "   " + header.getName() + ":" + header.getValue() );
+					Log.d( MainActivity.LOG_TAG,
+						   "   " + header.getName() + ":" + header.getValue() );
 				}
 			}
 			catch ( IOException e )
