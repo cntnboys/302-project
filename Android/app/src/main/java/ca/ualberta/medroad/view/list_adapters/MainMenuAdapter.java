@@ -25,6 +25,7 @@ public class MainMenuAdapter
 	public static final int ID_PATIENT_INFO = 1;
 	public static final int ID_DIAGNOSTICS  = 2;
 	public static final int ID_ALARMS       = 3;
+	public static final int ID_LOGIN        = 4;
 	public static final int ID_CONFIG       = 100;
 
 	protected List< MenuItem > data;
@@ -52,6 +53,8 @@ public class MainMenuAdapter
 								 "Configure",
 								 "Set up bluetooth",
 								 R.drawable.ic_placeholder_dark ) );
+
+		nData.add( new MenuItem( ID_LOGIN, "Login", "", R.drawable.ic_placeholder_dark ) );
 
 		return new MainMenuAdapter( ctx, nData );
 	}

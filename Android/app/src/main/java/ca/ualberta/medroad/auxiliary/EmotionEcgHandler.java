@@ -51,6 +51,7 @@ public class EmotionEcgHandler
 
 		case EmotionEcg.STOP_DATA:
 			// have to stop reading from device and user didn't ask for it
+			callbackTarget.onEcgBtDisconnected( null );
 			break;
 
 		case EmotionEcg.BATTERY_LOW:
