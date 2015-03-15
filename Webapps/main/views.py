@@ -31,14 +31,15 @@ name = None
 
 
 #variables for creating/newdata from HTTP requests
-p_id = None
-mv1 = None
-oxygen1 = None
-diastolicbp1 = None
-systolicbp1 = None
-map21 = None
-timestamp1 = None 
-session_id1 = None
+hey1 = None
+hey2 = None
+hey3 = None
+hey4 = None
+hey5 = None
+hey6 = None
+hey7 = None 
+hey8 = None
+
 
 
 #grab patient information
@@ -181,9 +182,9 @@ def create_pat(idpat, ahcn, dob, liveStatus, doctor, name):
 
 
 #function for adding in Data
-def add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21,session_id1):
+def add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21,session_id1,pulse):
     print("data added")
-    ECG.objects.get_or_create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, session_id=session_id1 )
+    ECG.objects.get_or_create(patient_id = p_id , mv = mv1,pulse = pulse, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, session_id=session_id1 )
 
 
      
@@ -250,20 +251,66 @@ def getPatient(request):
 #getting in data from android app:
 @csrf_exempt
 def getMedData(request):
+    
     if request.method == "POST":
+
         data = json.loads(request.body)
-        print 'Raw Data: "%s"' % request.body
-        p_id = data["patient_id"]
-        mv1 = data["mv"]
-        oxygen1 = data["oxygen"]
-        diastolicbp1 = data["diastolicbp"]
-        systolicbp1 = data["systolicbp"]
-        map21 = data["map2"]
-        timestamp1 = data["timestamp"]
-        session_id1 = data["session_id"]
+
+        
+        p_id = str(data["patient_id"])
+
+        hey1 = p_id
+
+        print("pid:",p_id)
+
+        mv1 = str(data["mv"])
+
+        hey2 = mv1
+
+        print("mv:",mv1)
+
+        oxygen1 = str(data["oxygen"])
+
+        hey3 = oxygen1
+
+        print("oxygen:",oxygen1)
+
+
+        diastolicbp1 = (data["diastolicbp"])
+
+        hey4 = diastolicbp1
+
+        print("dias:", diastolicbp1)
+
+        systolicbp1 = (data["systolicbp"])
+
+        hey5 = systolicbp1
+
+        print("sys:",systolicbp1)
+
+
+        map21 = str(data["map2"])
+
+        hey6 = map21
+
+
+        print("map:",map21)
+
+
+        session_id1 = str(data["session_id"])
         
 
-        add_data(p_id,mv1,oxygen1,diastolicbp1,systolicbp1,map21, session_id1)
+        hey7 = session_id1
+    
+        print("session:",session_id1)
+
+        pulse_1 = str(data["pulse"])
+
+        print("pulse_1", pulse_1)
+
+        hey8 = pulse_1
+
+        add_data(hey1,hey2,hey3,hey4,hey5,hey6,hey7,hey8)
 
        # patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
         #patient_data = ECG.objects.create(patient_id = p_id ,mv = mv1, oxygen=oxygen1, diastolicbp=diastolicbp1, systolicbp=systolicbp1, map2=map21, timestamp=timestamp1, session_id=session_id1 )
