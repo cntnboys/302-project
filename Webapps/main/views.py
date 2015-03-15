@@ -79,13 +79,10 @@ def patientDisplay(request, patient_id):
     return render(request, "panel1.html", {'items' : items, 'sessions' : sessions})
 
 def getPatientdata(request, patient_id):
-    print("hello")
-    if request.method == "GET":
-        if request.user.is_authenticated():
-            ecgobject = []
-            Ecgobj = ECG.objects.filter(patient_id = patient_id).order_by('timestamp')
-            ecgobject.append(Ecgobj)
-    return HttpResponse(json.dumps(ecgobject), content_type = "application/json")
+    ecgobject = []
+    Ecgobj = ECG.objects.filter(patient_id = patient_id).order_by('timestamp')
+    ecgobject.append(Ecgobj)
+    return HttpResponse("OK")
 
 
 #redirect to home page
