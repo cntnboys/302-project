@@ -176,15 +176,27 @@ def searchPage(request):
 
 #create patient or update patient 
 def create_pat(idpat, ahcn, dob, liveStatus, doctor, name):
-     print("patient created")
+
+
+    #check if patient already exist if so update status otherwise create the patient
+    if Patient.objects.filter(patient_id = idpat).count() >= 1:
+
+        if liveStatus == "y":
+            Patient.objects.filter(patient_id = idpat).update(liveStatus="y")
+            print("patient updated to live again")
+            return
+  
+        else:
+            Patient.objects.filter(patient_id = idpat).update(liveStatus="n")
+            print("status updated to notlive")
+            return
+    else:
+            created = Patient.objects.get_or_create(patient_id = idpat, ahcn= ahcn, dob= dob, liveStatus="y", doctor= doctor, name= name)
+            print("patient created")
      
-     if liveStatus == "n":
-
-         Patient.objects.filter(patient_id = idpat).update(liveStatus="n")
-
-     else:
-        
-         created = Patient.objects.get_or_create(patient_id = idpat, ahcn= ahcn, dob= dob, liveStatus= liveStatus, doctor= doctor, name= name)
+       
+     
+         
      
 
 
