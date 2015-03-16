@@ -11,8 +11,8 @@ class Patient(models.Model):
     ahcn = models.CharField(max_length=9, null=True, unique=True)
     dob = models.DateField()
     liveStatus = models.CharField(max_length=1, default ="n")
-    doctor = models.CharField(max_length=5, null = True)
-    name = models.CharField(max_length=10, null = True)
+    doctor = models.CharField(max_length=200, null = True)
+    name = models.CharField(max_length=200, null = True)
 
     class Meta:
         db_table = "patients"
