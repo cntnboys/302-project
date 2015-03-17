@@ -49,6 +49,31 @@ public class TwoLineArrayAdapter
 		return convertView;
 	}
 
+	@Override
+	public View getDropDownView( int position, View convertView, ViewGroup parent )
+	{
+		ViewHolder holder;
+
+		if ( convertView == null )
+		{
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			convertView = inflater.inflate( android.R.layout.simple_list_item_2, parent, false );
+
+			holder = new ViewHolder( convertView );
+			convertView.setTag( holder );
+		}
+		else
+		{
+			holder = (ViewHolder) convertView.getTag();
+		}
+
+		Pair<String, String> item = data.get( position );
+		holder.text1.setText( item.first );
+		holder.text2.setText( item.second );
+
+		return convertView;
+	}
+
 	protected class ViewHolder
 	{
 		public TextView text1;

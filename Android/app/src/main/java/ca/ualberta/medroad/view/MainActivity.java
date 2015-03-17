@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,10 +40,10 @@ import ca.ammi.medlib.ForaBpGlucose;
 import ca.ammi.medlib.NoninOximeter;
 import ca.ualberta.medroad.R;
 import ca.ualberta.medroad.auxiliary.AppState;
-import ca.ualberta.medroad.auxiliary.EmotionEcgHandler;
-import ca.ualberta.medroad.auxiliary.ForaBpGlucoseHandler;
+import ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler;
+import ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler;
 import ca.ualberta.medroad.auxiliary.HttpRequestManager;
-import ca.ualberta.medroad.auxiliary.NoninOxometerHandler;
+import ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
@@ -55,7 +56,7 @@ import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
  */
 public class MainActivity
 		extends Activity
-		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks
+		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks, ConfigurationFragment.ConfigurationCallbacks
 {
 	public static final String               LOG_TAG                     = "MedROAD";
 	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 100;
@@ -232,14 +233,14 @@ public class MainActivity
 
 		for ( BluetoothDevice device : devices )
 		{
-			if ( emotionEcg == null && device.getName().equals( ecgInfo.first ) )
+			if ( emotionEcg == null && device.getAddress().equals( ecgInfo.second ) )
 			{
 				rawEcgDevice = device;
 				emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
 				continue;
 			}
 
-			if ( foraBpGlucose == null && device.getName().equals( bpgInfo.first ) )
+			if ( foraBpGlucose == null && device.getAddress().equals( bpgInfo.second ) )
 			{
 				rawGlucoseBpDevice = device;
 				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
@@ -247,7 +248,7 @@ public class MainActivity
 				continue;
 			}
 
-			if ( noninOximeter == null && device.getName().equals( o2xInfo.first ) )
+			if ( noninOximeter == null && device.getAddress().equals( o2xInfo.second ) )
 			{
 				rawNoninOxometer = device;
 				noninOximeter = new NoninOximeter( rawNoninOxometer,
@@ -296,6 +297,16 @@ public class MainActivity
 			emotionEcg.stopData();
 			emotionEcg.stopAndIdle();
 		}
+
+		if ( foraBpGlucose != null )
+		{
+			// Nothing to do here.
+		}
+
+		if ( noninOximeter != null )
+		{
+			noninOximeter.stopData();
+		}
 	}
 
 	private void disconnectAndCleanupBtDevices()
@@ -304,18 +315,24 @@ public class MainActivity
 		{
 			emotionEcg.disconnect();
 			emotionEcg.cleanup();
+			emotionEcg = null;
+			rawEcgDevice = null;
 		}
 
 		if ( foraBpGlucose != null )
 		{
 			foraBpGlucose.disconnect();
 			foraBpGlucose.cleanup();
+			foraBpGlucose = null;
+			rawGlucoseBpDevice = null;
 		}
 
 		if ( noninOximeter != null )
 		{
 			noninOximeter.disconnect();
 			noninOximeter.cleanup();
+			noninOximeter = null;
+			rawNoninOxometer = null;
 		}
 	}
 
@@ -361,7 +378,7 @@ public class MainActivity
 
 		case MainMenuAdapter.ID_CONFIG:
 			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, ConfigurationFragment.newInstance() )
+						   .replace( R.id.main_frame, ConfigurationFragment.newInstance( this ) )
 						   .commit();
 			break;
 
@@ -436,7 +453,8 @@ public class MainActivity
 		Log.v( LOG_TAG, " [ BT ] > BPG bluetooth connected" );
 		if ( foraBpGlucose != null )
 		{
-			foraBpGlucose.getData();
+			foraBpGlucose.getLatestData();
+			foraBpGlucose.clearData();
 			view.bpStatus.setGood();
 		}
 		else
@@ -546,6 +564,62 @@ public class MainActivity
 										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
 		} );
+	}
+
+	@Override
+	public void onEcgDeviceChange()
+	{
+		// Stop and clear the device if it exists.
+		view.ecgStatus.setLoading();
+
+		InitEcgAsync task = new InitEcgAsync();
+		task.execute();
+
+		emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
+		emotionEcg.connect();
+	}
+
+	@Override
+	public void onBpDeviceChange()
+	{
+		// Stop and clear the device if it exists.
+		view.bpStatus.setLoading();
+
+		if ( foraBpGlucose != null )
+		{
+			foraBpGlucose.disconnect();
+			foraBpGlucose.cleanup();
+			foraBpGlucose = null;
+			rawGlucoseBpDevice = null;
+		}
+
+		// Connect the new device.
+		rawGlucoseBpDevice = mBluetoothAdapter.getRemoteDevice( AppState.getState()
+																		.getBpgDevice().second );
+		foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice, new Handler( bpGlucoseHandler ) );
+		foraBpGlucose.connect();
+	}
+
+	@Override
+	public void onO2DeviceChange()
+	{
+		// Stop and clear the device if it exists.
+		view.o2Status.setLoading();
+
+		if ( noninOximeter != null )
+		{
+			noninOximeter.stopData();
+			noninOximeter.disconnect();
+			noninOximeter.cleanup();
+			noninOximeter = null;
+			rawNoninOxometer = null;
+		}
+
+		// Connect the new device.
+		rawNoninOxometer = mBluetoothAdapter.getRemoteDevice( AppState.getState()
+																	  .getO2xDevice().second );
+		noninOximeter = new NoninOximeter( rawNoninOxometer, new Handler( oxometerHandler ) );
+		noninOximeter.connect();
 	}
 
 	protected class ViewHolder
@@ -833,6 +907,31 @@ public class MainActivity
 					newData = false;
 				}
 			}
+		}
+	}
+
+	/* 	For some reason, re-init-ing the ECG device (but not the others) hangs the UI for about 2
+		seconds, so we need to do this in its own thread. */
+	private class InitEcgAsync
+			extends AsyncTask< Void, Void, Void >
+	{
+		@Override
+		protected Void doInBackground( Void... params )
+		{
+			if ( emotionEcg != null )
+			{
+				emotionEcg.stopAndIdle();
+				emotionEcg.disconnect();
+				emotionEcg.cleanup();
+				emotionEcg = null;
+				rawEcgDevice = null;
+			}
+
+			// Connect the new device.
+			rawEcgDevice = mBluetoothAdapter.getRemoteDevice( AppState.getState()
+																	  .getEcgDevice().second );
+
+			return null;
 		}
 	}
 }

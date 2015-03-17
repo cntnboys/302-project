@@ -26,6 +26,13 @@
 				android:layout_gravity="center"
 				android:text="@string/ecg_device_label"/>
 
+			<ImageButton
+				android:id="@+id/f_config_ecg_button"
+				android:src="@drawable/ic_refresh_dark"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="@dimen/margin"
+				android:layout_gravity="center"/>
+
 			<Spinner
 				android:id="@+id/f_config_ecg_device"/>
 
@@ -39,6 +46,13 @@
 				android:layout_gravity="center"
 				android:text="@string/nibp_device_label"/>
 
+			<ImageButton
+				android:id="@+id/f_config_bp_button"
+				android:src="@drawable/ic_refresh_dark"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="@dimen/margin"
+				android:layout_gravity="center"/>
+
 			<Spinner
 				android:id="@+id/f_config_bp_device"/>
 
@@ -51,6 +65,13 @@
 				android:padding="@dimen/margin_less"
 				android:layout_gravity="center"
 				android:text="@string/spo2_device_label"/>
+
+			<ImageButton
+				android:id="@+id/f_config_o2_button"
+				android:src="@drawable/ic_refresh_dark"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="@dimen/margin"
+				android:layout_gravity="center"/>
 
 			<Spinner
 				android:id="@+id/f_config_o2_device"/>

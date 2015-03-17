@@ -7,8 +7,6 @@ import android.content.Context;
  */
 public class FileManager
 {
-
-
 	public static void initManager( Context context )
 	{
 		

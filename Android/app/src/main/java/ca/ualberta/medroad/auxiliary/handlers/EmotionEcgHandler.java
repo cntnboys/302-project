@@ -1,4 +1,4 @@
-package ca.ualberta.medroad.auxiliary;
+package ca.ualberta.medroad.auxiliary.handlers;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;

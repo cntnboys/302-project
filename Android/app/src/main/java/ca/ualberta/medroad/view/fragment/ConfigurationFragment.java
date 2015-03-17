@@ -2,15 +2,17 @@ package ca.ualberta.medroad.view.fragment;
 
 
 import android.app.Fragment;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -23,16 +25,18 @@ import ca.ualberta.medroad.view.list_adapters.TwoLineArrayAdapter;
 public class ConfigurationFragment
 		extends Fragment
 {
-	protected List< Pair< String, String > > deviceNames  = new ArrayList<>();
-	protected TwoLineArrayAdapter            arrayAdapter = null;
-	protected ViewHolder                     view         = null;
+	protected List< Pair< String, String > > deviceNames    = new ArrayList<>();
+	protected ConfigurationCallbacks         callbackTarget = null;
+	protected TwoLineArrayAdapter            arrayAdapter   = null;
+	protected ViewHolder                     view           = null;
 
-	public static ConfigurationFragment newInstance()
+	public static ConfigurationFragment newInstance( ConfigurationCallbacks callbackTarget )
 	{
 		ConfigurationFragment fragment = new ConfigurationFragment();
 
 		Bundle args = new Bundle();
 		fragment.setArguments( args );
+		fragment.callbackTarget = callbackTarget;
 
 		return fragment;
 	}
@@ -63,22 +67,31 @@ public class ConfigurationFragment
 
 	protected class ViewHolder
 	{
-		public Spinner emotionEcgSpinner;
-		public Spinner foraBpgSpinner;
-		public Spinner noninO2xSpinner;
+		public Spinner     emotionEcgSpinner;
+		public ImageButton emotionEcgButton;
+		public Spinner     foraBpgSpinner;
+		public ImageButton foraBpgButton;
+		public Spinner     noninO2xSpinner;
+		public ImageButton noninO2xButton;
+		private boolean ecgInit = true;
+		private boolean bpgInit = true;
+		private boolean o2xInit = true;
 
 		public ViewHolder( View parentView )
 		{
 			emotionEcgSpinner = (Spinner) parentView.findViewById( R.id.f_config_ecg_device );
+			emotionEcgButton = (ImageButton) parentView.findViewById( R.id.f_config_ecg_button );
 			foraBpgSpinner = (Spinner) parentView.findViewById( R.id.f_config_bp_device );
+			foraBpgButton = (ImageButton) parentView.findViewById( R.id.f_config_bp_button );
 			noninO2xSpinner = (Spinner) parentView.findViewById( R.id.f_config_o2_device );
+			noninO2xButton = (ImageButton) parentView.findViewById( R.id.f_config_o2_button );
 		}
 
 		public void init()
 		{
 			// Resolve bluetooth devices we have available.
-			BluetoothAdapter adapter = (BluetoothAdapter) getActivity().getSystemService( Context.BLUETOOTH_SERVICE );
-			for ( BluetoothDevice device : adapter.getBondedDevices() )
+			BluetoothManager manager = (BluetoothManager) getActivity().getSystemService( Context.BLUETOOTH_SERVICE );
+			for ( BluetoothDevice device : manager.getAdapter().getBondedDevices() )
 			{
 				deviceNames.add( new Pair<>( device.getName(), device.getAddress() ) );
 			}
@@ -89,40 +102,148 @@ public class ConfigurationFragment
 			foraBpgSpinner.setAdapter( arrayAdapter );
 			noninO2xSpinner.setAdapter( arrayAdapter );
 
+			setCurrentSelection();
+
 			setupListeners();
+		}
+
+		private void setCurrentSelection()
+		{
+			AppState state = AppState.getState();
+
+			for ( Pair< String, String > item : deviceNames )
+			{
+				if ( item.equals( state.getEcgDevice() ) )
+				{
+					emotionEcgSpinner.setSelection( deviceNames.indexOf( item ) );
+					continue;
+				}
+
+				if ( item.equals( state.getBpgDevice() ) )
+				{
+					foraBpgSpinner.setSelection( deviceNames.indexOf( item ) );
+					continue;
+				}
+
+				if ( item.equals( state.getO2xDevice() ) )
+				{
+					noninO2xSpinner.setSelection( deviceNames.indexOf( item ) );
+				}
+			}
 		}
 
 		private void setupListeners()
 		{
-			emotionEcgSpinner.setOnItemClickListener( new AdapterView.OnItemClickListener()
+			emotionEcgSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
 			{
 				@Override
-				public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+				public void onItemSelected( AdapterView< ? > parent,
+											View view,
+											int position,
+											long id )
 				{
-					Pair<String, String> item = deviceNames.get( position );
+					Pair< String, String > item = deviceNames.get( position );
 					AppState.getState().setEcgDevice( item.first, item.second );
+					if ( ecgInit )
+					{
+						ecgInit = false;
+						return;
+					}
+					callbackTarget.onEcgDeviceChange();
+				}
+
+				@Override
+				public void onNothingSelected( AdapterView< ? > parent )
+				{
+					// Do nothing!
 				}
 			} );
 
-			foraBpgSpinner.setOnItemClickListener( new AdapterView.OnItemClickListener()
+			emotionEcgButton.setOnClickListener( new View.OnClickListener()
 			{
 				@Override
-				public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+				public void onClick( View v )
 				{
-					Pair<String, String> item = deviceNames.get( position );
+					callbackTarget.onEcgDeviceChange();
+				}
+			} );
+
+			foraBpgSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
+			{
+				@Override
+				public void onItemSelected( AdapterView< ? > parent,
+											View view,
+											int position,
+											long id )
+				{
+					Pair< String, String > item = deviceNames.get( position );
 					AppState.getState().setBpgDevice( item.first, item.second );
+					if ( bpgInit )
+					{
+						bpgInit = false;
+						return;
+					}
+					callbackTarget.onBpDeviceChange();
+				}
+
+				@Override
+				public void onNothingSelected( AdapterView< ? > parent )
+				{
+					// Do nothing!
 				}
 			} );
 
-			noninO2xSpinner.setOnItemClickListener( new AdapterView.OnItemClickListener()
+			foraBpgButton.setOnClickListener( new View.OnClickListener()
 			{
 				@Override
-				public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+				public void onClick( View v )
 				{
-					Pair<String, String> item = deviceNames.get( position );
+					callbackTarget.onBpDeviceChange();
+				}
+			} );
+
+			noninO2xSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
+			{
+				@Override
+				public void onItemSelected( AdapterView< ? > parent,
+											View view,
+											int position,
+											long id )
+				{
+					Pair< String, String > item = deviceNames.get( position );
 					AppState.getState().setO2xDevice( item.first, item.second );
+					if ( o2xInit )
+					{
+						o2xInit = false;
+						return;
+					}
+					callbackTarget.onO2DeviceChange();
+				}
+
+				@Override
+				public void onNothingSelected( AdapterView< ? > parent )
+				{
+					// Do nothing!
+				}
+			} );
+
+			noninO2xButton.setOnClickListener( new View.OnClickListener()
+			{
+				@Override
+				public void onClick( View v )
+				{
+					callbackTarget.onO2DeviceChange();
 				}
 			} );
 		}
+	}
+
+	public interface ConfigurationCallbacks
+	{
+		public void onEcgDeviceChange();
+
+		public void onBpDeviceChange();
+
+		public void onO2DeviceChange();
 	}
 }

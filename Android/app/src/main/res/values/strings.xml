@@ -26,6 +26,7 @@
 	<string name="ecg_device_label">ECG Device:</string>
 	<string name="nibp_device_label">NIBP Device:</string>
 	<string name="spo2_device_label">SpO2 Device:</string>
+	<string name="refresh_label">Refresh</string>
 	<string-array name="Genders">
 		<item>Male</item>
 		<item>Female</item>

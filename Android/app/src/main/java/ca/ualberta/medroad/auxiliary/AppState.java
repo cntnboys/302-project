@@ -22,11 +22,11 @@ public class AppState
 	protected transient Context context        = null;
 	protected           Patient currentPatient = new MockPatient(); // Example data
 	protected           String  emotionEcgName = "AATOS-987";
-	protected           String  emotionEcgAddr = "";
+	protected           String  emotionEcgAddr = "00:07:80:6D:5A:FE";
 	protected           String  foraBpgName    = "TaiDoc-BTM";
-	protected           String  foraBpgAddr    = "";
+	protected           String  foraBpgAddr    = "00:12:3E:00:03:17";
 	protected           String  noninO2xName   = "Nonin_Medical_Inc._802706";
-	protected           String  noninO2xAddr   = "";
+	protected           String  noninO2xAddr   = "00:1C:05:00:EA:DA";
 
 	public static void initState( @NonNull Context context )
 	{
