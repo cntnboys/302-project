@@ -84,7 +84,7 @@ public class AppState
 
 	public void setO2xDevice( String name, String addr )
 	{
-		this.foraBpgName = name;
-		this.foraBpgAddr = addr;
+		this.noninO2xName = name;
+		this.noninO2xAddr = addr;
 	}
 }
