@@ -84,7 +84,7 @@ public class MainActivity
 	protected           DataRow              latestRow                   = null;
 	protected           PatientRow           testPatient                 = null;
 	protected           boolean              newData                     = false;
-	private             int                  menuSelection               = MainMenuAdapter.ID_PATIENT_INFO;
+	private             int                  menuSelection               = -1;
 	private             long                 ecgGraphCounter             = 0;
 	private             long                 bpGraphCounter              = 0;
 	private             long                 o2GraphCounter              = 0;
