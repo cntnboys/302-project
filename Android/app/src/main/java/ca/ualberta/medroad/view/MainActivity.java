@@ -95,6 +95,8 @@ public class MainActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
+		Log.v( LOG_TAG, " [INFO] > MainActivity created!" );
+
 		initializeBtHandles();
 
 		// Initialize the AppState
@@ -164,6 +166,8 @@ public class MainActivity
 		testPatient.liveStatus = "n";
 		HttpRequestManager.sendPatient( testPatient );
 
+		AppState.getState().saveState();
+
 		httpWorker.stop();
 	}
 
@@ -172,8 +176,9 @@ public class MainActivity
 	{
 		super.onDestroy();
 
-		AppState.getState().saveState();
 		disconnectAndCleanupBtDevices();
+
+		Log.v( LOG_TAG, " [INFO] > MainActivity destroyed!" );
 	}
 
 	@Override

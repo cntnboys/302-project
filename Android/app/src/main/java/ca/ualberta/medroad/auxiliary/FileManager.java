@@ -104,10 +104,17 @@ public class FileManager
 				Log.e( MainActivity.LOG_TAG, " [FILE] > Failed to clear an existing app state" );
 			}
 		}
-		if ( !outFile.mkdirs() )
+		try
+		{
+			if ( !outFile.createNewFile() )
+			{
+				throw new IOException();
+			}
+		}
+		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create a new file to store app state" );
+				   " [FILE] > Failed to create a new file to store app state: " + e.getMessage() );
 		}
 
 		OutputStream os = null;
@@ -180,18 +187,19 @@ public class FileManager
 		catch ( FileNotFoundException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "Failed to open a BufferedInputStream to load app state: " + e.getMessage() );
+				   " [FILE] > Failed to open a BufferedInputStream to load app state: " + e.getMessage() );
 		}
 		catch ( StreamCorruptedException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "Failed to open an ObjectInputStream to load app state (StreamCorruptedException): " + e
+				   " [FILE] > Failed to open an ObjectInputStream to load app state (StreamCorruptedException): " + e
 						   .getMessage() );
 		}
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "Failed to open an ObjectInputStream to load app state (IOException): " + e.getMessage() );
+				   " [FILE] > Failed to open an ObjectInputStream to load app state (IOException): " + e
+						   .getMessage() );
 		}
 
 		if ( oi == null )
@@ -239,10 +247,17 @@ public class FileManager
 	protected BufferedOutputStream openBufferedOutStream( String filename )
 	{
 		File outFile = new File( docsRootExtDir, filename );
-		if ( !outFile.mkdirs() )
+		try
+		{
+			if ( !outFile.createNewFile() )
+			{
+				throw new IOException();
+			}
+		}
+		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create the file " + outFile.getAbsolutePath() );
+				   " [FILE] > Failed to create the file " + outFile.getAbsolutePath() + ": " + e.getMessage() );
 		}
 
 		try

@@ -6,10 +6,19 @@
 				android:rowCount="3"
 				android:columnCount="3">
 
+	<TextView
+		android:id="@+id/f_patient_info_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:padding="@dimen/margin"
+		android:text="Patient Information"/>
+
 	<ImageView
 		android:id="@+id/f_patient_info_ico"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_below="@id/f_patient_info_title"
 		android:src="@drawable/ic_placeholder_dark"
 		android:padding="@dimen/margin"/>
 
@@ -17,6 +26,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_toEndOf="@id/f_patient_info_ico"
+		android:layout_below="@id/f_patient_info_title"
 		android:stretchColumns="true">
 
 		<TableRow
@@ -28,7 +38,7 @@
 
 			<EditText
 				android:id="@+id/f_patient_info_name_entry"
-				android:inputType="textPersonName"
+				android:inputType="textPersonName|textCapWords"
 				android:maxLines="1"
 				android:ems="12"/>
 
@@ -76,7 +86,8 @@
 
 			<EditText
 				android:id="@+id/f_patient_info_physician_entry"
-				android:inputType="textPersonName"
+				android:inputType="textPersonName|textCapWords"
+				android:imeOptions="actionDone"
 				android:maxLines="1"/>
 
 		</TableRow>
@@ -91,6 +102,19 @@
 			<TextView
 				android:id="@+id/f_patient_info_id"
 				tools:text="123456789"/>
+
+		</TableRow>
+
+		<TableRow
+			android:padding="@dimen/margin_less">
+
+			<TextView
+				android:text="@string/session_id_label"
+				android:labelFor="@+id/f_patient_info_sid"/>
+
+			<TextView
+				android:id="@+id/f_patient_info_sid"
+				tools:text="20150101120000"/>
 
 		</TableRow>
 

@@ -80,6 +80,7 @@ public class PatientInfoFragment
 		public TextView ageText;
 		public EditText physicianEntry;
 		public TextView idText;
+		public TextView sidText;
 
 		public ViewHolder( View parentView )
 		{
@@ -89,6 +90,7 @@ public class PatientInfoFragment
 			ageText = (TextView) parentView.findViewById( R.id.f_patient_info_age );
 			physicianEntry = (EditText) parentView.findViewById( R.id.f_patient_info_physician_entry );
 			idText = (TextView) parentView.findViewById( R.id.f_patient_info_id );
+			sidText = (TextView) parentView.findViewById( R.id.f_patient_info_sid );
 		}
 
 		public void init()
@@ -108,12 +110,11 @@ public class PatientInfoFragment
 			else
 			{
 				dobEntry.setText( DOB_FORMAT.format( p.getDob().getTime() ) );
-				ageText.setText( String.valueOf( Calendar.getInstance()
-														 .get( Calendar.YEAR ) - p.getDob()
-																				  .get( Calendar.YEAR ) ) + " years old." );
+				ageText.setText( getAge( p.getDob() ) );
 			}
 			physicianEntry.setText( p.getDoctor() );
 			idText.setText( String.valueOf( p.getId() ) );
+			sidText.setText( AppState.getState().getCurrentSession().getId() );
 		}
 
 		protected void setupListeners()
@@ -206,9 +207,7 @@ public class PatientInfoFragment
 				@Override
 				public void afterTextChanged( Editable s )
 				{
-					AppState.getState()
-							.getCurrentPatient()
-							.setDoctor( s.toString() );
+					AppState.getState().getCurrentPatient().setDoctor( s.toString() );
 				}
 			} );
 		}
@@ -252,10 +251,22 @@ public class PatientInfoFragment
 
 			parentFragment.view.dobEntry.setText( PatientInfoFragment.DOB_FORMAT.format( p.getDob()
 																						  .getTime() ) );
-			parentFragment.view.ageText.setText( String.valueOf( Calendar.getInstance()
-																		 .get( Calendar.YEAR ) - p.getDob()
-																								  .get( Calendar.YEAR ) ) + " years old." );
+			parentFragment.view.ageText.setText( getAge( p.getDob() ) );
 			parentFragment.view.physicianEntry.requestFocus();
 		}
+	}
+
+	private static String getAge( Calendar dob )
+	{
+		Calendar now = Calendar.getInstance();
+		int diff = now.get( Calendar.YEAR ) - dob.get( Calendar.YEAR ) - 1;
+
+		if ( now.get( Calendar.MONTH ) > dob.get( Calendar.MONTH ) || ( now.get( Calendar.MONTH ) == dob
+				.get( Calendar.MONTH ) && now.get( Calendar.DATE ) >= dob.get( Calendar.DATE ) ) )
+		{
+			++diff;
+		}
+
+		return String.valueOf( diff ) + " years old.";
 	}
 }

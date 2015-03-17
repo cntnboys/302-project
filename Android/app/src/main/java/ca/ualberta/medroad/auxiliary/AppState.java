@@ -42,8 +42,8 @@ public class AppState
 		if ( AppState.state == null )
 		{
 			FileManager tempManager = new FileManager( context );
-			AppState tempState = tempManager.loadAppState();
-			if ( tempState == null )
+			state = tempManager.loadAppState();
+			if ( state == null )
 			{
 				Log.w( MainActivity.LOG_TAG,
 					   " [FILE] > The file manager returned null when loading app state" );
