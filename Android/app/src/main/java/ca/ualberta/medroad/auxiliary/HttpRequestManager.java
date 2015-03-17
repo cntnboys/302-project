@@ -3,7 +3,6 @@ package ca.ualberta.medroad.auxiliary;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -47,16 +46,20 @@ public class HttpRequestManager
 		protected Void doInBackground( PatientRow... params )
 		{
 			String entity = PatientRow.getJSON( params[ 0 ] );
-			HttpResponse response = composeAndExecutePost( PATIENT_URL,
-														   entity );
+			HttpResponse response = composeAndExecutePost( PATIENT_URL, entity );
 
 			if ( response != null )
 			{
 				Log.d( MainActivity.LOG_TAG,
-					   "Post request executed with response " + response
+					   " [HTTP] > POST finished with response: " + response.getStatusLine()
+																		   .getStatusCode() + " - " + response
 							   .getStatusLine()
-							   .getStatusCode() + " - " + response.getStatusLine()
-																  .getReasonPhrase() );
+							   .getReasonPhrase() );
+			}
+			else
+			{
+				Log.w( MainActivity.LOG_TAG,
+					   " [HTTP] > POST finished but the response handle was null." );
 			}
 
 			return null;
@@ -75,10 +78,15 @@ public class HttpRequestManager
 			if ( response != null )
 			{
 				Log.d( MainActivity.LOG_TAG,
-					   "Post request executed for patient with response " + response
+					   " [HTTP] > POST finished with response: " + response.getStatusLine()
+																		   .getStatusCode() + " - " + response
 							   .getStatusLine()
-							   .getStatusCode() + " - " + response.getStatusLine()
-																  .getReasonPhrase() );
+							   .getReasonPhrase() );
+			}
+			else
+			{
+				Log.w( MainActivity.LOG_TAG,
+					   " [HTTP] > POST finished but the response handle was null." );
 			}
 
 			return null;
@@ -94,15 +102,6 @@ public class HttpRequestManager
 		postRequest.addHeader( "Content-Type", "application/json" );
 		HttpResponse response = null;
 
-		Log.v( MainActivity.LOG_TAG, " > Composed an HTTP request to " + url );
-		Log.v( MainActivity.LOG_TAG, " > JSON payload: " + entity );
-		Log.v( MainActivity.LOG_TAG, " > Headers: " );
-		for ( Header header : postRequest.getAllHeaders() )
-		{
-			Log.v( MainActivity.LOG_TAG,
-				  " >     " + header.getName() + ":" + header.getValue() );
-		}
-
 		try
 		{
 			postRequest.setEntity( new StringEntity( entity ) );
@@ -114,12 +113,14 @@ public class HttpRequestManager
 
 		try
 		{
+			Log.v( MainActivity.LOG_TAG, " [HTTP] > Executing POST" );
+			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Destination: " + url );
+			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Payload:     " + entity );
 			response = client.execute( postRequest );
 		}
 		catch ( IOException e )
 		{
-			Log.e( MainActivity.LOG_TAG,
-				   "Post request failed: " + e.getMessage() );
+			Log.e( MainActivity.LOG_TAG, " [HTTP] > Post request failed: " + e.getMessage() );
 		}
 
 		return response;

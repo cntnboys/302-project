@@ -1,9 +1,7 @@
 package ca.ualberta.medroad.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by Yuey on 2015-02-25.
@@ -13,47 +11,20 @@ import java.util.List;
 public class Patient
 		implements Serializable
 {
-	private int id;
-	private String physician;
-
-	public String getPhysician()
-	{
-		return physician;
-	}
+	protected int      id;
+	protected String   ahcn;
+	protected Calendar dob;
+	protected String   doctor;
+	protected String   name;
 
 	public int getId()
 	{
 		return id;
 	}
 
-	public enum Gender
+	public void setId( int id )
 	{
-		Male,
-		Female,
-		Other
-	}
-
-	protected String                     name;
-	protected String                     ahcn;
-	protected Calendar                   dob;
-	protected Gender                     gender;
-	protected List< PatientNote >        notes;
-	protected List< PatientHistoryItem > historyItems;
-
-	public Patient()
-	{
-		notes = new ArrayList<>();
-		historyItems = new ArrayList<>();
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName( String name )
-	{
-		this.name = name;
+		this.id = id;
 	}
 
 	public String getAhcn()
@@ -76,86 +47,23 @@ public class Patient
 		this.dob = dob;
 	}
 
-	public Gender getGender()
+	public String getDoctor()
 	{
-		return gender;
+		return doctor;
 	}
 
-	public void setGender( Gender gender )
+	public void setDoctor( String doctor )
 	{
-		this.gender = gender;
+		this.doctor = doctor;
 	}
 
-	public List< PatientNote > getNotes()
-	{
-		return notes;
-	}
-
-	public List< PatientHistoryItem > getHistoryItems()
-	{
-		return historyItems;
-	}
-
-	/**
-	 * Checks if the patient has any notes.
-	 *
-	 * @return 0 if the patient has no notes else the value of the highest severity note.
-	 */
-	public int hasNotes()
-	{
-		if ( notes.isEmpty() )
-		{
-			return 0;
-		}
-
-		int result = 100;
-		for ( PatientNote note : notes )
-		{
-			if ( note.severity < result )
-			{
-				result = note.severity;
-			}
-		}
-
-		return result;
-	}
-
-	@Override
-	public String toString()
+	public String getName()
 	{
 		return name;
 	}
 
-	public static String genderToString( Gender g )
+	public void setName( String name )
 	{
-		switch ( g )
-		{
-		case Male:
-			return "Male";
-
-		case Female:
-			return "Female";
-
-		case Other:
-		default:
-			return "Other";
-		}
-	}
-
-	public static Gender stringToGender( String s )
-	{
-		switch ( s.toLowerCase() )
-		{
-		case "male":
-		case "m":
-			return Gender.Male;
-
-		case "female":
-		case "f":
-			return Gender.Female;
-
-		default:
-			return Gender.Other;
-		}
+		this.name = name;
 	}
 }

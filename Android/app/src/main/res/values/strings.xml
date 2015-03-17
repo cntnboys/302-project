@@ -19,6 +19,10 @@
 	<string name="connected">Connected!</string>
 	<string name="map_label">MAP</string>
 	<string name="patient_name_label">Name:</string>
+	<string name="ahcn_label">AHCN:</string>
+	<string name="dob_label">DOB:</string>
+	<string name="physician_label">Physician:</string>
+	<string name="id_label">ID:</string>
 	<string-array name="Genders">
 		<item>Male</item>
 		<item>Female</item>

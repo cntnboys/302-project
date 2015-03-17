@@ -18,6 +18,7 @@ import ca.ualberta.medroad.R;
  * <p/>
  * Adapter class to display the main menu list view. This is poor software engineering at its
  * finest.
+ * @see ca.ualberta.medroad.view.MainActivity#onMainMenuSelect(int)
  */
 public class MainMenuAdapter
 		extends ArrayAdapter< MainMenuAdapter.MenuItem >
@@ -74,7 +75,7 @@ public class MainMenuAdapter
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		ViewHolder viewHolder = null;
+		ViewHolder viewHolder;
 
 		if ( convertView == null )
 		{

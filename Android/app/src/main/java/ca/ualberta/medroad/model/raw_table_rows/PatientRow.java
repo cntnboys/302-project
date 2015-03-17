@@ -2,11 +2,8 @@ package ca.ualberta.medroad.model.raw_table_rows;
 
 import com.google.gson.Gson;
 
-import org.apache.http.NameValuePair;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import ca.ualberta.medroad.auxiliary.Encrypter;
@@ -14,12 +11,13 @@ import ca.ualberta.medroad.model.Patient;
 
 /**
  * Created by Yuey on 2015-03-12.
+ * <p/>
+ * Class representing a raw database latestRow for patients.
  */
 public class PatientRow
 {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat(
-			"yyyy-MM-dd",
-			Locale.getDefault() );
+	public static final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd",
+																	 Locale.getDefault() );
 
 	public String patient_id;
 	public String ahcn;
@@ -53,11 +51,11 @@ public class PatientRow
 			  patient.getAhcn(),
 			  patient.getDob().getTime(),
 			  live,
-			  patient.getPhysician(),
+			  patient.getDoctor(),
 			  patient.getName() );
 	}
 
-	public static String getJSON(PatientRow row)
+	public static String getJSON( PatientRow row )
 	{
 		Gson gson = new Gson();
 		return Encrypter.encryptToString( gson.toJson( row ) );

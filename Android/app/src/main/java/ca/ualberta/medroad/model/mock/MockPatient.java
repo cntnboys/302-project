@@ -3,35 +3,24 @@ package ca.ualberta.medroad.model.mock;
 import java.util.Calendar;
 
 import ca.ualberta.medroad.model.Patient;
-import ca.ualberta.medroad.model.PatientHistoryItem;
-import ca.ualberta.medroad.model.PatientNote;
 
 /**
- * Created by Yuey on 2015-02-25.
+ * Created by Yuey on 2015-03-16.
  */
 public class MockPatient
-		extends Patient
+	extends Patient
 {
 	public MockPatient()
 	{
-		super();
+		Calendar c = Calendar.getInstance();
+		c.set( Calendar.YEAR, 1993 );
+		c.set( Calendar.MONTH, 3 );
+		c.set( Calendar.DAY_OF_MONTH, 2 );
 
-		name = "John Doe";
-		ahcn = "123456789";
-
-		Calendar birthday = Calendar.getInstance();
-		birthday.add( Calendar.YEAR, -18 );
-
-		dob = birthday;
-		gender = Gender.Male;
-
-		for ( int i = 0; i < 5; i++ )
-		{
-			historyItems.add( new PatientHistoryItem( "Test " + i,
-													  Calendar.getInstance().getTime(),
-													  "This is an example!" ) );
-		}
-
-		notes.add( new PatientNote( "Medical Alert", "Patient is allergic to penicillin.", 1 ) );
+		this.id = 1;
+		this.ahcn = "123456789";
+		this.dob = c;
+		this.doctor = "Dr. Foo";
+		this.name = "John Doe";
 	}
 }
