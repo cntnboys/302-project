@@ -52,10 +52,10 @@ public class MainMenuAdapter
 
 		nData.add( new MenuItem( ID_CONFIG,
 								 "Configure",
-								 "Set up bluetooth",
+								 "Set up bluetooth devices",
 								 R.drawable.ic_placeholder_dark ) );
 
-		nData.add( new MenuItem( ID_LOGIN, "Login", "", R.drawable.ic_placeholder_dark ) );
+		nData.add( new MenuItem( ID_LOGIN, "Account", "Vie", R.drawable.ic_placeholder_dark ) );
 
 		return new MainMenuAdapter( ctx, nData );
 	}

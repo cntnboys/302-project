@@ -40,10 +40,11 @@ import ca.ammi.medlib.ForaBpGlucose;
 import ca.ammi.medlib.NoninOximeter;
 import ca.ualberta.medroad.R;
 import ca.ualberta.medroad.auxiliary.AppState;
+import ca.ualberta.medroad.auxiliary.HttpRequestManager;
 import ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler;
 import ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler;
-import ca.ualberta.medroad.auxiliary.HttpRequestManager;
 import ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler;
+import ca.ualberta.medroad.model.Session;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
@@ -83,6 +84,7 @@ public class MainActivity
 	protected           DataRow              latestRow                   = null;
 	protected           PatientRow           testPatient                 = null;
 	protected           boolean              newData                     = false;
+	private             int                  menuSelection               = MainMenuAdapter.ID_PATIENT_INFO;
 	private             long                 ecgGraphCounter             = 0;
 	private             long                 bpGraphCounter              = 0;
 	private             long                 o2GraphCounter              = 0;
@@ -97,7 +99,7 @@ public class MainActivity
 
 		// Initialize the AppState
 		AppState.initState( getApplicationContext() );
-		AppState.getState();
+		AppState.getState().setCurrentSession( new Session() );
 
 		// Initialize application workers and data.
 		httpWorker = new HttpWorker( HTTP_UPDATE_FREQUENCY, TimeUnit.SECONDS );
@@ -131,6 +133,9 @@ public class MainActivity
 		latestRow.patient_id = "1";
 		latestRow.session_id = "1";
 
+		testPatient.liveStatus = "y";
+		HttpRequestManager.sendPatient( testPatient );
+
 		httpWorker.start();
 	}
 
@@ -141,19 +146,12 @@ public class MainActivity
 
 		checkBtStatus();
 		connectBtDevices();
-
-		testPatient.liveStatus = "y";
-		HttpRequestManager.sendPatient( testPatient );
-
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-
-		testPatient.liveStatus = "n";
-		HttpRequestManager.sendPatient( testPatient );
 	}
 
 	@Override
@@ -163,6 +161,9 @@ public class MainActivity
 
 		idleBtDevices();
 
+		testPatient.liveStatus = "n";
+		HttpRequestManager.sendPatient( testPatient );
+
 		httpWorker.stop();
 	}
 
@@ -171,6 +172,7 @@ public class MainActivity
 	{
 		super.onDestroy();
 
+		AppState.getState().saveState();
 		disconnectAndCleanupBtDevices();
 	}
 
@@ -198,9 +200,6 @@ public class MainActivity
 	{
 		switch ( item.getItemId() )
 		{
-		case R.id.action_settings:
-			return true;
-
 		default:
 			return super.onOptionsItemSelected( item );
 		}
@@ -359,31 +358,59 @@ public class MainActivity
 			break;
 
 		case MainMenuAdapter.ID_PATIENT_INFO:
-			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, PatientInfoFragment.newInstance() )
-						   .commit();
+			if ( menuSelection != MainMenuAdapter.ID_PATIENT_INFO )
+			{
+				fragmentManager.beginTransaction()
+							   .replace( R.id.main_frame, PatientInfoFragment.newInstance() )
+							   .commit();
+				menuSelection = MainMenuAdapter.ID_PATIENT_INFO;
+			}
 			break;
 
 		case MainMenuAdapter.ID_DIAGNOSTICS:
-
+			if ( menuSelection != MainMenuAdapter.ID_DIAGNOSTICS )
+			{
+				fragmentManager.beginTransaction()
+							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .commit();
+				menuSelection = MainMenuAdapter.ID_DIAGNOSTICS;
+			}
 			break;
 
 		case MainMenuAdapter.ID_ALARMS:
-
+			if ( menuSelection != MainMenuAdapter.ID_ALARMS )
+			{
+				fragmentManager.beginTransaction()
+							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .commit();
+				menuSelection = MainMenuAdapter.ID_ALARMS;
+			}
 			break;
 
 		case MainMenuAdapter.ID_LOGIN:
-
+			if ( menuSelection != MainMenuAdapter.ID_LOGIN )
+			{
+				fragmentManager.beginTransaction()
+							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .commit();
+				menuSelection = MainMenuAdapter.ID_LOGIN;
+			}
 			break;
 
 		case MainMenuAdapter.ID_CONFIG:
-			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, ConfigurationFragment.newInstance( this ) )
-						   .commit();
+			if ( menuSelection != MainMenuAdapter.ID_CONFIG )
+			{
+				fragmentManager.beginTransaction()
+							   .replace( R.id.main_frame,
+										 ConfigurationFragment.newInstance( this ) )
+							   .commit();
+				menuSelection = MainMenuAdapter.ID_CONFIG;
+			}
 			break;
 
 		default:
-			// Do nothing!
+			Log.w( LOG_TAG,
+				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter.getItemId( pos ) );
 		}
 	}
 
