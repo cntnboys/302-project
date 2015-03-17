@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,12 +60,10 @@ public class MainActivity
 	public static final String               LOG_TAG                     = "MedROAD";
 	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 100;
 	public static final int                  REQUEST_ENABLE_BT           = 1;
-	public static final String               ECG_BT_NAME                 = "AATOS-987";
+	public static final int                  HTTP_UPDATE_FREQUENCY       = 10; // Seconds
 	public static       int                  ECG_SIGNAL_RESOLUTION       = 0; // note that signal resolution is actually /1000
 	public static       int                  ECG_HIGH_PASS_FILTER        = 0;
 	public static       int                  ECG_SAMPLING_FREQUENCY      = 1;
-	public static final String               BP_BT_NAME                  = "TaiDoc-BTM";
-	public static final String               O2_BT_NAME                  = "Nonin_Medical_Inc._802706";
 	protected           ViewHolder           view                        = null;
 	protected           MainMenuAdapter      menuAdapter                 = null;
 	protected           FragmentManager      fragmentManager             = null;
@@ -79,16 +78,9 @@ public class MainActivity
 	protected           BluetoothDevice      rawNoninOxometer            = null;
 	protected           NoninOximeter        noninOximeter               = null;
 	protected           NoninOxometerHandler oxometerHandler             = null;
-	protected           HttpWorker           httpWorker                  = new HttpWorker( 10,
-																						   TimeUnit.SECONDS );
-	protected           DataRow              latestRow                   = new DataRow();
-	protected           PatientRow           testPatient                 = new PatientRow( 4,
-																						   "4",
-																						   Calendar.getInstance()
-																								   .getTime(),
-																						   true,
-																						   "DrFoo",
-																						   "John Doe" );
+	protected           HttpWorker           httpWorker                  = null;
+	protected           DataRow              latestRow                   = null;
+	protected           PatientRow           testPatient                 = null;
 	protected           boolean              newData                     = false;
 	private             long                 ecgGraphCounter             = 0;
 	private             long                 bpGraphCounter              = 0;
@@ -103,15 +95,22 @@ public class MainActivity
 		initializeBtHandles();
 
 		// Initialize the AppState
-		AppState.getState( getApplicationContext() );
+		AppState.initState( getApplicationContext() );
+		AppState.getState();
+
+		// Initialize application workers and data.
+		httpWorker = new HttpWorker( HTTP_UPDATE_FREQUENCY, TimeUnit.SECONDS );
+		latestRow = new DataRow();
+		testPatient = new PatientRow( 4,
+									  "4",
+									  Calendar.getInstance().getTime(),
+									  true,
+									  "DrFoo",
+									  "John Doe" );
 
 		fragmentManager = getFragmentManager();
 
-		if ( view == null )
-		{
-			view = new ViewHolder( this );
-		}
-
+		view = new ViewHolder( this );
 		view.init();
 
 		onMainMenuSelect( 0 );
@@ -227,16 +226,20 @@ public class MainActivity
 		/*
 		 * Iterate through paired BT devices and find the ones we need.
 		 */
+		Pair< String, String > ecgInfo = AppState.getState().getEcgDevice();
+		Pair< String, String > bpgInfo = AppState.getState().getBpgDevice();
+		Pair< String, String > o2xInfo = AppState.getState().getO2xDevice();
+
 		for ( BluetoothDevice device : devices )
 		{
-			if ( emotionEcg == null && device.getName().equals( ECG_BT_NAME ) )
+			if ( emotionEcg == null && device.getName().equals( ecgInfo.first ) )
 			{
 				rawEcgDevice = device;
 				emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
 				continue;
 			}
 
-			if ( foraBpGlucose == null && device.getName().equals( BP_BT_NAME ) )
+			if ( foraBpGlucose == null && device.getName().equals( bpgInfo.first ) )
 			{
 				rawGlucoseBpDevice = device;
 				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
@@ -244,7 +247,7 @@ public class MainActivity
 				continue;
 			}
 
-			if ( noninOximeter == null && device.getName().equals( O2_BT_NAME ) )
+			if ( noninOximeter == null && device.getName().equals( o2xInfo.first ) )
 			{
 				rawNoninOxometer = device;
 				noninOximeter = new NoninOximeter( rawNoninOxometer,
@@ -383,7 +386,8 @@ public class MainActivity
 		}
 		else
 		{
-			Log.e( LOG_TAG, " [ BT ] > Tried to start reading ECG data, but the object handle was null." );
+			Log.e( LOG_TAG,
+				   " [ BT ] > Tried to start reading ECG data, but the object handle was null." );
 			view.ecgStatus.setBad();
 		}
 	}

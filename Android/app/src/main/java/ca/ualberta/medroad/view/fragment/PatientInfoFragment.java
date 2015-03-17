@@ -93,7 +93,7 @@ public class PatientInfoFragment
 
 		public void init()
 		{
-			setPatient( AppState.getState( getActivity() ).getCurrentPatient() );
+			setPatient( AppState.getState().getCurrentPatient() );
 			setupListeners();
 		}
 
@@ -135,7 +135,7 @@ public class PatientInfoFragment
 				@Override
 				public void afterTextChanged( Editable s )
 				{
-					AppState.getState( getActivity() ).getCurrentPatient().setName( s.toString() );
+					AppState.getState().getCurrentPatient().setName( s.toString() );
 				}
 			} );
 
@@ -156,7 +156,7 @@ public class PatientInfoFragment
 				@Override
 				public void afterTextChanged( Editable s )
 				{
-					AppState.getState( getActivity() ).getCurrentPatient().setAhcn( s.toString() );
+					AppState.getState().getCurrentPatient().setAhcn( s.toString() );
 				}
 			} );
 
@@ -182,7 +182,7 @@ public class PatientInfoFragment
 				@Override
 				public void onClick( View v )
 				{
-					DatePickerFragment.newInstance( AppState.getState( getActivity() )
+					DatePickerFragment.newInstance( AppState.getState()
 															.getCurrentPatient()
 															.getDob(), PatientInfoFragment.this )
 									  .show( getChildFragmentManager(), "DatePicker" );
@@ -206,7 +206,7 @@ public class PatientInfoFragment
 				@Override
 				public void afterTextChanged( Editable s )
 				{
-					AppState.getState( getActivity() )
+					AppState.getState()
 							.getCurrentPatient()
 							.setDoctor( s.toString() );
 				}
@@ -244,7 +244,7 @@ public class PatientInfoFragment
 		@Override
 		public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth )
 		{
-			Patient p = AppState.getState( getActivity() ).getCurrentPatient();
+			Patient p = AppState.getState().getCurrentPatient();
 
 			p.getDob().set( Calendar.YEAR, year );
 			p.getDob().set( Calendar.MONTH, monthOfYear );

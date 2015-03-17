@@ -10,7 +10,7 @@
 		android:layout_height="wrap_content"
 		android:padding="@dimen/margin"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:text="Configuration"/>
+		android:text="@string/config_title"/>
 
 	<TableLayout
 		android:layout_width="match_parent"
@@ -18,36 +18,39 @@
 		android:paddingLeft="@dimen/margin"
 		android:paddingRight="@dimen/margin">
 
-		<TableRow>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
 			<TextView
 				android:padding="@dimen/margin_less"
 				android:layout_gravity="center"
-				android:text="ECG Device:"/>
+				android:text="@string/ecg_device_label"/>
 
 			<Spinner
 				android:id="@+id/f_config_ecg_device"/>
 
 		</TableRow>
 
-		<TableRow>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
 			<TextView
 				android:padding="@dimen/margin_less"
 				android:layout_gravity="center"
-				android:text="NIBP Device:"/>
+				android:text="@string/nibp_device_label"/>
 
 			<Spinner
 				android:id="@+id/f_config_bp_device"/>
 
 		</TableRow>
 
-		<TableRow>
+		<TableRow
+			android:padding="@dimen/margin_less">
 
 			<TextView
 				android:padding="@dimen/margin_less"
 				android:layout_gravity="center"
-				android:text="SpO2 Device:"/>
+				android:text="@string/spo2_device_label"/>
 
 			<Spinner
 				android:id="@+id/f_config_o2_device"/>
