@@ -63,7 +63,7 @@ public class AppState
 	{
 		if ( context == null || state == null )
 		{
-			throw new IllegalStateException( "App state not initialized." );
+			throw new IllegalStateException( "App state called but not initialized." );
 		}
 
 		return AppState.state;

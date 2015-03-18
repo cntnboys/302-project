@@ -53,7 +53,8 @@ import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
 import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
 
 /**
- * The startup activity. This activity coordinates the view for the entire app.
+ * The startup activity. This activity coordinates the view for the entire app. It's a little bit
+ * of a god class but shit happens.
  */
 public class MainActivity
 		extends Activity
@@ -185,6 +186,8 @@ public class MainActivity
 	protected void onSaveInstanceState( @NonNull Bundle outState )
 	{
 		super.onSaveInstanceState( outState );
+
+		AppState.getState().saveState();
 	}
 
 	@Override
@@ -302,10 +305,11 @@ public class MainActivity
 			emotionEcg.stopAndIdle();
 		}
 
+		/*
 		if ( foraBpGlucose != null )
 		{
-			// Nothing to do here.
-		}
+			// Noting to do here.
+		}//*/
 
 		if ( noninOximeter != null )
 		{
@@ -415,7 +419,8 @@ public class MainActivity
 
 		default:
 			Log.w( LOG_TAG,
-				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter.getItemId( pos ) );
+				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter.getItemId(
+						   pos ) );
 		}
 	}
 
@@ -458,7 +463,7 @@ public class MainActivity
 		}
 
 		final int[] ecgData = data.getSamples();
-		final int rrInterval = data.getRrInterval();
+		//final int rrInterval = data.getRrInterval();
 
 		latestRow.mv = String.valueOf( ecgData[ 0 ] );
 		newData = true;
@@ -795,6 +800,10 @@ public class MainActivity
 		}
 	}
 
+	/*
+		A class that can be used to generate some fake data points on the graphs. For
+		demonstration only.
+	 */
 	@SuppressWarnings( "UnusedDeclaration" )
 	private class MockDataGenerator
 	{
@@ -892,6 +901,9 @@ public class MainActivity
 		}
 	}
 
+	/*
+		A class that periodically posts data to the Heroku server.
+	 */
 	private class HttpWorker
 	{
 		public static final int                         NUM_WORKERS = 1;
