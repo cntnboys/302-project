@@ -1,7 +1,7 @@
 
 
 ul li{
-	margin: 20px 20px 20px 20px; 
+	margin: 20px 20px 20px 20px;
 }
 ul {
 	list-style-type: none;
@@ -20,13 +20,13 @@ ul {
 	coloumn-gap:50px;
 }
 div .bloodPressure{
-	background:black; 
-	height: 100%; 
-	
+	background:black;
+	height: 100%;
+
 }
 div .bloodPressure .oximeter{
 	display:inline;
-	
+
 }
 div .bloodPressure .oximeter #oxim{
 	text-align: right;
@@ -59,38 +59,38 @@ div .ecgbox{
 	width= 1000;
 }
 div .ecgbox .ecg{
-	background:black; 
-	float: left; 
-	height: 100%; 
-	width: auto; 
+	background:black;
+	float: left;
+	height: 100%;
+	width: auto;
 }
 div .heartRate{
-	background:black; 
-	height: 100%; 
+	background:black;
+	height: 100%;
 	text-align: center;
 }
 
-div.clear { 
+div.clear {
 	clear: both;
 	height: 1px;
-	overflow: hidden; 
+	overflow: hidden;
 	font-size:0pt;
-	margin-top: -1px; 
+	margin-top: -1px;
 }
 
 .heartRate #hr{
 	background-color: #black;
 	color:#00bd00;
-    font-size:15em;
+    font-size:12em;
     display:inline;
-   
+
     background-color: black;
 }
 .heartRate h3{
 	background-color: #black;
 	color:#00bd00;
     display: inline;
-    
+
 }
 a:link, a:visited {
 	display: block;
