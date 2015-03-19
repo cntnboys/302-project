@@ -1,20 +1,20 @@
 package ca.ualberta.medroad.view.fragment;
 
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -22,26 +22,28 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import ca.ualberta.medroad.R;
+import ca.ualberta.medroad.auxiliary.AppState;
 import ca.ualberta.medroad.model.Patient;
-import ca.ualberta.medroad.view.list_adapters.PatientHistoryAdapter;
 
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link PatientInfoFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class PatientInfoFragment
 		extends Fragment
 {
-	public static final String ARG_DATA = "patient";
+	protected ViewHolder view = null;
 
-	protected Patient               data;
-	protected ViewHolder            view;
-	protected PatientHistoryAdapter listAdapter;
+	public static final SimpleDateFormat DOB_FORMAT = new SimpleDateFormat( "LLLL d, yyyy",
+																			Locale.getDefault() );
 
-	public static PatientInfoFragment newInstance( Patient data )
+	public static PatientInfoFragment newInstance()
 	{
 		PatientInfoFragment fragment = new PatientInfoFragment();
 
 		Bundle args = new Bundle();
 		fragment.setArguments( args );
-		fragment.data = data;
 
 		return fragment;
 	}
@@ -55,24 +57,6 @@ public class PatientInfoFragment
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-
-		if ( getArguments() != null )
-		{
-			data = (Patient) getArguments().getSerializable( ARG_DATA );
-		}
-	}
-
-	@Override
-	public void onAttach( Activity activity )
-	{
-		super.onAttach( activity );
-	}
-
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		listAdapter = null;
 	}
 
 	@Override
@@ -80,94 +64,150 @@ public class PatientInfoFragment
 							  ViewGroup container,
 							  Bundle savedInstanceState )
 	{
-		View resultView = inflater.inflate( R.layout.fragment_patient_info, container, false );
+		// Inflate the layout for this fragment
+		View v = inflater.inflate( R.layout.fragment_patient_info, container, false );
+		view = new ViewHolder( v );
+		view.init();
 
-		view = new ViewHolder( resultView );
-
-		return resultView;
+		return v;
 	}
 
 	protected class ViewHolder
 	{
-		public final SimpleDateFormat sdf     = new SimpleDateFormat( "MMM d, yy",
-																	  Locale.getDefault() );
-		public       TextView         name    = null;
-		public       EditText         ahcn    = null;
-		public       EditText         dob     = null;
-		public       TextView         age     = null;
-		public       Spinner          gender  = null;
-		public       ListView         history = null;
+		public EditText nameEntry;
+		public EditText ahcnEntry;
+		public EditText dobEntry;
+		public TextView ageText;
+		public EditText physicianEntry;
+		public TextView idText;
+		public TextView sidText;
 
-		public ViewHolder( View v )
+		public ViewHolder( View parentView )
 		{
-			name = (TextView) v.findViewById( R.id.f_patient_info_name );
-			ahcn = (EditText) v.findViewById( R.id.f_patient_info_ahcn );
-			dob = (EditText) v.findViewById( R.id.f_patient_info_dob );
-			age = (TextView) v.findViewById( R.id.f_patient_info_age );
-			gender = (Spinner) v.findViewById( R.id.f_patient_info_gender );
-			history = (ListView) v.findViewById( R.id.f_patient_info_list );
+			nameEntry = (EditText) parentView.findViewById( R.id.f_patient_info_name_entry );
+			ahcnEntry = (EditText) parentView.findViewById( R.id.f_patient_info_ahcn_entry );
+			dobEntry = (EditText) parentView.findViewById( R.id.f_patient_info_dob_entry );
+			ageText = (TextView) parentView.findViewById( R.id.f_patient_info_age );
+			physicianEntry = (EditText) parentView.findViewById( R.id.f_patient_info_physician_entry );
+			idText = (TextView) parentView.findViewById( R.id.f_patient_info_id );
+			sidText = (TextView) parentView.findViewById( R.id.f_patient_info_sid );
 		}
 
-		public void init( Patient data )
+		public void init()
 		{
-			name.setText( data.getName() );
-			ahcn.setText( data.getAhcn() );
-			dob.setText( sdf.format( data.getDob() ) );
-			listAdapter = new PatientHistoryAdapter( getActivity(), data.getHistoryItems() );
-			history.setAdapter( listAdapter );
+			setPatient( AppState.getState().getCurrentPatient() );
+			setupListeners();
+		}
 
-			int yearsOld = Calendar.getInstance().get( Calendar.YEAR ) - // This year
-						   data.getDob().get( Calendar.YEAR ); // DOB year
-
-			age.setText( "Age " + yearsOld );
-
-			switch ( data.getGender() )
+		public void setPatient( Patient p )
+		{
+			nameEntry.setText( p.getName() );
+			ahcnEntry.setText( p.getAhcn() );
+			if ( p.getDob() == null )
 			{
-			case Male:
-				gender.setSelection( 0 );
-				break;
-
-			case Female:
-				gender.setSelection( 1 );
-				break;
-
-			case Other:
-			default:
-				gender.setSelection( 2 );
-				break;
+				ageText.setText( "Age unknown." );
 			}
-
-			setupEditors( data );
+			else
+			{
+				dobEntry.setText( DOB_FORMAT.format( p.getDob().getTime() ) );
+				ageText.setText( getAge( p.getDob() ) );
+			}
+			physicianEntry.setText( p.getDoctor() );
+			idText.setText( String.valueOf( p.getId() ) );
+			sidText.setText( AppState.getState().getCurrentSession().getId() );
 		}
 
-		private void setupEditors( final Patient data )
+		protected void setupListeners()
 		{
-			dob.setOnClickListener( new View.OnClickListener()
+			nameEntry.addTextChangedListener( new TextWatcher()
+			{
+				@Override
+				public void beforeTextChanged( CharSequence s, int start, int count, int after )
+				{
+
+				}
+
+				@Override
+				public void onTextChanged( CharSequence s, int start, int before, int count )
+				{
+
+				}
+
+				@Override
+				public void afterTextChanged( Editable s )
+				{
+					AppState.getState().getCurrentPatient().setName( s.toString() );
+				}
+			} );
+
+			ahcnEntry.addTextChangedListener( new TextWatcher()
+			{
+				@Override
+				public void beforeTextChanged( CharSequence s, int start, int count, int after )
+				{
+
+				}
+
+				@Override
+				public void onTextChanged( CharSequence s, int start, int before, int count )
+				{
+
+				}
+
+				@Override
+				public void afterTextChanged( Editable s )
+				{
+					AppState.getState().getCurrentPatient().setAhcn( s.toString() );
+				}
+			} );
+
+			ahcnEntry.setOnEditorActionListener( new TextView.OnEditorActionListener()
+			{
+				@Override
+				public boolean onEditorAction( TextView v, int actionId, KeyEvent event )
+				{
+					switch ( actionId )
+					{
+					case EditorInfo.IME_ACTION_NEXT:
+						dobEntry.callOnClick();
+						return true;
+
+					default:
+						return false;
+					}
+				}
+			} );
+
+			dobEntry.setOnClickListener( new View.OnClickListener()
 			{
 				@Override
 				public void onClick( View v )
 				{
-					DatePickerFragment datePicker = new DatePickerFragment();
-					datePicker.show( getChildFragmentManager(), "datePicker" );
+					DatePickerFragment.newInstance( AppState.getState()
+															.getCurrentPatient()
+															.getDob(), PatientInfoFragment.this )
+									  .show( getChildFragmentManager(), "DatePicker" );
 				}
 			} );
 
-			gender.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
+			physicianEntry.addTextChangedListener( new TextWatcher()
 			{
 				@Override
-				public void onItemSelected( AdapterView< ? > parent,
-											View view,
-											int position,
-											long id )
+				public void beforeTextChanged( CharSequence s, int start, int count, int after )
 				{
-					// Resolve the string resource.
-					String[] genders = Resources.getSystem().getStringArray( R.array.Genders );
+
 				}
 
 				@Override
-				public void onNothingSelected( AdapterView< ? > parent )
+				public void onTextChanged( CharSequence s, int start, int before, int count )
 				{
-					// Do nothing!
+
+				}
+
+				@Override
+				public void afterTextChanged( Editable s )
+				{
+					AppState.getState().getCurrentPatient().setDoctor( s.toString() );
 				}
 			} );
 		}
@@ -177,17 +217,56 @@ public class PatientInfoFragment
 			extends DialogFragment
 			implements DatePickerDialog.OnDateSetListener
 	{
+		protected Calendar            startDate;
+		protected PatientInfoFragment parentFragment;
+
+		public static DatePickerFragment newInstance( Calendar c, PatientInfoFragment infoFragment )
+		{
+			DatePickerFragment result = new DatePickerFragment();
+
+			result.startDate = c;
+			result.parentFragment = infoFragment;
+
+			return result;
+		}
+
+		@Override
+		public Dialog onCreateDialog( Bundle savedInstanceState )
+		{
+			return new DatePickerDialog( getActivity(),
+										 this,
+										 startDate.get( Calendar.YEAR ),
+										 startDate.get( Calendar.MONTH ),
+										 startDate.get( Calendar.DAY_OF_MONTH ) );
+		}
+
 		@Override
 		public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth )
 		{
-			Calendar c = Calendar.getInstance();
-			c.set( Calendar.SECOND, 0 );
-			c.set( Calendar.MINUTE, 0 );
-			c.set( Calendar.HOUR, 0 );
-			c.set( Calendar.DAY_OF_MONTH, dayOfMonth );
-			c.set( Calendar.MONTH, monthOfYear );
-			c.set( Calendar.YEAR, year );
+			Patient p = AppState.getState().getCurrentPatient();
 
+			p.getDob().set( Calendar.YEAR, year );
+			p.getDob().set( Calendar.MONTH, monthOfYear );
+			p.getDob().set( Calendar.DAY_OF_MONTH, dayOfMonth );
+
+			parentFragment.view.dobEntry.setText( PatientInfoFragment.DOB_FORMAT.format( p.getDob()
+																						  .getTime() ) );
+			parentFragment.view.ageText.setText( getAge( p.getDob() ) );
+			parentFragment.view.physicianEntry.requestFocus();
 		}
+	}
+
+	private static String getAge( Calendar dob )
+	{
+		Calendar now = Calendar.getInstance();
+		int diff = now.get( Calendar.YEAR ) - dob.get( Calendar.YEAR ) - 1;
+
+		if ( now.get( Calendar.MONTH ) > dob.get( Calendar.MONTH ) || ( now.get( Calendar.MONTH ) == dob
+				.get( Calendar.MONTH ) && now.get( Calendar.DATE ) >= dob.get( Calendar.DATE ) ) )
+		{
+			++diff;
+		}
+
+		return String.valueOf( diff ) + " years old.";
 	}
 }

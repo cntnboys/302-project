@@ -18,8 +18,6 @@ public class Encrypter
 
 	public static byte[] encryptToByteArray( String s )
 	{
-		Log.d( MainActivity.LOG_TAG, "Encrypting: " + s );
-
 		byte[] rawBytes;
 
 		try
@@ -41,8 +39,6 @@ public class Encrypter
 
 	public static String encryptToString( String s )
 	{
-		Log.d( MainActivity.LOG_TAG, "Encrypting \"" + s + "\"" );
-
 		// Do encryption of the string and return it as a string.
 
 		return s;

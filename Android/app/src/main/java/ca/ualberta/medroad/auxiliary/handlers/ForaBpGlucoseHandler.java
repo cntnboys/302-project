@@ -1,4 +1,4 @@
-package ca.ualberta.medroad.auxiliary;
+package ca.ualberta.medroad.auxiliary.handlers;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
@@ -14,7 +14,7 @@ import ca.ualberta.medroad.view.MainActivity;
  * Handler for incoming ForaBpGlucose messages. Also defines a callback interface for data
  * consumers.
  *
- * @see ca.ualberta.medroad.auxiliary.EmotionEcgHandler
+ * @see EmotionEcgHandler
  */
 public class ForaBpGlucoseHandler
 		implements Handler.Callback

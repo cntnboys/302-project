@@ -261,6 +261,7 @@
 			android:id="@+id/main_list_view"
 			android:layout_width="256dp"
 			android:layout_height="match_parent"
+			android:elevation="@dimen/margin_less"
 			android:divider="@null"
 			android:dividerHeight="@dimen/margin_less"
 			tools:listitem="@layout/list_item_main"/>
@@ -269,7 +270,8 @@
 			android:id="@+id/main_frame"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_weight="3">
+			android:layout_weight="3"
+			android:animateLayoutChanges="true">
 
 		</FrameLayout>
 

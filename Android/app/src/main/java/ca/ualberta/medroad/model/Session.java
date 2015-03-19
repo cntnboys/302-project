@@ -1,17 +1,27 @@
 package ca.ualberta.medroad.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Yuey on 2015-03-12.
- *
+ * <p/>
  * Class representing a user session.
  */
 public class Session
-	implements Serializable
 {
+	public static final SimpleDateFormat ID_GEN = new SimpleDateFormat( "yyyyMMddHHmmss",
+																		Locale.getDefault() );
 	protected String id;
-	protected Patient patient;
 
+	public Session()
+	{
+		id = ID_GEN.format( Calendar.getInstance().getTime() );
+	}
+
+	public String getId()
+	{
+		return id;
+	}
 }
