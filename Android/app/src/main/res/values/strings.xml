@@ -21,7 +21,7 @@
 	<string name="ahcn_label">AHCN:</string>
 	<string name="dob_label">DOB:</string>
 	<string name="physician_label">Physician:</string>
-	<string name="id_label">ID:</string>
+	<string name="id_label">Patient ID</string>
 	<string name="config_title">Configuration</string>
 	<string name="ecg_device_label">ECG Device:</string>
 	<string name="nibp_device_label">NIBP Device:</string>
@@ -29,6 +29,9 @@
 	<string name="refresh_label">Refresh</string>
 	<string name="placeholder_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 	<string name="session_id_label">Session #</string>
+	<string name="patient_information_title">Patient Information</string>
+	<string name="new_patient_button">New Patient</string>
+	<string name="find_patient_button">Find a Patient</string>
 	<string-array name="Genders">
 		<item>Male</item>
 		<item>Female</item>

@@ -59,7 +59,7 @@ public class NoninOxometerHandler
 			break;
 
 		case NoninOximeter.NONIN_STOP_DATA:
-			// if something other than a call to stopData() makes it stop reading
+			// if something other than a call to stopData() makes it stopHttpWorker reading
 			callbackTarget.onOxometerBtDisconnected( null );
 			break;
 

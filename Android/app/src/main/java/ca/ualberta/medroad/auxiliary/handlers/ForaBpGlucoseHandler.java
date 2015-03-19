@@ -71,6 +71,10 @@ public class ForaBpGlucoseHandler
 
 		case ForaBpGlucose.FORA_CHECK_FOR_DATA:
 			// the arg1 value is the number of data (response from checkForData)
+			if ( msg.arg1 > 0 )
+			{
+				callbackTarget.onBpGlucoseDataAvailable();
+			}
 			break;
 
 		case ForaBpGlucose.FORA_SET_TIME:
@@ -99,5 +103,7 @@ public class ForaBpGlucoseHandler
 		public void onBpGlucoseBtDisconnected( BluetoothDevice device );
 
 		public void onBpGlucosePacketReceive( ForaBpGlucose.ForaData data );
+
+		public void onBpGlucoseDataAvailable();
 	}
 }

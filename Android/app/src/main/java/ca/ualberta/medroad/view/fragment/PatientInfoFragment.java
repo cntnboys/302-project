@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,17 +34,19 @@ import ca.ualberta.medroad.model.Patient;
 public class PatientInfoFragment
 		extends Fragment
 {
-	protected ViewHolder view = null;
+	protected ViewHolder        view           = null;
+	protected FragmentCallbacks callbackTarget = null;
 
 	public static final SimpleDateFormat DOB_FORMAT = new SimpleDateFormat( "LLLL d, yyyy",
 																			Locale.getDefault() );
 
-	public static PatientInfoFragment newInstance()
+	public static PatientInfoFragment newInstance( FragmentCallbacks callbackTarget )
 	{
 		PatientInfoFragment fragment = new PatientInfoFragment();
 
 		Bundle args = new Bundle();
 		fragment.setArguments( args );
+		fragment.callbackTarget = callbackTarget;
 
 		return fragment;
 	}
@@ -79,8 +82,9 @@ public class PatientInfoFragment
 		public EditText dobEntry;
 		public TextView ageText;
 		public EditText physicianEntry;
-		public TextView idText;
+		public TextView pidText;
 		public TextView sidText;
+		public Button   newPatientButton;
 
 		public ViewHolder( View parentView )
 		{
@@ -89,17 +93,18 @@ public class PatientInfoFragment
 			dobEntry = (EditText) parentView.findViewById( R.id.f_patient_info_dob_entry );
 			ageText = (TextView) parentView.findViewById( R.id.f_patient_info_age );
 			physicianEntry = (EditText) parentView.findViewById( R.id.f_patient_info_physician_entry );
-			idText = (TextView) parentView.findViewById( R.id.f_patient_info_id );
+			pidText = (TextView) parentView.findViewById( R.id.f_patient_info_id );
 			sidText = (TextView) parentView.findViewById( R.id.f_patient_info_sid );
+			newPatientButton = (Button) parentView.findViewById( R.id.f_patient_info_new_patient_button );
 		}
 
 		public void init()
 		{
-			setPatient( AppState.getState().getCurrentPatient() );
+			setEntryValues( AppState.getState().getCurrentPatient() );
 			setupListeners();
 		}
 
-		public void setPatient( Patient p )
+		public void setEntryValues( Patient p )
 		{
 			nameEntry.setText( p.getName() );
 			ahcnEntry.setText( p.getAhcn() );
@@ -113,7 +118,7 @@ public class PatientInfoFragment
 				ageText.setText( getAge( p.getDob() ) );
 			}
 			physicianEntry.setText( p.getDoctor() );
-			idText.setText( String.valueOf( p.getId() ) );
+			pidText.setText( String.valueOf( p.getId() ) );
 			sidText.setText( AppState.getState().getCurrentSession().getId() );
 		}
 
@@ -210,6 +215,16 @@ public class PatientInfoFragment
 					AppState.getState().getCurrentPatient().setDoctor( s.toString() );
 				}
 			} );
+
+			newPatientButton.setOnClickListener( new View.OnClickListener()
+			{
+				@Override
+				public void onClick( View v )
+				{
+					AppState.getState().newPatient();
+					callbackTarget.triggerPatientInfoFragmentReload();
+				}
+			} );
 		}
 	}
 
@@ -268,5 +283,10 @@ public class PatientInfoFragment
 		}
 
 		return String.valueOf( diff ) + " years old.";
+	}
+
+	public interface FragmentCallbacks
+	{
+		public void triggerPatientInfoFragmentReload();
 	}
 }

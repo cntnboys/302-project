@@ -40,8 +40,8 @@ public class EmotionEcgHandler
 					dataFormat()  returns the data format as a float (0.7 )
 					getSamples() returns an int[25] of micro volt readings,
 						which can be plotted against the sampling frequency (def 100Hz)
-					getRrInterval() returns the rr interval in ms (int) 0 if there isn't one
-					gotRrInterval() returns the true if there is an rr interval, false otherwise
+					getRrInterval() returns the rr HTTP_INTERVAL in ms (int) 0 if there isn't one
+					gotRrInterval() returns the true if there is an rr HTTP_INTERVAL, false otherwise
 					getPeak() returns the absolute time or RR peak in ms (int)
 					getPacketNumber() returns the packet number (int)
 				Note that this object may be null
@@ -50,7 +50,7 @@ public class EmotionEcgHandler
 			break;
 
 		case EmotionEcg.STOP_DATA:
-			// have to stop reading from device and user didn't ask for it
+			// have to stopHttpWorker reading from device and user didn't ask for it
 			callbackTarget.onEcgBtDisconnected( null );
 			break;
 

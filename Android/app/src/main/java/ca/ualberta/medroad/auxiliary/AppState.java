@@ -10,6 +10,7 @@ import java.io.Serializable;
 import ca.ualberta.medroad.model.Patient;
 import ca.ualberta.medroad.model.Session;
 import ca.ualberta.medroad.model.mock.MockPatient;
+import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.MainActivity;
 
 /**
@@ -64,8 +65,7 @@ public class AppState
 	{
 		if ( context == null || state == null )
 		{
-			throw new IllegalStateException(
-					"App state called but not initialized." );
+			throw new IllegalStateException( "App state called but not initialized." );
 		}
 
 		return AppState.state;
@@ -145,14 +145,15 @@ public class AppState
 		currentSession = new Session();
 		Log.v( MainActivity.LOG_TAG, " [STAT] > Resetting session:" );
 		Log.v( MainActivity.LOG_TAG, " [STAT] >     Old ID: " + oldId );
-		Log.v( MainActivity.LOG_TAG,
-			   " [STAT] >     New ID: " + currentSession.getId() );
+		Log.v( MainActivity.LOG_TAG, " [STAT] >     New ID: " + currentSession.getId() );
 	}
 
 	public static void writeToSessionLog( String msg )
 	{
-		if ( state == null ) throw new IllegalStateException(
-				"The app state has not been initialized!" );
+		if ( state == null )
+		{
+			throw new IllegalStateException( "The app state has not been initialized!" );
+		}
 
 		if ( !state.fileManager.isLogOpen() )
 		{
@@ -160,5 +161,17 @@ public class AppState
 		}
 
 		state.fileManager.writeToSessionLog( msg );
+	}
+
+	public void newPatient()
+	{
+		HttpRequestManager.sendPatient( new PatientRow( currentPatient, false ) );
+		fileManager.closeSessionLog();
+
+		currentPatient = new MockPatient();
+		currentSession = new Session();
+
+		HttpRequestManager.sendPatient( new PatientRow( currentPatient, true ) );
+		fileManager.openSessionLog();
 	}
 }

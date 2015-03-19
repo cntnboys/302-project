@@ -38,24 +38,22 @@ public class MainMenuAdapter
 		nData.add( new MenuItem( ID_PATIENT_INFO,
 								 "Patient Info",
 								 "View patient information.",
-								 R.drawable.ic_placeholder_dark ) );
+								 R.drawable.ic_info_dark ) );
 
 		nData.add( new MenuItem( ID_DIAGNOSTICS,
 								 "Diagnostics",
 								 "Take measurements, photos and notes",
-								 R.drawable.ic_placeholder_dark ) );
+								 R.drawable.ic_search_dark ) );
 
 		nData.add( new MenuItem( ID_ALARMS,
 								 "Alarms",
 								 "Configure alarms",
-								 R.drawable.ic_placeholder_dark ) );
+								 R.drawable.ic_volume_dark ) );
 
 		nData.add( new MenuItem( ID_CONFIG,
 								 "Configure",
 								 "Set up bluetooth devices",
-								 R.drawable.ic_placeholder_dark ) );
-
-		nData.add( new MenuItem( ID_LOGIN, "Account", "Vie", R.drawable.ic_placeholder_dark ) );
+								 R.drawable.ic_bluetooth_dark ) );
 
 		return new MainMenuAdapter( ctx, nData );
 	}
