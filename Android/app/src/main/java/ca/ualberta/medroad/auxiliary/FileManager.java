@@ -47,6 +47,7 @@ public class FileManager
 
 		if ( !Environment.MEDIA_MOUNTED.equals( state ) )
 		{
+			// TODO
 			// External media is not available
 		}
 		else
@@ -56,7 +57,7 @@ public class FileManager
 
 			if ( !docsRootExtDir.mkdirs() )
 			{
-				Log.e( MainActivity.LOG_TAG, " [FILE] > Failed to create a directory to store log files!" );
+				Log.w( MainActivity.LOG_TAG, " [FILE] > The directory to store log files was not created" );
 			}
 		}
 

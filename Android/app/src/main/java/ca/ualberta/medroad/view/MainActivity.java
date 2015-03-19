@@ -83,6 +83,7 @@ public class MainActivity
 	protected           NoninOxometerHandler oxometerHandler             = null;
 	protected           HttpWorker           httpWorker                  = null;
 	protected           DataRow              latestRow                   = null;
+	protected           MockDataGenerator    mockDataGenerator           = new MockDataGenerator();
 	protected           boolean              newData                     = false;
 	private             int                  menuSelection               = -1;
 	private             long                 ecgGraphCounter             = 0;
@@ -135,6 +136,8 @@ public class MainActivity
 
 		getPairedBtDevices();
 
+		//mockDataGenerator.start();
+
 		httpWorker.start();
 		HttpRequestManager.sendPatient( new PatientRow( AppState.getState()
 																.getCurrentPatient(),
@@ -172,6 +175,8 @@ public class MainActivity
 		AppState.getState().getFileManager().closeSessionLog();
 		AppState.getState().setCurrentSession( null );
 		AppState.getState().saveState();
+
+		mockDataGenerator.stop();
 
 		httpWorker.stop();
 		HttpRequestManager.sendPatient( new PatientRow( AppState.getState()
@@ -494,7 +499,6 @@ public class MainActivity
 			@Override
 			public void run()
 			{
-
 				for ( int datum : ecgData )
 				{
 					view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter,
@@ -882,6 +886,51 @@ public class MainActivity
 
 			@Override
 			public void run()
+			{
+				final int[] ecgData = new int[]{
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+				};
+
+				runOnUiThread( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						for ( int datum : ecgData )
+						{
+							view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter,
+																	  datum ),
+													   true,
+													   GRAPH_HORIZONTAL_RESOLUTION );
+						}
+					}
+				} );
+			}
+
+			private void oldGen()
 			{
 				ecgGraphCounter++;
 
