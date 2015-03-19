@@ -18,6 +18,11 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.IllegalFormatCodePointException;
+import java.util.Locale;
 
 import ca.ualberta.medroad.view.MainActivity;
 
@@ -26,10 +31,15 @@ import ca.ualberta.medroad.view.MainActivity;
  */
 public class FileManager
 {
-	public final String               APP_STATE_FILENAME = "state.ser";
-	private      File                 docsRootExtDir     = null;
-	private      File                 docsRootIntDir     = null;
-	protected    BufferedOutputStream sessionLog         = null;
+	public final String               APP_STATE_FILENAME    = "state.ser";
+	public final String               LOG_FILE_EXT          = ".log";
+	public final SimpleDateFormat     TIMESTAMP_DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd_HH:mm:ss    ",
+			Locale.getDefault() );
+	private      File                 docsRootExtDir        = null;
+	private      File                 docsRootIntDir        = null;
+	protected    BufferedOutputStream sessionLog            = null;
+	protected    boolean              logOpen               = false;
 
 	public FileManager( Context context )
 	{
@@ -41,7 +51,13 @@ public class FileManager
 		}
 		else
 		{
-			docsRootExtDir = context.getExternalFilesDir( Environment.DIRECTORY_DOCUMENTS );
+			docsRootExtDir = new File( Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_DOCUMENTS ), "MedROAD" );
+
+			if ( !docsRootExtDir.mkdirs() )
+			{
+				Log.e( MainActivity.LOG_TAG, " [FILE] > Failed to create a directory to store log files!" );
+			}
 		}
 
 		docsRootIntDir = context.getFilesDir();
@@ -55,42 +71,72 @@ public class FileManager
 		}
 
 		Log.v( MainActivity.LOG_TAG,
-			   " [FILE] > Opening the session log output stream for " + AppState.getState()
-																				.getCurrentSession()
-																				.getId() );
-		sessionLog = openBufferedOutStream( AppState.getState().getCurrentSession().getId() );
+			   " [FILE] > Opening the session log output stream for " + AppState
+					   .getState()
+					   .getCurrentSession()
+					   .getId() );
+		sessionLog = openBufferedOutStream( AppState.getState()
+													.getCurrentSession()
+													.getId() );
+		logOpen = true;
+
+		writeLogOpenMessage();
 	}
 
-	public void writeToSessionLog( byte[] buffer )
+	private void writeLogOpenMessage()
+	{
+		writeToSessionLog( "Session log opened." );
+		writeToSessionLog( "Session ID: " + AppState.getState()
+													.getCurrentSession()
+													.getId() );
+		writeToSessionLog( "Patient ID: " + AppState.getState()
+													.getCurrentPatient()
+													.getId() );
+	}
+
+	public void writeToSessionLog( String msg )
 	{
 		try
 		{
-			sessionLog.write( buffer );
+			Date now = Calendar.getInstance().getTime();
+			sessionLog.write( Encrypter.encryptToByteArray(
+					TIMESTAMP_DATE_FORMAT.format( now ) + msg + "\n\r" ) );
 		}
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to write a buffer to the session log: " + e.getMessage() );
+				   " [FILE] > Failed to write a buffer to the session log: " + e
+						   .getMessage() );
 		}
 	}
 
 	public void closeSessionLog()
 	{
+		writeLogCloseMessage();
+
 		try
 		{
 			Log.v( MainActivity.LOG_TAG,
-				   " [FILE] > Closing the session log output stream for " + AppState.getState()
-																					.getCurrentSession()
-																					.getId() );
+				   " [FILE] > Closing the session log output stream for " + AppState
+						   .getState()
+						   .getCurrentSession()
+						   .getId() );
 			sessionLog.flush();
 			sessionLog.close();
 			sessionLog = null;
+			logOpen = false;
 		}
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to close the session log output stream: " + e.getMessage() );
+				   " [FILE] > Failed to close the session log output stream: " + e
+						   .getMessage() );
 		}
+	}
+
+	private void writeLogCloseMessage()
+	{
+		writeToSessionLog( "Session log closed." );
 	}
 
 	public void saveAppState( AppState saveMe )
@@ -101,7 +147,8 @@ public class FileManager
 		{
 			if ( !outFile.delete() )
 			{
-				Log.e( MainActivity.LOG_TAG, " [FILE] > Failed to clear an existing app state" );
+				Log.e( MainActivity.LOG_TAG,
+					   " [FILE] > Failed to clear an existing app state" );
 			}
 		}
 		try
@@ -114,7 +161,8 @@ public class FileManager
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create a new file to store app state: " + e.getMessage() );
+				   " [FILE] > Failed to create a new file to store app state: " + e
+						   .getMessage() );
 		}
 
 		OutputStream os = null;
@@ -128,12 +176,14 @@ public class FileManager
 		catch ( FileNotFoundException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create a BufferedOutputStream to save AppState: " + e.getMessage() );
+				   " [FILE] > Failed to create a BufferedOutputStream to save AppState: " + e
+						   .getMessage() );
 		}
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create an ObjectOutputStream to save AppState: " + e.getMessage() );
+				   " [FILE] > Failed to create an ObjectOutputStream to save AppState: " + e
+						   .getMessage() );
 		}
 
 		if ( oo == null )
@@ -187,7 +237,8 @@ public class FileManager
 		catch ( FileNotFoundException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to open a BufferedInputStream to load app state: " + e.getMessage() );
+				   " [FILE] > Failed to open a BufferedInputStream to load app state: " + e
+						   .getMessage() );
 		}
 		catch ( StreamCorruptedException e )
 		{
@@ -214,7 +265,8 @@ public class FileManager
 		catch ( ClassNotFoundException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to load app state (ClassNotFoundException): " + e.getMessage() );
+				   " [FILE] > Failed to load app state (ClassNotFoundException): " + e
+						   .getMessage() );
 		}
 		catch ( IOException e )
 		{
@@ -244,20 +296,32 @@ public class FileManager
 		return result;
 	}
 
+	public boolean isLogOpen()
+	{
+		return logOpen;
+	}
+
 	protected BufferedOutputStream openBufferedOutStream( String filename )
 	{
-		File outFile = new File( docsRootExtDir, filename );
+		File outFile = new File( docsRootExtDir, filename + LOG_FILE_EXT );
 		try
 		{
 			if ( !outFile.createNewFile() )
 			{
 				throw new IOException();
 			}
+			else
+			{
+				Log.v( MainActivity.LOG_TAG,
+					   " [FILE] > Created " + outFile.getAbsolutePath() + " " + outFile
+							   .exists() );
+			}
 		}
 		catch ( IOException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   " [FILE] > Failed to create the file " + outFile.getAbsolutePath() + ": " + e.getMessage() );
+				   " [FILE] > Failed to create the file " + outFile.getAbsolutePath() + ": " + e
+						   .getMessage() );
 		}
 
 		try

@@ -50,11 +50,22 @@ public class HttpRequestManager
 
 			if ( response != null )
 			{
-				Log.d( MainActivity.LOG_TAG,
-					   " [HTTP] > POST finished with response: " + response.getStatusLine()
-																		   .getStatusCode() + " - " + response
-							   .getStatusLine()
-							   .getReasonPhrase() );
+				if ( response.getStatusLine().getStatusCode() / 100 > 2 )
+				{
+					Log.e( MainActivity.LOG_TAG,
+						   " [HTTP] > POST finished with response: " + response.getStatusLine()
+																			   .getStatusCode() + " - " + response
+								   .getStatusLine()
+								   .getReasonPhrase() );
+				}
+				else
+				{
+					Log.v( MainActivity.LOG_TAG,
+						   " [HTTP] > POST finished with response: " + response.getStatusLine()
+																			   .getStatusCode() + " - " + response
+								   .getStatusLine()
+								   .getReasonPhrase() );
+				}
 			}
 			else
 			{

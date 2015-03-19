@@ -49,12 +49,13 @@ public class AppState
 					   " [FILE] > The file manager returned null when loading app state" );
 				state = new AppState();
 			}
-
 			state.fileManager = tempManager;
 			if ( state.currentPatient == null )
 			{
 				state.currentPatient = new MockPatient();
 			}
+
+			Log.v( MainActivity.LOG_TAG, " [STAT] > App state initialized." );
 		}
 	}
 
@@ -63,7 +64,8 @@ public class AppState
 	{
 		if ( context == null || state == null )
 		{
-			throw new IllegalStateException( "App state called but not initialized." );
+			throw new IllegalStateException(
+					"App state called but not initialized." );
 		}
 
 		return AppState.state;
@@ -130,5 +132,33 @@ public class AppState
 	public void saveState()
 	{
 		fileManager.saveAppState( state );
+	}
+
+	public void resetSession()
+	{
+		String oldId = "-1";
+		if ( currentSession != null )
+		{
+			oldId = currentSession.getId();
+		}
+
+		currentSession = new Session();
+		Log.v( MainActivity.LOG_TAG, " [STAT] > Resetting session:" );
+		Log.v( MainActivity.LOG_TAG, " [STAT] >     Old ID: " + oldId );
+		Log.v( MainActivity.LOG_TAG,
+			   " [STAT] >     New ID: " + currentSession.getId() );
+	}
+
+	public static void writeToSessionLog( String msg )
+	{
+		if ( state == null ) throw new IllegalStateException(
+				"The app state has not been initialized!" );
+
+		if ( !state.fileManager.isLogOpen() )
+		{
+			state.fileManager.openSessionLog();
+		}
+
+		state.fileManager.writeToSessionLog( msg );
 	}
 }

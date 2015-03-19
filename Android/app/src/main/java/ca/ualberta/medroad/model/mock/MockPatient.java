@@ -13,14 +13,16 @@ public class MockPatient
 	public MockPatient()
 	{
 		Calendar c = Calendar.getInstance();
-		c.set( Calendar.YEAR, 1993 );
-		c.set( Calendar.MONTH, 3 );
-		c.set( Calendar.DAY_OF_MONTH, 2 );
 
-		this.id = 1;
-		this.ahcn = "123456789";
+		this.id = (int) generateNewId();
+		this.ahcn = "n/a";
 		this.dob = c;
-		this.doctor = "Dr. Foo";
+		this.doctor = "n/a";
 		this.name = "John Doe";
+	}
+
+	private long generateNewId()
+	{
+		return Calendar.getInstance().getTimeInMillis();
 	}
 }

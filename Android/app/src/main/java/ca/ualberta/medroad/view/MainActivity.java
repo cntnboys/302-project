@@ -28,6 +28,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.Set;
@@ -44,7 +45,6 @@ import ca.ualberta.medroad.auxiliary.HttpRequestManager;
 import ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler;
 import ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler;
 import ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler;
-import ca.ualberta.medroad.model.Session;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
@@ -83,7 +83,6 @@ public class MainActivity
 	protected           NoninOxometerHandler oxometerHandler             = null;
 	protected           HttpWorker           httpWorker                  = null;
 	protected           DataRow              latestRow                   = null;
-	protected           PatientRow           testPatient                 = null;
 	protected           boolean              newData                     = false;
 	private             int                  menuSelection               = -1;
 	private             long                 ecgGraphCounter             = 0;
@@ -93,26 +92,23 @@ public class MainActivity
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onCreate()" );
+
+		// Housekeeping
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
-		Log.v( LOG_TAG, " [INFO] > MainActivity created!" );
-
+		// Initialize bluetooth
 		initializeBtHandles();
 
 		// Initialize the AppState
 		AppState.initState( getApplicationContext() );
-		AppState.getState().setCurrentSession( new Session() );
+		AppState.getState().resetSession();
 
 		// Initialize application workers and data.
 		httpWorker = new HttpWorker( HTTP_UPDATE_FREQUENCY, TimeUnit.SECONDS );
 		latestRow = new DataRow();
-		testPatient = new PatientRow( 4,
-									  "4",
-									  Calendar.getInstance().getTime(),
-									  true,
-									  "DrFoo",
-									  "John Doe" );
+		latestRow.session_id = AppState.getState().getCurrentSession().getId();
 
 		fragmentManager = getFragmentManager();
 
@@ -125,36 +121,29 @@ public class MainActivity
 	@Override
 	protected void onStart()
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onStart()" );
+
 		super.onStart();
 
 		view.ecgStatus.setLoading();
 		view.bpStatus.setLoading();
 		view.o2Status.setLoading();
 
+		AppState.getState().getFileManager().openSessionLog();
+
 		getPairedBtDevices();
 
-		latestRow.patient_id = "1";
-		latestRow.session_id = "1";
-
-		testPatient.liveStatus = "y";
-
-		for ( int i = 1; i < 11; i++ )
-		{
-			HttpRequestManager.sendPatient( new PatientRow( i,
-															String.valueOf( i ),
-															Calendar.getInstance().getTime(),
-															false,
-															"DrFoo",
-															"John Doe" ) );
-
-		}
-
 		httpWorker.start();
+		HttpRequestManager.sendPatient( new PatientRow( AppState.getState()
+																.getCurrentPatient(),
+														true ) );
 	}
 
 	@Override
 	protected void onResume()
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onResume()" );
+
 		super.onResume();
 
 		checkBtStatus();
@@ -164,32 +153,38 @@ public class MainActivity
 	@Override
 	protected void onPause()
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onPause()" );
+
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop()
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onStop()" );
+
 		super.onStop();
 
 		idleBtDevices();
 
-		testPatient.liveStatus = "n";
-		HttpRequestManager.sendPatient( testPatient );
-
+		AppState.getState().getFileManager().closeSessionLog();
+		AppState.getState().setCurrentSession( null );
 		AppState.getState().saveState();
 
 		httpWorker.stop();
+		HttpRequestManager.sendPatient( new PatientRow( AppState.getState()
+																.getCurrentPatient(),
+														false ) );
 	}
 
 	@Override
 	protected void onDestroy()
 	{
+		Log.v( LOG_TAG, " [INFO] > MainActivity.onDestroy()" );
+
 		super.onDestroy();
 
 		disconnectAndCleanupBtDevices();
-
-		Log.v( LOG_TAG, " [INFO] > MainActivity destroyed!" );
 	}
 
 	@Override
@@ -250,14 +245,17 @@ public class MainActivity
 
 		for ( BluetoothDevice device : devices )
 		{
-			if ( emotionEcg == null && device.getAddress().equals( ecgInfo.second ) )
+			if ( emotionEcg == null && device.getAddress()
+											 .equals( ecgInfo.second ) )
 			{
 				rawEcgDevice = device;
-				emotionEcg = new EmotionEcg( rawEcgDevice, new Handler( ecgHandler ) );
+				emotionEcg = new EmotionEcg( rawEcgDevice,
+											 new Handler( ecgHandler ) );
 				continue;
 			}
 
-			if ( foraBpGlucose == null && device.getAddress().equals( bpgInfo.second ) )
+			if ( foraBpGlucose == null && device.getAddress()
+												.equals( bpgInfo.second ) )
 			{
 				rawGlucoseBpDevice = device;
 				foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
@@ -265,7 +263,8 @@ public class MainActivity
 				continue;
 			}
 
-			if ( noninOximeter == null && device.getAddress().equals( o2xInfo.second ) )
+			if ( noninOximeter == null && device.getAddress()
+												.equals( o2xInfo.second ) )
 			{
 				rawNoninOxometer = device;
 				noninOximeter = new NoninOximeter( rawNoninOxometer,
@@ -372,7 +371,8 @@ public class MainActivity
 		case -1:
 			// Placeholder
 			fragmentManager.beginTransaction()
-						   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+						   .replace( R.id.main_frame,
+									 PlaceholderFragment.newInstance() )
 						   .commit();
 			break;
 
@@ -380,7 +380,8 @@ public class MainActivity
 			if ( menuSelection != MainMenuAdapter.ID_PATIENT_INFO )
 			{
 				fragmentManager.beginTransaction()
-							   .replace( R.id.main_frame, PatientInfoFragment.newInstance() )
+							   .replace( R.id.main_frame,
+										 PatientInfoFragment.newInstance() )
 							   .commit();
 				menuSelection = MainMenuAdapter.ID_PATIENT_INFO;
 			}
@@ -390,7 +391,8 @@ public class MainActivity
 			if ( menuSelection != MainMenuAdapter.ID_DIAGNOSTICS )
 			{
 				fragmentManager.beginTransaction()
-							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .replace( R.id.main_frame,
+										 PlaceholderFragment.newInstance() )
 							   .commit();
 				menuSelection = MainMenuAdapter.ID_DIAGNOSTICS;
 			}
@@ -400,7 +402,8 @@ public class MainActivity
 			if ( menuSelection != MainMenuAdapter.ID_ALARMS )
 			{
 				fragmentManager.beginTransaction()
-							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .replace( R.id.main_frame,
+										 PlaceholderFragment.newInstance() )
 							   .commit();
 				menuSelection = MainMenuAdapter.ID_ALARMS;
 			}
@@ -410,7 +413,8 @@ public class MainActivity
 			if ( menuSelection != MainMenuAdapter.ID_LOGIN )
 			{
 				fragmentManager.beginTransaction()
-							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .replace( R.id.main_frame,
+										 PlaceholderFragment.newInstance() )
 							   .commit();
 				menuSelection = MainMenuAdapter.ID_LOGIN;
 			}
@@ -429,8 +433,8 @@ public class MainActivity
 
 		default:
 			Log.w( LOG_TAG,
-				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter.getItemId(
-						   pos ) );
+				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter
+						   .getItemId( pos ) );
 		}
 	}
 
@@ -438,6 +442,7 @@ public class MainActivity
 	public void onEcgBtConnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > ECG bluetooth connected" );
+		AppState.writeToSessionLog( "ECG bluetooth device connected." );
 
 		if ( emotionEcg != null )
 		{
@@ -460,6 +465,7 @@ public class MainActivity
 	public void onEcgBtDisconnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > ECG bluetooth disconnected" );
+		AppState.writeToSessionLog( "ECG bluetooth device disconnected." );
 		view.ecgStatus.setBad();
 	}
 
@@ -471,6 +477,9 @@ public class MainActivity
 		{
 			return;
 		}
+
+		AppState.writeToSessionLog( "ECG packet received {no:" + data.getPacketNumber() + ",samples:" + Arrays
+				.toString( data.getSamples() ) + ",rr_interval:" + data.getRrInterval() + "}" );
 
 		final int[] ecgData = data.getSamples();
 		//final int rrInterval = data.getRrInterval();
@@ -486,7 +495,8 @@ public class MainActivity
 
 				for ( int datum : ecgData )
 				{
-					view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter, datum ),
+					view.ecgSeries.appendData( new DataPoint( ++ecgGraphCounter,
+															  datum ),
 											   true,
 											   GRAPH_HORIZONTAL_RESOLUTION );
 				}
@@ -498,6 +508,7 @@ public class MainActivity
 	public void onBpGlucoseBtConnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > BPG bluetooth connected" );
+		AppState.writeToSessionLog( "BPG bluetooth device connected." );
 		if ( foraBpGlucose != null )
 		{
 			foraBpGlucose.getLatestData();
@@ -514,6 +525,7 @@ public class MainActivity
 	public void onBpGlucoseBtDisconnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > BPG bluetooth disconnected" );
+		AppState.writeToSessionLog( "BPG bluetooth device disconnected." );
 		view.bpStatus.setBad();
 	}
 
@@ -525,6 +537,9 @@ public class MainActivity
 		{
 			return;
 		}
+
+		AppState.writeToSessionLog( "BPG packet received {time:" + data.getTimeStamp() + ",data:" + data
+				.getDataString() + "}" );
 
 		final int systolic = data.getSystolic();
 		int diastolic = data.getDiastolic();
@@ -548,7 +563,8 @@ public class MainActivity
 				view.sbpText.setText( strSystolic );
 				view.dbpText.setText( strDiastolic );
 				view.mapText.setText( strMap );
-				view.sbpSeries.appendData( new DataPoint( bpGraphCounter, systolic ),
+				view.sbpSeries.appendData( new DataPoint( bpGraphCounter,
+														  systolic ),
 										   true,
 										   GRAPH_HORIZONTAL_RESOLUTION );
 				view.mapSeries.appendData( new DataPoint( bpGraphCounter, map ),
@@ -562,6 +578,7 @@ public class MainActivity
 	public void onOxometerBtConnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > O2X bluetooth connected" );
+		AppState.writeToSessionLog( "O2X bluetooth device connected." );
 		if ( noninOximeter != null )
 		{
 			noninOximeter.getData();
@@ -577,6 +594,7 @@ public class MainActivity
 	public void onOxometerBtDisconnected( BluetoothDevice device )
 	{
 		Log.v( LOG_TAG, " [ BT ] > O2X bluetooth disconnected" );
+		AppState.writeToSessionLog( "O2X bluetooth device disconnected." );
 		view.o2Status.setBad();
 	}
 
@@ -588,6 +606,9 @@ public class MainActivity
 		{
 			return;
 		}
+
+		AppState.writeToSessionLog( "BPG packet received {time:" + data.getTimeStamp() + ",SpO2:" + data
+				.getSpO2() + ",pulse:" + data.getPulse() + "}" );
 
 		int pulse = data.getPulse();
 		final int spo2 = data.getSpO2();
@@ -606,7 +627,8 @@ public class MainActivity
 			{
 				view.ecgText.setText( strPulse );
 				view.o2Text.setText( strSpo2 );
-				view.o2xSeries.appendData( new DataPoint( ++o2GraphCounter, spo2 ),
+				view.o2xSeries.appendData( new DataPoint( ++o2GraphCounter,
+														  spo2 ),
 										   true,
 										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
@@ -643,7 +665,8 @@ public class MainActivity
 		// Connect the new device.
 		rawGlucoseBpDevice = mBluetoothAdapter.getRemoteDevice( AppState.getState()
 																		.getBpgDevice().second );
-		foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice, new Handler( bpGlucoseHandler ) );
+		foraBpGlucose = new ForaBpGlucose( rawGlucoseBpDevice,
+										   new Handler( bpGlucoseHandler ) );
 		foraBpGlucose.connect();
 	}
 
@@ -665,7 +688,8 @@ public class MainActivity
 		// Connect the new device.
 		rawNoninOxometer = mBluetoothAdapter.getRemoteDevice( AppState.getState()
 																	  .getO2xDevice().second );
-		noninOximeter = new NoninOximeter( rawNoninOxometer, new Handler( oxometerHandler ) );
+		noninOximeter = new NoninOximeter( rawNoninOxometer,
+										   new Handler( oxometerHandler ) );
 		noninOximeter.connect();
 	}
 
@@ -777,10 +801,7 @@ public class MainActivity
 			public ImageView   good;
 			public ProgressBar loading;
 
-			public DataStatusIndicator( MainActivity activity,
-										int goodResID,
-										int badResID,
-										int loadingResId )
+			public DataStatusIndicator( MainActivity activity, int goodResID, int badResID, int loadingResId )
 			{
 				bad = (ImageView) activity.findViewById( badResID );
 				good = (ImageView) activity.findViewById( goodResID );
@@ -814,7 +835,7 @@ public class MainActivity
 		A class that can be used to generate some fake data points on the graphs. For
 		demonstration only.
 	 */
-	@SuppressWarnings( "UnusedDeclaration" )
+	@SuppressWarnings("UnusedDeclaration")
 	private class MockDataGenerator
 	{
 		public static final int                         NUM_WORKERS = 1;
@@ -893,18 +914,18 @@ public class MainActivity
 						view.o2Text.setText( sspo2 );
 
 						/* This bogs down the UI thread a lot. May need to find an alternative... */
-						view.ecgSeries.appendData( new DataPoint( ecgGraphCounter, ecg ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.sbpSeries.appendData( new DataPoint( ecgGraphCounter, sbp ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.mapSeries.appendData( new DataPoint( ecgGraphCounter, map ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.o2xSeries.appendData( new DataPoint( ecgGraphCounter, spo2 ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
+						view.ecgSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								ecg ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.sbpSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								sbp ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.mapSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								map ), true, GRAPH_HORIZONTAL_RESOLUTION );
+						view.o2xSeries.appendData( new DataPoint(
+								ecgGraphCounter,
+								spo2 ), true, GRAPH_HORIZONTAL_RESOLUTION );
 					}
 				} );
 			}
@@ -956,7 +977,8 @@ public class MainActivity
 			{
 				if ( newData )
 				{
-					latestRow.timestamp = DataRow.sdf.format( Calendar.getInstance().getTime() );
+					latestRow.timestamp = DataRow.sdf.format( Calendar.getInstance()
+																	  .getTime() );
 					HttpRequestManager.sendData( latestRow );
 					newData = false;
 				}
