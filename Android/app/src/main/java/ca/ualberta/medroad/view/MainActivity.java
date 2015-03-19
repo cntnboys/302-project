@@ -137,7 +137,17 @@ public class MainActivity
 		latestRow.session_id = "1";
 
 		testPatient.liveStatus = "y";
-		HttpRequestManager.sendPatient( testPatient );
+
+		for ( int i = 1; i < 11; i++ )
+		{
+			HttpRequestManager.sendPatient( new PatientRow( i,
+															String.valueOf( i ),
+															Calendar.getInstance().getTime(),
+															false,
+															"DrFoo",
+															"John Doe" ) );
+
+		}
 
 		httpWorker.start();
 	}
