@@ -129,6 +129,8 @@ public class MainActivity
 		view.bpStatus.setLoading();
 		view.o2Status.setLoading();
 
+		if ( AppState.getState().getCurrentSession() == null )
+			AppState.getState().resetSession();
 		AppState.getState().getFileManager().openSessionLog();
 
 		getPairedBtDevices();
