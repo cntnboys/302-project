@@ -10,6 +10,7 @@ import java.io.Serializable;
 import ca.ualberta.medroad.model.Patient;
 import ca.ualberta.medroad.model.Session;
 import ca.ualberta.medroad.model.mock.MockPatient;
+import ca.ualberta.medroad.model.mock.MockPatientForTheDamnDemo;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.MainActivity;
 
@@ -53,7 +54,7 @@ public class AppState
 			state.fileManager = tempManager;
 			if ( state.currentPatient == null )
 			{
-				state.currentPatient = new MockPatient();
+				state.currentPatient = new MockPatientForTheDamnDemo();
 			}
 
 			Log.v( MainActivity.LOG_TAG, " [STAT] > App state initialized." );
@@ -168,7 +169,7 @@ public class AppState
 		HttpRequestManager.sendPatient( new PatientRow( currentPatient, false ) );
 		fileManager.closeSessionLog();
 
-		currentPatient = new MockPatient();
+		currentPatient = new MockPatientForTheDamnDemo();
 		currentSession = new Session();
 
 		HttpRequestManager.sendPatient( new PatientRow( currentPatient, true ) );

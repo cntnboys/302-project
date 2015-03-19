@@ -8,14 +8,14 @@ import ca.ualberta.medroad.model.Patient;
  * Created by Yuey on 2015-03-16.
  */
 public class MockPatient
-	extends Patient
+		extends Patient
 {
 	public MockPatient()
 	{
 		Calendar c = Calendar.getInstance();
 
 		this.id = (int) generateNewId();
-		this.ahcn = "n/a";
+		this.ahcn = String.valueOf( this.id % 1000000000 );
 		this.dob = c;
 		this.doctor = "n/a";
 		this.name = "John Doe";
