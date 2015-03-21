@@ -8,8 +8,8 @@ from django.contrib.auth.models import UserManager
 
 class Patient(models.Model):
     patient_id = models.IntegerField(primary_key = True, null=False)
-    ahcn = models.CharField(max_length=9, null=True, unique=True)
-    dob = models.DateField()
+    ahcn = models.CharField(max_length=9, null=True)
+    dob = models.DateField(null=True)
     liveStatus = models.CharField(max_length=1, default ="n")
     doctor = models.CharField(max_length=200, null = True)
     name = models.CharField(max_length=200, null = True)
