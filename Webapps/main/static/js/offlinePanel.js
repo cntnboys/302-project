@@ -70,7 +70,7 @@ function hrAlert(){
     //window.alert("HEART RATE TOO LOW");
 }
 function bploop(){
-
+    sleep(1000);
     httpGet();
     var dia=document.getElementById('dia');
     var sys=document.getElementById('sys');
@@ -103,7 +103,8 @@ function bploop(){
         oxim.style.color='green';
     }
 
-    setInterval(bploop,1000);
+    //setInterval(bploop,1000);
+    requestAnimationFrame(bploop);
 }
 bploop();
 function loop() {
@@ -116,9 +117,6 @@ function loop() {
     if(i%24==0){
       document.getElementById('hr').innerHTML=BPMList[j];
       j++;
-      if(j==4){
-        window.alert(new Date().getTime() - start);
-      }
     }
     py = 280 - ECGMvList[i]*.015-120;
     px += speed;
