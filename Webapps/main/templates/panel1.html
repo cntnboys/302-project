@@ -7,8 +7,8 @@
 
 
 
-	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/css/panel1.css"/>
-<!--	<link type="text/css" rel="stylesheet" href="../static/css/panel1.css"/>-->
+	<!-- 		<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/css/panel1.css"/> -->
+	<link type="text/css" rel="stylesheet" href="../static/css/panel1.css"/>
 		<!-- Latest compiled and minified CSS -->
 
 
@@ -27,6 +27,7 @@
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src ="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src ="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
 
 	<script type="text/javascript" >
@@ -41,19 +42,13 @@
 	    });
 	});
 	</script>
-    <!--
-	<script type="text/javascript">
-        //httpGet("hello");
-	function httpGet(theUrl) {
-	var xmlHttp= new XMLHttpRequest();
-	xmlHttp.open("GET","http://127.0.0.1:8000/main/getPatientdata/",false);
-	xmlHttp.send(null);
-	window.alert(xmlHttp.responseText);
-	}
 
-
-	</script>
--->
+<script type="text/javascript">
+//jQuery used for simplicity
+$(window).scroll(function(){
+  $('#header-inner').toggleClass('scrolling', $(window).scrollTop() > $('#header').offset().top);
+});
+</script>
 
 
 
@@ -87,7 +82,7 @@
 
 
 
-<!-- TOP ---->
+<!-- TOP -->
 <div class="container">
 		<div id = "patientInfo">
 			<table id="pTable" class="table table-striped" >
@@ -110,11 +105,17 @@
 
 
 
-					
+						{% if link.liveStatus == "True" %}
 
 						<td style="padding:0 15px 0 15px;">Active  </td>
 
-						
+						{% endif %}
+
+						{% if link.liveStatus == "False" %}
+
+						<td style="padding:0 15px 0 15px;"> Inactive  </td>
+
+						{% endif %}
 
 
 
@@ -126,87 +127,52 @@
 				</tbody>
 			</table>
 		</div>
+</div>
 
-		<div class="ecgbox">
-			<div class = "ecg">
-
-				<canvas id="demo" width=800px height=280px></canvas>
-
-			</div>
-			<div class="heartRate">
-					<p id="hr" value="60">100
-					</p>
-					<h3 >BMP</h3>
-			</div>
-			<div class="clear">
-
-			</div>
+<div class="numbers">
+	<div id="header">
+		<div id="header-inner">
+			<canvas id="demo" height=280px></canvas>
 		</div>
-		<div class = "bloodPressure">
+</div>
+	<div class = "bloodPressure">
 			<h3>Sys:</h3>
 			<p id="sys">N/A</p>
 			<h3>Dia:</h3>
 			<p id ="dia">N/A</p>
-			<div class="oximeter">
-				<h3 id ="o2">%SpO2:</h3>
-				<p id="oxim">N/A</p>
-			</div>
-		</div>
+			<h3 id ="o2">%SpO2:</h3>
+			<p id="oxim">N/A</p>
+			<p id="hr">100</p>
+			<h3 id = "bpmH3">BPM:</h3>
 
-
-
-
+	</div>
 </div>
 
 <!-- Session Table -->
 </br></br>
 </br>
-
-
 		<div class="container">
 		<h1>Patient Testing History</h1>
 		<table id="example" class="table table-striped">
 			<thead>
 				<tr>
 					<th>Session #</th>
-
-
-
-
 					<th>Assigned/status</th>
 				</tr>
 			</thead>
 			<tbody>
-
-
 				<!-- get all patients -->
-
 				{% for link in sessions %}
-
-
 				<tr class='clickable-row' data-href= #>
-
-					<td data-search="{{ link }}">{{ link }}</a></td>
-
-
+					<td data-search="{{ link.session_id }}">{{ link.session_id }}</a></td>
 					<td data-order="seen">Inactive</td>
-
-
-
 				</tr>
-
 				{% endfor %}
-
 			</tbody>
-
-
-
 		</table>
 	</div>
-
 	</body>
 	<!-- script taken from http://jsfiddle.net/AbdiasSoftware/tFn66/ -->
-	<script type="text/javascript" src="{{ STATIC_URL }}/js/panelScript.js"></script>
-	<!--<script type="text/javascript" src="../static/js/panelScript.js">-->
-
+	<!--	<script type="text/javascript" src="{{ STATIC_URL }}/js/offlinePanel.js"></script>-->
+	<script type="text/javascript" src="../static/js/offlinePanel.js"></script>
 </html>
