@@ -103,7 +103,7 @@ function bploop(){
         oxim.style.color='green';
     }
 
-    requestAnimationFrame(bploop);
+    setInterval(bploop,1000);
 }
 bploop();
 function loop() {
@@ -143,9 +143,6 @@ function loop() {
     if(i%24==0){
       document.getElementById('hr').innerHTML=BPMList[j];
       j++;
-      if(j==40){
-        window.alert(new Date().getTime() - start);
-      }
     }
     py = 280 - ECGMvList[i]*.015-120;
     px += speed;
