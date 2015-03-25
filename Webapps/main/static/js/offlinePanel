@@ -36,7 +36,7 @@ function stringToData(requestString){
 var ctx = demo.getContext('2d');
 ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
-var px = 0, opx = 0, speed = 1,
+var px = 0, opx = 0, speed = 5,
 py = h * .5, opy = py,
 scanBarWidth = 20,
 bpmList=[57,60,61,60,61,61,59,58,57,57,58,60,60,60,59,58,57,56,55,55,55,53,52,51,50,],
