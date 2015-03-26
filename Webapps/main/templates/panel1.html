@@ -109,9 +109,7 @@ $(window).scroll(function(){
 
 						<td style="padding:0 15px 0 15px;">Active  </td>
 
-						{% endif %}
-
-						{% if link.liveStatus == "False" %}
+                        {% else %}
 
 						<td style="padding:0 15px 0 15px;"> Inactive  </td>
 
@@ -164,7 +162,7 @@ $(window).scroll(function(){
 				<!-- get all patients -->
 				{% for link in sessions %}
 				<tr class='clickable-row' data-href= #>
-					<td data-search="{{ link.session_id }}">{{ link.session_id }}</a></td>
+					<td data-search="{{ link }}">{{ link }}</a></td>
 					<td data-order="seen">Inactive</td>
 				</tr>
 				{% endfor %}
