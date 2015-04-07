@@ -13,7 +13,7 @@ ctx.strokeStyle = '#00bd00';
 ctx.lineWidth = 3;
 var py;
 var t22 = new Date().getTime();
-loop();
+//loop();
 function sleep(milliseconds) {
 var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
