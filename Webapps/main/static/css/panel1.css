@@ -11,7 +11,7 @@ ul {
 	    background-color:white;
 	    color:black;
 	    text-align:right;
-		padding:1px;
+			padding:1px;
 }
 #pTable{
 	-webkit-column-gap: 40px; /* Chrome, Safari, Opera */
@@ -24,7 +24,13 @@ ul {
 	width:100%;
 
 }
-
+.floatable {
+	position:fixed;
+	z-index=100;
+}
+.slidedown{
+	margin-top:350px;
+}
 .numbers .bloodPressure h3 {
 	color:grey;
 	display:inline;
@@ -36,7 +42,6 @@ div .bloodPressure{
 	width:100%;
 	float:left;
 	background-color:black;
-	margin-top:180px;
 }
 .numbers .bpmClass p{
 		display:inline;
@@ -77,27 +82,21 @@ div .bloodPressure{
     width: 100%;
 		background-color:black;
 }
-
+#header2,
+#header-inner2 { /* Note #1 */
+    height: 100px;
+    width: 100%;
+		background-color:black;
+}
 .scrolling { /* Note #2 */
     position: fixed;
     top: 0;
 }
-div .ecgbox{
+.scrolling2 { /* Note #2 */
+    position: fixed;
+    top: 300;
+}
 
-	background:black;
-	height: 300px;
-	width: 100%;
-	padding:0;
-	margin:0;
-	border:0;
-}
-div .ecgbox .ecg{
-	background:black;
-	float: left;
-	height: 100%;
-	width: 100%;
-	padding:0;
-}
 
 div.clear {
 	clear: both;
