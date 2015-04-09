@@ -11,23 +11,23 @@ var j=0;
 var i =0;
 function httpGet() {
     try {
-      // var xmlHttp= new XMLHttpRequest();
-      // var ptid=document.getElementById('pId');
-      // var ptString=1;
-      // var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
-      // var slash ="/";
-      // var page= pageString.concat(ptString);
-      // var pageFinal= page.concat(slash);
-      //
-      // xmlHttp.open("GET",pageFinal,false);
-      // xmlHttp.send(null);
+      var xmlHttp= new XMLHttpRequest();
+      var ptid=document.getElementById('pId');
+      var ptString=1;
+      var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
+      var slash ="/";
+      var page= pageString.concat(ptString);
+      var pageFinal= page.concat(slash);
+
+      xmlHttp.open("GET",pageFinal,false);
+      xmlHttp.send(null);
   }catch{
 
   }
-  var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
+//  var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
     //window.alert(xmlHttp.responseText);
     //window.alert(xmlHttp.responseText);
-  //  var dataString= xmlHttp.responseText;
+  var dataString= xmlHttp.responseText;
   stringToData(dataString);
 }
 var pulseRat,diaLoc,sysLoc,mapLoc,oxySub,diaCal,sysCal;
