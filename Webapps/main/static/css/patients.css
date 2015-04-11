@@ -25,6 +25,13 @@ table.dataTable thead th,
 table.dataTable tfoot th {
   font-weight: bold;
 }
+mark.red{
+    color:red !important;
+}
+
+mark.green{
+    color:green !important;
+}
 table.dataTable thead th,
 table.dataTable thead td {
   padding: 10px 18px;

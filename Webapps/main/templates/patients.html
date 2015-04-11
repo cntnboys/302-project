@@ -5,7 +5,7 @@
 	<title>MedRoad-Patient</title>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/patients.css">
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 
@@ -94,11 +94,15 @@
 					
 					{% if link.liveStatus == "y" %}
 
-					<td data-order="seen">Active</td>
+					<td data-order="seen">
+                    <mark class="red">Active </mark>
+                    </td>
 
                     {% else %}
 	
-					<td data-order="seen">Inactive</td>
+                    <td data-order="seen">
+                    <mark class ="green">Inactive</mark>
+                    </td>
 
 					{% endif %}
 			
