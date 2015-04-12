@@ -15,7 +15,7 @@ function httpGet() {
         //try{
         sleep(1000);
         var xmlHttp= new XMLHttpRequest();
-        var ptid=document.getElementById('pId')[3];
+        var ptid=document.getElementById('pId')[2];
         var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
         var slash ="/";
         var page= pageString.concat(ptid);

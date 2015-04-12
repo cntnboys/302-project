@@ -102,22 +102,22 @@
 					</thead>
 					<tbody>
 						{% for link in items %}
-						<h1> {{ link.liveStatus }}</h1>
+						
 						<tr>
 							<td style="padding:0 15px 0 15px;">{{ link.name }} </td>
 							<td style="padding:0 15px 0 15px;">{{ link.dob }} </td>
 							<td style="padding:0 15px 0 15px;">{{ link.ahcn }} </td>
 							<td style="padding:0 15px 0 15px;" id ="pId">{{ link.patient_id }}  </td>
-								
 
 
-							{% if link.liveStatus == "True" %}
+
+							{% if link.liveStatus == "y" %}
 
 							<td style="padding:0 15px 0 15px;">Active  </td>
 
 	                        {% else %}
 
-							<td style="padding:0 15px 0 15px;"> Active  </td>
+							<td style="padding:0 15px 0 15px;"> inActive  </td>
 
 							{% endif %}
 
