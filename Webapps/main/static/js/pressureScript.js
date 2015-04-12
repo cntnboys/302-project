@@ -10,6 +10,7 @@ var start = new Date().getTime();
 var j=0;
 var i =0;
 function httpGet() {
+      sleep(2000);
       try{
       var xmlHttp= new XMLHttpRequest();
       var ptid=document.getElementById('pId');
