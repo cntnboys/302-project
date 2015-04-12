@@ -27,13 +27,13 @@ function httpGet() {
 //  var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
     //window.alert(xmlHttp.responseText);
     //window.alert(xmlHttp.responseText);
-  var dataString= xmlHttp.responseText;
-  stringToData(dataString);
-  }
-  catch(){
-    var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
-    stringToData(dataString);
-  }
+      var dataString= xmlHttp.responseText;
+      stringToData(dataString);
+      }
+      catch(err){
+        var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
+        stringToData(dataString);
+      }
 }
 var pulseRat,diaLoc,sysLoc,mapLoc,oxySub,diaCal,sysCal;
 function stringToData(requestString){
