@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
 			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+			  android:layout_height="match_parent"
+			  android:orientation="vertical">
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:padding="@dimen/margin"
-		android:layout_marginTop="@dimen/margin"
 		android:layout_gravity="center_horizontal"
-		android:text="Placeholder Layout"/>
+		android:layout_marginTop="@dimen/margin"
+		android:padding="@dimen/margin"
+		android:text="Placeholder Layout"
+		android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_more"
 		android:layout_marginLeft="@dimen/margin"
 		android:layout_marginRight="@dimen/margin"
 		android:background="#FFE0E0E0"
+		android:padding="@dimen/margin_more"
 		android:text="@string/placeholder_paragraph"/>
 
 </LinearLayout>

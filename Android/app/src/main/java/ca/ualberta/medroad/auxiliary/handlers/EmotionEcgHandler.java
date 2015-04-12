@@ -18,6 +18,13 @@ import ca.ualberta.medroad.view.MainActivity;
 public class EmotionEcgHandler
 		implements Handler.Callback
 {
+	/* 	This hack fixes the "Over 500" bug that occurs sometimes because we have to use medlib.
+		Basically, the pulse shown is 5x what it should be because somewhere in the pipeline the
+		"average over 5 samples" isn't getting divided by 5. Nobody (including the author of
+		medlib) knows why this happens. */
+	public static final boolean STUPID_ECG_HACK_ENABLED  = true;
+	public static final int     STUPID_ECG_HACK_THRESOLD = 350;
+
 	protected EcgHandlerCallbacks callbackTarget;
 
 	public EmotionEcgHandler( EcgHandlerCallbacks callbackTarget )
@@ -32,6 +39,12 @@ public class EmotionEcgHandler
 		{
 		case EmotionEcg.GET_DATA:
 			// Returns pulse (averaged over 5 packets) as msg.arg1
+			int pulse = msg.arg1;
+
+			if ( STUPID_ECG_HACK_ENABLED && pulse > STUPID_ECG_HACK_THRESOLD )
+				pulse /= 5;
+
+			callbackTarget.onEcgPulseReceive( pulse );
 			break;
 
 		case EmotionEcg.ECG_SAMPLES:
@@ -40,8 +53,8 @@ public class EmotionEcgHandler
 					dataFormat()  returns the data format as a float (0.7 )
 					getSamples() returns an int[25] of micro volt readings,
 						which can be plotted against the sampling frequency (def 100Hz)
-					getRrInterval() returns the rr interval in ms (int) 0 if there isn't one
-					gotRrInterval() returns the true if there is an rr interval, false otherwise
+					getRrInterval() returns the rr HTTP_INTERVAL in ms (int) 0 if there isn't one
+					gotRrInterval() returns the true if there is an rr HTTP_INTERVAL, false otherwise
 					getPeak() returns the absolute time or RR peak in ms (int)
 					getPacketNumber() returns the packet number (int)
 				Note that this object may be null
@@ -50,7 +63,7 @@ public class EmotionEcgHandler
 			break;
 
 		case EmotionEcg.STOP_DATA:
-			// have to stop reading from device and user didn't ask for it
+			// have to stopHttpWorker reading from device and user didn't ask for it
 			callbackTarget.onEcgBtDisconnected( null );
 			break;
 
@@ -82,10 +95,12 @@ public class EmotionEcgHandler
 
 	public interface EcgHandlerCallbacks
 	{
-		public void onEcgBtConnected( BluetoothDevice device );
+		void onEcgBtConnected( BluetoothDevice device );
 
-		public void onEcgBtDisconnected( BluetoothDevice device );
+		void onEcgBtDisconnected( BluetoothDevice device );
 
-		public void onEcgPacketReceive( EmotionEcg.EcgData data );
+		void onEcgPacketReceive( EmotionEcg.EcgData data );
+
+		void onEcgPulseReceive( int pulse );
 	}
 }

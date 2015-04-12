@@ -18,8 +18,9 @@ import ca.ualberta.medroad.view.MainActivity;
 /**
  * Created by Yuey on 2015-03-12.
  * <p/>
- * A wrapper for an HttpURLConnection. The class manages opening, closing and writing to the con.
+ * A wrapper for an HttpURLConnection. The class manages opening, closing and writing to the con. It's a robust solution to sending continuous data to the server.
  * NB: This class does not work with our current server implementation. Refer to HttpRequestManager instead.
+ *
  * @see ca.ualberta.medroad.auxiliary.HttpRequestManager
  */
 public class HttpConnectionManager
@@ -54,7 +55,9 @@ public class HttpConnectionManager
 		}
 	}
 
-	public HttpConnectionManager( ConManagerCallbacks callbackTarget, String patientUrl, String dataUrl )
+	public HttpConnectionManager( ConManagerCallbacks callbackTarget,
+								  String patientUrl,
+								  String dataUrl )
 			throws MalformedURLException
 	{
 		this.callbackTarget = callbackTarget;
@@ -96,6 +99,28 @@ public class HttpConnectionManager
 					   .getResponseMessage() );
 	}
 
+	private void formatConnectionRequest( HttpsURLConnection dataConnection )
+	{
+		dataConnection.setDoOutput( true );
+		//dataConnection.setChunkedStreamingMode( 0 );
+		dataConnection.setRequestProperty( "Host", HOST );
+		dataConnection.setRequestProperty( "Accept", "*/*" );
+		dataConnection.setRequestProperty( "Content-Type", "application/json" );
+		dataConnection.setRequestProperty( "Cache-Control", "no-cache" );
+
+		Log.d( MainActivity.LOG_TAG, "Connection formatted with headers: " );
+		for ( String prop : dataConnection.getRequestProperties().keySet() )
+		{
+			Log.d( MainActivity.LOG_TAG,
+				   prop + ":" + dataConnection.getRequestProperties().get( prop ) );
+		}
+	}
+
+	public interface ConManagerCallbacks
+	{
+		public void onDataStreamConnected();
+	}
+
 	public class OpenConnectionAsync
 			extends AsyncTask< Void, Void, Void >
 	{
@@ -110,8 +135,8 @@ public class HttpConnectionManager
 
 				dataOut = new BufferedOutputStream( dataConnection.getOutputStream() );
 				Log.d( MainActivity.LOG_TAG,
-					   "A connection was made to the server with response " + dataConnection
-							   .getResponseCode() + " - " + dataConnection.getResponseMessage() );
+					   "A connection was made to the server with response " + dataConnection.getResponseCode() + " - " + dataConnection
+							   .getResponseMessage() );
 			}
 			catch ( IOException e )
 			{
@@ -127,8 +152,8 @@ public class HttpConnectionManager
 
 				patientOut = new BufferedOutputStream( patientConnection.getOutputStream() );
 				Log.d( MainActivity.LOG_TAG,
-					   "A connection was made to the server with response " + patientConnection
-							   .getResponseCode() + " - " + patientConnection.getResponseMessage() );
+					   "A connection was made to the server with response " + patientConnection.getResponseCode() + " - " + patientConnection
+							   .getResponseMessage() );
 			}
 			catch ( IOException e )
 			{
@@ -143,24 +168,6 @@ public class HttpConnectionManager
 		protected void onPostExecute( Void aVoid )
 		{
 			callbackTarget.onDataStreamConnected();
-		}
-	}
-
-	private void formatConnectionRequest( HttpsURLConnection dataConnection )
-	{
-		dataConnection.setDoOutput( true );
-		//dataConnection.setChunkedStreamingMode( 0 );
-		dataConnection.setRequestProperty( "Host", HOST );
-		dataConnection.setRequestProperty( "Accept", "*/*" );
-		dataConnection.setRequestProperty( "Content-Type", "application/json" );
-		dataConnection.setRequestProperty( "Cache-Control", "no-cache" );
-
-		Log.d( MainActivity.LOG_TAG, "Connection formatted with headers: " );
-		for ( String prop : dataConnection.getRequestProperties().keySet() )
-		{
-			Log.d( MainActivity.LOG_TAG,
-				   prop + ":" + dataConnection.getRequestProperties()
-											  .get( prop ) );
 		}
 	}
 
@@ -195,10 +202,5 @@ public class HttpConnectionManager
 
 			return null;
 		}
-	}
-
-	public interface ConManagerCallbacks
-	{
-		public void onDataStreamConnected();
 	}
 }

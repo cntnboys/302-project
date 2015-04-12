@@ -21,13 +21,13 @@ import ca.ualberta.medroad.view.MainActivity;
 public class BtHealthDeviceHandler
 		implements Handler.Callback
 {
-	private final String                  deviceTag;
+	private final int                     index;
 	private       BtHealthDeviceCallbacks callbackTarget;
 
-	public BtHealthDeviceHandler( String deviceTag, BtHealthDeviceCallbacks callbackTarget )
+	public BtHealthDeviceHandler( BtHealthDeviceCallbacks callbackTarget, int index )
 	{
-		this.deviceTag = deviceTag;
 		this.callbackTarget = callbackTarget;
+		this.index = index;
 	}
 
 	@Override
@@ -36,19 +36,19 @@ public class BtHealthDeviceHandler
 		switch ( msg.what )
 		{
 		case BtHealthDevice.CONNECTED_BT:
-			callbackTarget.onHealthDeviceBtConnected( deviceTag, (BluetoothDevice) msg.obj );
+			callbackTarget.onHealthDeviceBtConnected( (BluetoothDevice) msg.obj, index );
 			break;
 
 		case BtHealthDevice.CANNOT_CONNECT_BT:
-			callbackTarget.onHealthDeviceBtDisconnected( deviceTag, (BluetoothDevice) msg.obj );
+			callbackTarget.onHealthDeviceBtDisconnected( (BluetoothDevice) msg.obj, index );
 			break;
 
 		case BtHealthDevice.GET_DATA:
-			callbackTarget.onHealthDeviceDataRecieve( deviceTag, (ByteBuffer) msg.obj );
+			callbackTarget.onHealthDeviceDataReceive( (ByteBuffer) msg.obj, msg.arg1, index );
 			break;
 
 		case BtHealthDevice.STOP_DATA:
-			callbackTarget.onHealthDeviceBtDisconnected( deviceTag, null );
+			callbackTarget.onHealthDeviceBtDisconnected( null, index );
 			break;
 
 		default:
@@ -61,10 +61,10 @@ public class BtHealthDeviceHandler
 
 	public interface BtHealthDeviceCallbacks
 	{
-		public void onHealthDeviceBtConnected( String tag, BluetoothDevice device );
+		void onHealthDeviceBtConnected( BluetoothDevice device, int index );
 
-		public void onHealthDeviceBtDisconnected( String tag, BluetoothDevice device );
+		void onHealthDeviceBtDisconnected( BluetoothDevice device, int index );
 
-		public void onHealthDeviceDataRecieve( String tag, ByteBuffer data );
+		void onHealthDeviceDataReceive( ByteBuffer data, int length, int index );
 	}
 }

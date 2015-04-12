@@ -38,6 +38,38 @@ public class HttpRequestManager
 		task.execute( dataRow );
 	}
 
+	protected static HttpResponse composeAndExecutePost( String url, String entity )
+	{
+		HttpClient client = new DefaultHttpClient();
+		HttpPost postRequest = new HttpPost( url );
+		postRequest.addHeader( "Accept", "*/*" );
+		postRequest.addHeader( "Content-Type", "application/json" );
+		HttpResponse response = null;
+
+		try
+		{
+			postRequest.setEntity( new StringEntity( entity ) );
+		}
+		catch ( UnsupportedEncodingException e )
+		{
+			e.printStackTrace();
+		}
+
+		try
+		{
+			Log.v( MainActivity.LOG_TAG, " [HTTP] > Executing POST" );
+			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Destination: " + url );
+			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Payload:     " + entity );
+			response = client.execute( postRequest );
+		}
+		catch ( IOException e )
+		{
+			Log.e( MainActivity.LOG_TAG, " [HTTP] > Post request failed: " + e.getMessage() );
+		}
+
+		return response;
+	}
+
 	protected static class PostPatientAsync
 			extends AsyncTask< PatientRow, Void, Void >
 	{
@@ -102,38 +134,5 @@ public class HttpRequestManager
 
 			return null;
 		}
-	}
-
-
-	protected static HttpResponse composeAndExecutePost( String url, String entity )
-	{
-		HttpClient client = new DefaultHttpClient();
-		HttpPost postRequest = new HttpPost( url );
-		postRequest.addHeader( "Accept", "*/*" );
-		postRequest.addHeader( "Content-Type", "application/json" );
-		HttpResponse response = null;
-
-		try
-		{
-			postRequest.setEntity( new StringEntity( entity ) );
-		}
-		catch ( UnsupportedEncodingException e )
-		{
-			e.printStackTrace();
-		}
-
-		try
-		{
-			Log.v( MainActivity.LOG_TAG, " [HTTP] > Executing POST" );
-			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Destination: " + url );
-			Log.v( MainActivity.LOG_TAG, " [HTTP] >     Payload:     " + entity );
-			response = client.execute( postRequest );
-		}
-		catch ( IOException e )
-		{
-			Log.e( MainActivity.LOG_TAG, " [HTTP] > Post request failed: " + e.getMessage() );
-		}
-
-		return response;
 	}
 }

@@ -9,29 +9,29 @@
 		android:id="@+id/list_item_alert_ico"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:src="@drawable/ic_exclaim_light"
 		android:layout_centerVertical="true"
-		android:padding="@dimen/margin"/>
+		android:padding="@dimen/margin"
+		android:src="@drawable/ic_exclaim_light"/>
 
 	<TextView
 		android:id="@+id/list_item_alert_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_toEndOf="@id/list_item_alert_ico"
+		android:paddingTop="@dimen/margin"
 		android:textAppearance="?android:attr/textAppearanceLargeInverse"
 		android:textStyle="bold"
-		android:paddingTop="@dimen/margin"
 		tools:text="Alert!"/>
 
 	<TextView
 		android:id="@+id/list_item_alert_description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_toEndOf="@+id/list_item_alert_ico"
 		android:layout_below="@+id/list_item_alert_title"
+		android:layout_toEndOf="@+id/list_item_alert_ico"
+		android:paddingBottom="@dimen/margin"
 		android:textAppearance="?android:attr/textAppearanceInverse"
 		android:textStyle="italic"
-		android:paddingBottom="@dimen/margin"
 		tools:text="Patient is allergic to penicillin."/>
 
 </RelativeLayout>

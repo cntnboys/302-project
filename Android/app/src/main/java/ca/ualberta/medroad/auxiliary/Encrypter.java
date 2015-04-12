@@ -27,8 +27,7 @@ public class Encrypter
 		catch ( UnsupportedEncodingException e )
 		{
 			Log.e( MainActivity.LOG_TAG,
-				   "The Encrypter couldn't use string encoding " + STRING_ENCODING + ": " + e
-						   .getMessage() );
+				   "The Encrypter couldn't use string encoding " + STRING_ENCODING + ": " + e.getMessage() );
 			rawBytes = s.getBytes();
 		}
 
