@@ -1,0 +1,238 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:keepScreenOn="true"
+			  android:orientation="vertical"
+			  tools:context=".MainActivity">
+
+	<!-- Ignore relative overlap for graph labels. Readouts should never be more than 3 digits. -->
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/graphBG"
+		android:orientation="horizontal">
+
+		<com.jjoe64.graphview.GraphView
+			android:id="@+id/main_ecg_graph"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/graph_height_portrait"
+			android:layout_weight="1"/>
+
+		<RelativeLayout
+			android:layout_width="@dimen/graph_label_width"
+			android:layout_height="@dimen/graph_height_portrait"
+			android:padding="@dimen/margin"
+			tools:ignore="RelativeOverlap">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@+id/main_ecg_text"
+				android:text="@string/ecg_label"
+				android:textColor="@color/green"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:id="@+id/main_ecg_text"
+				style="@style/AppTheme.DisplayText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentTop="true"
+				android:padding="@dimen/margin"
+				android:text="@string/placeholder_data_reading"
+				android:textColor="@color/green_dark"
+				tools:text="80"/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@+id/main_sbp_text"
+				android:text="@string/bp_mmhg_label"
+				android:textColor="@color/red"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:id="@+id/main_sbp_text"
+				style="@style/AppTheme.DisplayText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentStart="true"
+				android:layout_centerVertical="true"
+				android:paddingBottom="@dimen/margin"
+				android:paddingStart="@dimen/margin"
+				android:paddingTop="@dimen/margin"
+				android:text="@string/placeholder_data_reading"
+				android:textColor="@color/red_dark"
+				tools:ignore="RtlSymmetry"
+				tools:text="120"/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@+id/main_map_text"
+				android:layout_alignParentEnd="true"
+				android:paddingBottom="@dimen/margin"
+				android:text="@string/map_label"
+				android:textColor="@color/orange"
+				android:textStyle="italic"/>
+
+			<TextView
+				android:id="@+id/main_map_text"
+				style="@style/AppTheme.DisplayText.Small"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@id/main_sbp_text"
+				android:layout_alignParentEnd="true"
+				android:paddingBottom="@dimen/margin_more"
+				android:text="@string/placeholder_data_reading"
+				android:textColor="@color/orange_dark"
+				tools:text="93"/>
+
+			<TextView
+				android:id="@+id/main_dbp_text"
+				style="@style/AppTheme.DisplayText.Small"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@id/main_sbp_text"
+				android:layout_marginTop="28dp"
+				android:layout_toEndOf="@id/main_sbp_text"
+				android:textColor="@color/red_dark"
+				tools:text="/80"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@+id/main_o2_text"
+				android:text="@string/spo2_label"
+				android:textColor="@color/blue"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:id="@+id/main_o2_text"
+				style="@style/AppTheme.DisplayText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentStart="true"
+				android:padding="@dimen/margin"
+				android:text="@string/placeholder_data_reading"
+				android:textColor="@color/blue_dark"
+				tools:text="99"/>
+
+			<ImageView
+				android:id="@+id/main_ecg_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"
+				android:contentDescription="@string/not_connected"
+				android:src="@drawable/ic_bad"
+				android:visibility="gone"/>
+
+			<ImageView
+				android:id="@+id/main_ecg_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"
+				android:contentDescription="@string/connected"
+				android:src="@drawable/ic_good"
+				android:visibility="gone"/>
+
+			<ProgressBar
+				android:id="@+id/main_ecg_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"/>
+
+
+			<ImageView
+				android:id="@+id/main_bp_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_sbp_text"
+				android:contentDescription="@string/not_connected"
+				android:src="@drawable/ic_bad"
+				android:visibility="gone"/>
+
+			<ImageView
+				android:id="@+id/main_bp_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_sbp_text"
+				android:contentDescription="@string/connected"
+				android:src="@drawable/ic_good"
+				android:visibility="gone"/>
+
+			<ProgressBar
+				android:id="@+id/main_bp_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_sbp_text"/>
+
+			<ImageView
+				android:id="@+id/main_o2_ic_bad"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_o2_text"
+				android:contentDescription="@string/not_connected"
+				android:src="@drawable/ic_bad"
+				android:visibility="gone"/>
+
+			<ImageView
+				android:id="@+id/main_o2_ic_good"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_o2_text"
+				android:contentDescription="@string/connected"
+				android:src="@drawable/ic_good"
+				android:visibility="gone"/>
+
+			<ProgressBar
+				android:id="@+id/main_o2_progressBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignTop="@id/main_o2_text"/>
+
+		</RelativeLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:baselineAligned="false"
+		android:orientation="horizontal">
+
+		<ListView
+			android:id="@+id/main_list_view"
+			android:layout_width="256dp"
+			android:layout_height="match_parent"
+			android:divider="@null"
+			android:dividerHeight="@dimen/margin_less"
+			tools:listitem="@layout/list_item_main"/>
+
+		<FrameLayout
+			android:id="@+id/main_frame"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="3"
+			android:animateLayoutChanges="true">
+
+		</FrameLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

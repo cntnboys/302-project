@@ -18,6 +18,7 @@ import ca.ualberta.medroad.R;
  * <p/>
  * Adapter class to display the main menu list view. This is poor software engineering at its
  * finest.
+ *
  * @see ca.ualberta.medroad.view.MainActivity#onMainMenuSelect(int)
  */
 public class MainMenuAdapter
@@ -31,6 +32,12 @@ public class MainMenuAdapter
 
 	protected List< MenuItem > data;
 
+	private MainMenuAdapter( Context context, List< MenuItem > data )
+	{
+		super( context, R.layout.list_item_main, R.id.list_item_main_title, data );
+		this.data = data;
+	}
+
 	public static MainMenuAdapter newInstance( Context ctx )
 	{
 		List< MenuItem > nData = new ArrayList<>();
@@ -42,7 +49,7 @@ public class MainMenuAdapter
 
 		nData.add( new MenuItem( ID_DIAGNOSTICS,
 								 "Diagnostics",
-								 "Take measurements, photos and notes",
+								 "Control bluetooth devices.",
 								 R.drawable.ic_search_dark ) );
 
 		nData.add( new MenuItem( ID_ALARMS,
@@ -62,12 +69,6 @@ public class MainMenuAdapter
 	public long getItemId( int position )
 	{
 		return data.get( position ).ID;
-	}
-
-	private MainMenuAdapter( Context context, List< MenuItem > data )
-	{
-		super( context, R.layout.list_item_main, R.id.list_item_main_title, data );
-		this.data = data;
 	}
 
 	@Override

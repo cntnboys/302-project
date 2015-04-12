@@ -1,8 +1,8 @@
 package ca.ualberta.medroad.view.fragment;
 
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,12 @@ import ca.ualberta.medroad.R;
 public class PlaceholderFragment
 		extends Fragment
 {
-	public static PlaceholderFragment newInstance( )
+	public PlaceholderFragment()
+	{
+		// Required empty public constructor
+	}
+
+	public static PlaceholderFragment newInstance()
 	{
 		PlaceholderFragment fragment = new PlaceholderFragment();
 
@@ -25,11 +30,6 @@ public class PlaceholderFragment
 		fragment.setArguments( args );
 
 		return fragment;
-	}
-
-	public PlaceholderFragment()
-	{
-		// Required empty public constructor
 	}
 
 	@Override

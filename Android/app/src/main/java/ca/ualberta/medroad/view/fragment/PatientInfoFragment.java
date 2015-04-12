@@ -34,11 +34,15 @@ import ca.ualberta.medroad.model.Patient;
 public class PatientInfoFragment
 		extends Fragment
 {
-	protected ViewHolder        view           = null;
-	protected FragmentCallbacks callbackTarget = null;
+	public static final SimpleDateFormat  DOB_FORMAT     = new SimpleDateFormat( "LLLL d, yyyy",
+																				 Locale.getDefault() );
+	protected           ViewHolder        view           = null;
+	protected           FragmentCallbacks callbackTarget = null;
 
-	public static final SimpleDateFormat DOB_FORMAT = new SimpleDateFormat( "LLLL d, yyyy",
-																			Locale.getDefault() );
+	public PatientInfoFragment()
+	{
+		// Required empty public constructor
+	}
 
 	public static PatientInfoFragment newInstance( FragmentCallbacks callbackTarget )
 	{
@@ -51,9 +55,18 @@ public class PatientInfoFragment
 		return fragment;
 	}
 
-	public PatientInfoFragment()
+	private static String getAge( Calendar dob )
 	{
-		// Required empty public constructor
+		Calendar now = Calendar.getInstance();
+		int diff = now.get( Calendar.YEAR ) - dob.get( Calendar.YEAR ) - 1;
+
+		if ( now.get( Calendar.MONTH ) > dob.get( Calendar.MONTH ) || ( now.get( Calendar.MONTH ) == dob
+				.get( Calendar.MONTH ) && now.get( Calendar.DATE ) >= dob.get( Calendar.DATE ) ) )
+		{
+			++diff;
+		}
+
+		return String.valueOf( diff ) + " years old.";
 	}
 
 	@Override
@@ -73,6 +86,54 @@ public class PatientInfoFragment
 		view.init();
 
 		return v;
+	}
+
+	public interface FragmentCallbacks
+	{
+		public void triggerPatientInfoFragmentReload();
+	}
+
+	public static class DatePickerFragment
+			extends DialogFragment
+			implements DatePickerDialog.OnDateSetListener
+	{
+		protected Calendar            startDate;
+		protected PatientInfoFragment parentFragment;
+
+		public static DatePickerFragment newInstance( Calendar c, PatientInfoFragment infoFragment )
+		{
+			DatePickerFragment result = new DatePickerFragment();
+
+			result.startDate = c;
+			result.parentFragment = infoFragment;
+
+			return result;
+		}
+
+		@Override
+		public Dialog onCreateDialog( Bundle savedInstanceState )
+		{
+			return new DatePickerDialog( getActivity(),
+										 this,
+										 startDate.get( Calendar.YEAR ),
+										 startDate.get( Calendar.MONTH ),
+										 startDate.get( Calendar.DAY_OF_MONTH ) );
+		}
+
+		@Override
+		public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth )
+		{
+			Patient p = AppState.getState().getCurrentPatient();
+
+			p.getDob().set( Calendar.YEAR, year );
+			p.getDob().set( Calendar.MONTH, monthOfYear );
+			p.getDob().set( Calendar.DAY_OF_MONTH, dayOfMonth );
+
+			parentFragment.view.dobEntry.setText( PatientInfoFragment.DOB_FORMAT.format( p.getDob()
+																						  .getTime() ) );
+			parentFragment.view.ageText.setText( getAge( p.getDob() ) );
+			parentFragment.view.physicianEntry.requestFocus();
+		}
 	}
 
 	protected class ViewHolder
@@ -226,67 +287,5 @@ public class PatientInfoFragment
 				}
 			} );
 		}
-	}
-
-	public static class DatePickerFragment
-			extends DialogFragment
-			implements DatePickerDialog.OnDateSetListener
-	{
-		protected Calendar            startDate;
-		protected PatientInfoFragment parentFragment;
-
-		public static DatePickerFragment newInstance( Calendar c, PatientInfoFragment infoFragment )
-		{
-			DatePickerFragment result = new DatePickerFragment();
-
-			result.startDate = c;
-			result.parentFragment = infoFragment;
-
-			return result;
-		}
-
-		@Override
-		public Dialog onCreateDialog( Bundle savedInstanceState )
-		{
-			return new DatePickerDialog( getActivity(),
-										 this,
-										 startDate.get( Calendar.YEAR ),
-										 startDate.get( Calendar.MONTH ),
-										 startDate.get( Calendar.DAY_OF_MONTH ) );
-		}
-
-		@Override
-		public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth )
-		{
-			Patient p = AppState.getState().getCurrentPatient();
-
-			p.getDob().set( Calendar.YEAR, year );
-			p.getDob().set( Calendar.MONTH, monthOfYear );
-			p.getDob().set( Calendar.DAY_OF_MONTH, dayOfMonth );
-
-			parentFragment.view.dobEntry.setText( PatientInfoFragment.DOB_FORMAT.format( p.getDob()
-																						  .getTime() ) );
-			parentFragment.view.ageText.setText( getAge( p.getDob() ) );
-			parentFragment.view.physicianEntry.requestFocus();
-		}
-	}
-
-	private static String getAge( Calendar dob )
-	{
-		Calendar now = Calendar.getInstance();
-		int diff = now.get( Calendar.YEAR ) - dob.get( Calendar.YEAR ) - 1;
-
-		if ( now.get( Calendar.MONTH ) > dob.get( Calendar.MONTH ) || ( now.get( Calendar.MONTH ) == dob
-				.get( Calendar.MONTH ) && now.get( Calendar.DATE ) >= dob.get( Calendar.DATE ) ) )
-		{
-			++diff;
-		}
-
-		return String.valueOf( diff ) + " years old.";
-	}
-
-	public interface FragmentCallbacks
-	{
-		public void triggerPatientInfoFragmentReload();
 	}
 }

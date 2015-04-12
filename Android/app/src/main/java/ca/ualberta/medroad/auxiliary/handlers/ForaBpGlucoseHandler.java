@@ -54,6 +54,7 @@ public class ForaBpGlucoseHandler
 
 		case ForaBpGlucose.CHECKSUM_ERROR:
 			// if there is a checksum error on a read
+			callbackTarget.onBpGlucoseDataError();
 			break;
 
 		case ForaBpGlucose.FORA_GET_SERIAL:
@@ -98,12 +99,14 @@ public class ForaBpGlucoseHandler
 
 	public interface BpGlucoseHandlerCallbacks
 	{
-		public void onBpGlucoseBtConnected( BluetoothDevice device );
+		void onBpGlucoseBtConnected( BluetoothDevice device );
 
-		public void onBpGlucoseBtDisconnected( BluetoothDevice device );
+		void onBpGlucoseBtDisconnected( BluetoothDevice device );
 
-		public void onBpGlucosePacketReceive( ForaBpGlucose.ForaData data );
+		void onBpGlucosePacketReceive( ForaBpGlucose.ForaData data );
 
-		public void onBpGlucoseDataAvailable();
+		void onBpGlucoseDataError();
+
+		void onBpGlucoseDataAvailable();
 	}
 }

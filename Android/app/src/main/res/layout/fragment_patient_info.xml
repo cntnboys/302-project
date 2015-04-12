@@ -103,9 +103,9 @@
 				android:text="@string/id_label"/>
 
 			<TextView
+				android:id="@+id/f_patient_info_id"
 				android:paddingLeft="@dimen/margin"
 				android:paddingRight="@dimen/margin"
-				android:id="@+id/f_patient_info_id"
 				android:textStyle="bold"
 				android:typeface="monospace"
 				tools:text="123456789"/>
@@ -122,9 +122,9 @@
 				android:text="@string/session_id_label"/>
 
 			<TextView
+				android:id="@+id/f_patient_info_sid"
 				android:paddingLeft="@dimen/margin"
 				android:paddingRight="@dimen/margin"
-				android:id="@+id/f_patient_info_sid"
 				android:textStyle="bold"
 				android:typeface="monospace"
 				tools:text="20150101120000"/>
@@ -138,8 +138,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/f_patient_info_table"
-		android:layout_marginTop="@dimen/margin"
 		android:layout_marginEnd="@dimen/margin"
+		android:layout_marginTop="@dimen/margin"
 		android:layout_toEndOf="@id/f_patient_info_ico"
 		android:text="@string/new_patient_button"/>
 

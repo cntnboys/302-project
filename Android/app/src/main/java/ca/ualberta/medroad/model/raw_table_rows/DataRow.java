@@ -3,7 +3,6 @@ package ca.ualberta.medroad.model.raw_table_rows;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -11,14 +10,13 @@ import ca.ualberta.medroad.auxiliary.Encrypter;
 
 /**
  * Created by Yuey on 2015-03-12.
- *
+ * <p/>
  * Class representing a raw database latestRow for data.
  */
 public class DataRow
 {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss",
-			Locale.getDefault() );
+	public static final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss",
+																	 Locale.getDefault() );
 
 	/*  */
 	public String patient_id;
@@ -31,7 +29,15 @@ public class DataRow
 	public String timestamp;
 	public String session_id;
 
-	public DataRow( int id, int mv, int pulse, int o2, int dbp, int sbp, int bpmap, Date timestamp, int sessionID )
+	public DataRow( int id,
+					int mv,
+					int pulse,
+					int o2,
+					int dbp,
+					int sbp,
+					int bpmap,
+					Date timestamp,
+					int sessionID )
 	{
 		this.patient_id = String.valueOf( id );
 		this.mv = String.valueOf( mv );

@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -30,6 +29,11 @@ public class ConfigurationFragment
 	protected TwoLineArrayAdapter            arrayAdapter   = null;
 	protected ViewHolder                     view           = null;
 
+	public ConfigurationFragment()
+	{
+		// Required empty public constructor
+	}
+
 	public static ConfigurationFragment newInstance( ConfigurationCallbacks callbackTarget )
 	{
 		ConfigurationFragment fragment = new ConfigurationFragment();
@@ -39,11 +43,6 @@ public class ConfigurationFragment
 		fragment.callbackTarget = callbackTarget;
 
 		return fragment;
-	}
-
-	public ConfigurationFragment()
-	{
-		// Required empty public constructor
 	}
 
 	@Override
@@ -63,6 +62,15 @@ public class ConfigurationFragment
 		view.init();
 
 		return v;
+	}
+
+	public interface ConfigurationCallbacks
+	{
+		public void onEcgDeviceChange();
+
+		public void onBpDeviceChange();
+
+		public void onO2DeviceChange();
 	}
 
 	protected class ViewHolder
@@ -96,7 +104,7 @@ public class ConfigurationFragment
 				deviceNames.add( new Pair<>( device.getName(), device.getAddress() ) );
 			}
 
-			arrayAdapter = new TwoLineArrayAdapter( getActivity(), deviceNames );
+			arrayAdapter = new TwoLineArrayAdapter( getActivity(), deviceNames, false );
 
 			emotionEcgSpinner.setAdapter( arrayAdapter );
 			foraBpgSpinner.setAdapter( arrayAdapter );
@@ -236,14 +244,5 @@ public class ConfigurationFragment
 				}
 			} );
 		}
-	}
-
-	public interface ConfigurationCallbacks
-	{
-		public void onEcgDeviceChange();
-
-		public void onBpDeviceChange();
-
-		public void onO2DeviceChange();
 	}
 }

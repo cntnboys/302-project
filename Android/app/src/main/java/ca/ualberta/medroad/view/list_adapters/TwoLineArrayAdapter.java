@@ -1,6 +1,7 @@
 package ca.ualberta.medroad.view.list_adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,16 @@ import java.util.List;
 public class TwoLineArrayAdapter
 		extends ArrayAdapter< Pair< String, String > >
 {
-	protected List< Pair< String, String > > data;
+	protected       List< Pair< String, String > > data;
+	protected final boolean                        oneLine;
 
-	public TwoLineArrayAdapter( Context context, List< Pair< String, String > > objects )
+	public TwoLineArrayAdapter( Context context,
+								List< Pair< String, String > > objects,
+								boolean oneLine )
 	{
 		super( context, android.R.layout.simple_list_item_2, android.R.id.text1, objects );
 		this.data = objects;
+		this.oneLine = oneLine;
 	}
 
 	@Override
@@ -42,7 +47,7 @@ public class TwoLineArrayAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Pair<String, String> item = data.get( position );
+		Pair< String, String > item = data.get( position );
 		holder.text1.setText( item.first );
 		holder.text2.setText( item.second );
 
@@ -67,7 +72,7 @@ public class TwoLineArrayAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Pair<String, String> item = data.get( position );
+		Pair< String, String > item = data.get( position );
 		holder.text1.setText( item.first );
 		holder.text2.setText( item.second );
 
@@ -83,6 +88,15 @@ public class TwoLineArrayAdapter
 		{
 			text1 = (TextView) parentView.findViewById( android.R.id.text1 );
 			text2 = (TextView) parentView.findViewById( android.R.id.text2 );
+
+			if ( oneLine )
+			{
+				text1.setMaxLines( 1 );
+				text2.setMaxLines( 1 );
+
+				text1.setEllipsize( TextUtils.TruncateAt.END );
+				text2.setEllipsize( TextUtils.TruncateAt.END );
+			}
 		}
 	}
 }

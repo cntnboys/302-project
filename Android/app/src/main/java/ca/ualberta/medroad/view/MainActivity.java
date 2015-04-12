@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -48,6 +49,7 @@ import ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler;
 import ca.ualberta.medroad.model.raw_table_rows.DataRow;
 import ca.ualberta.medroad.model.raw_table_rows.PatientRow;
 import ca.ualberta.medroad.view.fragment.ConfigurationFragment;
+import ca.ualberta.medroad.view.fragment.DiagnosticsFragment;
 import ca.ualberta.medroad.view.fragment.PatientInfoFragment;
 import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
 import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
@@ -58,10 +60,11 @@ import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
  */
 public class MainActivity
 		extends Activity
-		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks, ConfigurationFragment.ConfigurationCallbacks, PatientInfoFragment.FragmentCallbacks
+		implements EmotionEcgHandler.EcgHandlerCallbacks, ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks, NoninOxometerHandler.OxometerHandlerCallbacks, ConfigurationFragment.ConfigurationCallbacks, PatientInfoFragment.FragmentCallbacks, DiagnosticsFragment.DiagnosticsCallbacks
 {
 	public static final String               LOG_TAG                     = "MedROAD";
-	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 100;
+	public static final int                  GRAPH_HORIZONTAL_RESOLUTION = 200;
+	public static final int                  GRAPH_VERTICAL_RESOLUTION   = 500;
 	public static final int                  REQUEST_ENABLE_BT           = 1;
 	public static       int                  ECG_SIGNAL_RESOLUTION       = 0; // note that signal resolution is actually /1000
 	public static       int                  ECG_HIGH_PASS_FILTER        = 0;
@@ -86,8 +89,6 @@ public class MainActivity
 	protected           boolean              newData                     = false;
 	private             int                  menuSelection               = -1;
 	private             long                 ecgGraphCounter             = 0;
-	private             long                 bpGraphCounter              = 0;
-	private             long                 o2GraphCounter              = 0;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -398,7 +399,7 @@ public class MainActivity
 			if ( menuSelection != MainMenuAdapter.ID_DIAGNOSTICS )
 			{
 				fragmentManager.beginTransaction()
-							   .replace( R.id.main_frame, PlaceholderFragment.newInstance() )
+							   .replace( R.id.main_frame, DiagnosticsFragment.newInstance( this ) )
 							   .commit();
 				menuSelection = MainMenuAdapter.ID_DIAGNOSTICS;
 			}
@@ -483,7 +484,8 @@ public class MainActivity
 		}
 
 		AppState.writeToSessionLog( "ECG packet received {no:" + data.getPacketNumber() + ",samples:" + Arrays
-				.toString( data.getSamples() ) + ",rr_interval:" + data.getRrInterval() + "}" );
+				.toString( data.getSamples() ) + ",rr_ok:" + data.got_rr_interval + ",rr_interval:" + data
+											.getRrInterval() + "}" );
 
 		final int[] ecgData = data.getSamples();
 		//final int rrInterval = data.getRrInterval();
@@ -502,6 +504,25 @@ public class MainActivity
 											   true,
 											   GRAPH_HORIZONTAL_RESOLUTION );
 				}
+			}
+		} );
+	}
+
+	@Override
+	public void onEcgPulseReceive( int pulse )
+	{
+		Log.v( LOG_TAG, " [ BT ] > ECG pulse received " + pulse );
+		AppState.writeToSessionLog( "ECG pulse received {pulse:" + pulse + "}" );
+
+		final String pulseStr = String.valueOf( pulse );
+		latestRow.pulse = pulseStr;
+
+		runOnUiThread( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				view.ecgText.setText( pulseStr );
 			}
 		} );
 	}
@@ -545,8 +566,9 @@ public class MainActivity
 		AppState.writeToSessionLog( "BPG packet received {time:" + data.getTimeStamp() + ",data:" + data
 				.getDataString() + "}" );
 
-		final int systolic = data.getSystolic();
+		int systolic = data.getSystolic();
 		int diastolic = data.getDiastolic();
+		if ( systolic < 10 ) return;
 		final int map = (int) ( ( ( 2.0 / 3.0 ) * diastolic ) + ( ( 1.0 / 3.0 ) * systolic ) );
 		final String strSystolic = String.valueOf( systolic );
 		final String strDiastolic = String.valueOf( diastolic );
@@ -557,8 +579,6 @@ public class MainActivity
 		latestRow.map2 = strDiastolic;
 		newData = true;
 
-		++bpGraphCounter;
-
 		runOnUiThread( new Runnable()
 		{
 			@Override
@@ -567,19 +587,18 @@ public class MainActivity
 				view.sbpText.setText( strSystolic );
 				view.dbpText.setText( strDiastolic );
 				view.mapText.setText( strMap );
-				view.sbpSeries.appendData( new DataPoint( bpGraphCounter, systolic ),
-										   true,
-										   GRAPH_HORIZONTAL_RESOLUTION );
-				view.mapSeries.appendData( new DataPoint( bpGraphCounter, map ),
-										   true,
-										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
 		} );
+	}
 
-		if ( foraBpGlucose != null )
-		{
-			foraBpGlucose.checkForData();
-		}
+	@Override
+	public void onBpGlucoseDataError()
+	{
+		Log.e( LOG_TAG, "There was a data error in a BPG packet checksum." );
+		AppState.writeToSessionLog( "There was a data error in a BPG packet checksum." );
+		Toast.makeText( this,
+						"Blood Pressure Sensor Error - Readings may be inaccurate.",
+						Toast.LENGTH_LONG ).show();
 	}
 
 	@Override
@@ -629,12 +648,11 @@ public class MainActivity
 				.getSpO2() + ",pulse:" + data.getPulse() + "}" );
 
 		int pulse = data.getPulse();
-		final int spo2 = data.getSpO2();
+		int spo2 = data.getSpO2();
 
 		final String strPulse = String.valueOf( pulse );
 		final String strSpo2 = String.valueOf( spo2 );
 
-		latestRow.pulse = strPulse;
 		latestRow.oxygen = strSpo2;
 		newData = true;
 
@@ -643,11 +661,7 @@ public class MainActivity
 			@Override
 			public void run()
 			{
-				view.ecgText.setText( strPulse );
 				view.o2Text.setText( strSpo2 );
-				view.o2xSeries.appendData( new DataPoint( ++o2GraphCounter, spo2 ),
-										   true,
-										   GRAPH_HORIZONTAL_RESOLUTION );
 			}
 		} );
 	}
@@ -714,8 +728,26 @@ public class MainActivity
 		fragmentManager.beginTransaction()
 					   .replace( R.id.main_frame, PatientInfoFragment.newInstance( this ) )
 					   .commit();
-		
+
 		menuSelection = MainMenuAdapter.ID_PATIENT_INFO;
+	}
+
+	@Override
+	public void onDiagnosticsRefreshEcg()
+	{
+		onEcgDeviceChange();
+	}
+
+	@Override
+	public void onDiagnosticsRefreshBp()
+	{
+		onBpDeviceChange();
+	}
+
+	@Override
+	public void onDiagnosticsRefreshO2()
+	{
+		onO2DeviceChange();
 	}
 
 	protected class ViewHolder
@@ -723,20 +755,15 @@ public class MainActivity
 		public    GraphView                    ecgGraph;
 		public    TextView                     ecgText;
 		public    DataStatusIndicator          ecgStatus;
-		public    GraphView                    bpGraph;
 		public    TextView                     sbpText;
 		public    TextView                     dbpText;
 		public    TextView                     mapText;
 		public    DataStatusIndicator          bpStatus;
-		public    GraphView                    o2Graph;
 		public    TextView                     o2Text;
 		public    DataStatusIndicator          o2Status;
 		public    ListView                     mainMenu;
 		public    FrameLayout                  frame;
 		protected LineGraphSeries< DataPoint > ecgSeries;
-		protected LineGraphSeries< DataPoint > sbpSeries;
-		protected LineGraphSeries< DataPoint > mapSeries;
-		protected LineGraphSeries< DataPoint > o2xSeries;
 
 		public ViewHolder( MainActivity activity )
 		{
@@ -747,7 +774,6 @@ public class MainActivity
 												 R.id.main_ecg_ic_bad,
 												 R.id.main_ecg_progressBar );
 
-			bpGraph = (GraphView) activity.findViewById( R.id.main_bp_graph );
 			sbpText = (TextView) activity.findViewById( R.id.main_sbp_text );
 			dbpText = (TextView) activity.findViewById( R.id.main_dbp_text );
 			mapText = (TextView) activity.findViewById( R.id.main_map_text );
@@ -756,7 +782,6 @@ public class MainActivity
 												R.id.main_bp_ic_bad,
 												R.id.main_bp_progressBar );
 
-			o2Graph = (GraphView) activity.findViewById( R.id.main_o2_graph );
 			o2Text = (TextView) activity.findViewById( R.id.main_o2_text );
 			o2Status = new DataStatusIndicator( activity,
 												R.id.main_o2_ic_good,
@@ -776,25 +801,14 @@ public class MainActivity
 		private void setupGraph()
 		{
 			ecgSeries = new LineGraphSeries<>();
-			sbpSeries = new LineGraphSeries<>();
-			mapSeries = new LineGraphSeries<>();
-			o2xSeries = new LineGraphSeries<>();
 
 			Resources res = getResources();
 
 			ecgSeries.setColor( res.getColor( R.color.green_dark ) );
-			sbpSeries.setColor( res.getColor( R.color.red_dark ) );
-			mapSeries.setColor( res.getColor( R.color.orange_dark ) );
-			o2xSeries.setColor( res.getColor( R.color.blue_dark ) );
 
 			formatGraph( ecgGraph );
-			formatGraph( bpGraph );
-			formatGraph( o2Graph );
 
 			ecgGraph.addSeries( ecgSeries );
-			bpGraph.addSeries( sbpSeries );
-			bpGraph.addSeries( mapSeries );
-			o2Graph.addSeries( o2xSeries );
 		}
 
 		private void formatGraph( GraphView graph )
@@ -989,15 +1003,6 @@ public class MainActivity
 						view.ecgSeries.appendData( new DataPoint( ecgGraphCounter, ecg ),
 												   true,
 												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.sbpSeries.appendData( new DataPoint( ecgGraphCounter, sbp ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.mapSeries.appendData( new DataPoint( ecgGraphCounter, map ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
-						view.o2xSeries.appendData( new DataPoint( ecgGraphCounter, spo2 ),
-												   true,
-												   GRAPH_HORIZONTAL_RESOLUTION );
 					}
 				} );
 			}
@@ -1072,6 +1077,9 @@ public class MainActivity
 			{
 				if ( newData )
 				{
+					latestRow.patient_id = String.valueOf( AppState.getState()
+																   .getCurrentPatient()
+																   .getId() );
 					latestRow.timestamp = DataRow.sdf.format( Calendar.getInstance().getTime() );
 					HttpRequestManager.sendData( latestRow );
 					newData = false;

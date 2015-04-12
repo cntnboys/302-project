@@ -1,0 +1,243 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:tools="http://schemas.android.com/tools"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		tools:context="ca.ualberta.medroad.view.fragment.DiagnosticsFragment">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin"
+			android:text="Diagnostics"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin">
+
+			<Button
+				android:id="@+id/f_diagnostic_refresh_ecg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="REFRESH ECG"
+				android:textColor="@color/green_dark"/>
+
+			<Button
+				android:id="@+id/f_diagnostic_refresh_bp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="REFRESH NIBP"
+				android:textColor="@color/red_dark"/>
+
+			<Button
+				android:id="@+id/f_diagnostic_refresh_o2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="REFRESH SpO2"
+				android:textColor="@color/blue_dark"/>
+
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin"
+			android:text="Take readings from a different Bluetooth Health Device:"/>
+
+		<TableLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/margin"
+			android:paddingRight="@dimen/margin"
+			android:stretchColumns="5">
+
+			<TableRow
+				android:layout_marginTop="@dimen/margin">
+
+				<TextView
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="1"/>
+
+				<Spinner
+					android:id="@+id/f_diagnostic_device_1"
+					android:layout_gravity="center"
+					android:layout_width="@dimen/spinner_width"/>
+
+				<ImageButton
+					android:id="@+id/f_diagnostic_device_1_button"
+					android:layout_gravity="center"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="@dimen/margin"
+					android:src="@drawable/ic_refresh_dark"/>
+
+				<ProgressBar
+					android:id="@+id/f_diagnostic_device_1_progress"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="invisible"/>
+
+				<TextView
+					android:layout_column="4"
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="Reading:"/>
+
+				<TextView
+					android:id="@+id/f_diagnostic_device_1_text"
+					android:layout_column="5"
+					android:layout_gravity="center_vertical"
+					android:text="@string/placeholder_data_reading"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+			</TableRow>
+
+			<TableRow
+				android:layout_marginTop="@dimen/margin">
+
+				<TextView
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="2"/>
+
+				<Spinner
+					android:id="@+id/f_diagnostic_device_2"
+					android:layout_gravity="center"
+					android:layout_width="@dimen/spinner_width"/>
+
+				<ImageButton
+					android:id="@+id/f_diagnostic_device_2_button"
+					android:layout_gravity="center"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="@dimen/margin"
+					android:src="@drawable/ic_refresh_dark"/>
+
+				<ProgressBar
+					android:id="@+id/f_diagnostic_device_2_progress"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="invisible"/>
+
+				<TextView
+					android:layout_column="4"
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="Reading:"/>
+
+				<TextView
+					android:id="@+id/f_diagnostic_device_2_text"
+					android:layout_column="5"
+					android:layout_gravity="center_vertical"
+					android:text="@string/placeholder_data_reading"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+			</TableRow>
+
+			<TableRow
+				android:layout_marginTop="@dimen/margin">
+
+				<TextView
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="3"/>
+
+				<Spinner
+					android:id="@+id/f_diagnostic_device_3"
+					android:layout_gravity="center"
+					android:layout_width="@dimen/spinner_width"/>
+
+				<ImageButton
+					android:id="@+id/f_diagnostic_device_3_button"
+					android:layout_gravity="center"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="@dimen/margin"
+					android:src="@drawable/ic_refresh_dark"/>
+
+				<ProgressBar
+					android:id="@+id/f_diagnostic_device_3_progress"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="invisible"/>
+
+				<TextView
+					android:layout_column="4"
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="Reading:"/>
+
+				<TextView
+					android:id="@+id/f_diagnostic_device_3_text"
+					android:layout_column="5"
+					android:layout_gravity="center_vertical"
+					android:text="@string/placeholder_data_reading"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+			</TableRow>
+
+			<TableRow
+				android:layout_marginTop="@dimen/margin">
+
+				<TextView
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="4"/>
+
+				<Spinner
+					android:id="@+id/f_diagnostic_device_4"
+					android:layout_gravity="center"
+					android:layout_width="@dimen/spinner_width"/>
+
+				<ImageButton
+					android:id="@+id/f_diagnostic_device_4_button"
+					android:layout_gravity="center"
+					android:background="?android:attr/selectableItemBackground"
+					android:padding="@dimen/margin"
+					android:src="@drawable/ic_refresh_dark"/>
+
+				<ProgressBar
+					android:id="@+id/f_diagnostic_device_4_progress"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="invisible"/>
+
+				<TextView
+					android:layout_column="4"
+					android:layout_gravity="center"
+					android:paddingLeft="@dimen/margin"
+					android:paddingRight="@dimen/margin"
+					android:text="Reading:"/>
+
+				<TextView
+					android:id="@+id/f_diagnostic_device_4_text"
+					android:layout_column="5"
+					android:layout_gravity="center_vertical"
+					android:text="@string/placeholder_data_reading"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+			</TableRow>
+
+		</TableLayout>
+
+	</LinearLayout>
+</ScrollView>

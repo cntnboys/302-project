@@ -33,6 +33,11 @@ public class AppState
 	protected           String      noninO2xName   = "Nonin_Medical_Inc._802706";
 	protected           String      noninO2xAddr   = "00:1C:05:00:EA:DA";
 
+	private AppState()
+	{
+
+	}
+
 	public static void initState( @NonNull Context context )
 	{
 		if ( AppState.context == null )
@@ -71,9 +76,21 @@ public class AppState
 		return AppState.state;
 	}
 
-	private AppState()
+	public static void writeToSessionLog( String msg )
 	{
+		if ( state == null || state.fileManager == null )
+		{
+			Log.e( MainActivity.LOG_TAG,
+				   "Tried to write to the session log but the app state was not initialized." );
+			return;
+		}
 
+		if ( !state.fileManager.isLogOpen() )
+		{
+			state.fileManager.openSessionLog();
+		}
+
+		state.fileManager.writeToSessionLog( msg );
 	}
 
 	public Patient getCurrentPatient()
@@ -146,21 +163,6 @@ public class AppState
 		Log.v( MainActivity.LOG_TAG, " [STAT] > Resetting session:" );
 		Log.v( MainActivity.LOG_TAG, " [STAT] >     Old ID: " + oldId );
 		Log.v( MainActivity.LOG_TAG, " [STAT] >     New ID: " + currentSession.getId() );
-	}
-
-	public static void writeToSessionLog( String msg )
-	{
-		if ( state == null )
-		{
-			throw new IllegalStateException( "The app state has not been initialized!" );
-		}
-
-		if ( !state.fileManager.isLogOpen() )
-		{
-			state.fileManager.openSessionLog();
-		}
-
-		state.fileManager.writeToSessionLog( msg );
 	}
 
 	public void newPatient()

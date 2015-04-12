@@ -108,10 +108,10 @@ public class NoninOxometerHandler
 
 	public interface OxometerHandlerCallbacks
 	{
-		public void onOxometerBtConnected( BluetoothDevice device );
+		void onOxometerBtConnected( BluetoothDevice device );
 
-		public void onOxometerBtDisconnected( BluetoothDevice device );
+		void onOxometerBtDisconnected( BluetoothDevice device );
 
-		public void onOxometerPacketReceive( NoninOximeter.NoninData data );
+		void onOxometerPacketReceive( NoninOximeter.NoninData data );
 	}
 }
