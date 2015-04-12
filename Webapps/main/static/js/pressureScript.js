@@ -13,15 +13,16 @@ var Trying = true;
 function httpGet() {
     //  if (Trying){
         //try{
-          var xmlHttp= new XMLHttpRequest();
-          var ptid=document.getElementById('pId');
-          var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
-          var slash ="/";
-          var page= pageString.concat(ptid);
-          var pageFinal= page.concat(slash);
-
-          xmlHttp.open("GET",pageFinal,false);
-          xmlHttp.send(null);
+        sleep(1000);
+        var xmlHttp= new XMLHttpRequest();
+        var ptid=document.getElementById('pId');
+        var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
+        var slash ="/";
+        var page= pageString.concat(ptid);
+        var pageFinal= page.concat(slash);
+        window.alert(pageFinal);
+        xmlHttp.open("GET",pageFinal,false);
+        xmlHttp.send(null);
 
 
 

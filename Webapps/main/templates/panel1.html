@@ -102,6 +102,7 @@
 					</thead>
 					<tbody>
 						{% for link in items %}
+						<h1> link.liveStatus</h1>
 						<tr>
 							<td style="padding:0 15px 0 15px;">{{ link.name }} </td>
 							<td style="padding:0 15px 0 15px;">{{ link.dob }} </td>
@@ -116,7 +117,7 @@
 
 	                        {% else %}
 
-							<td style="padding:0 15px 0 15px;"> Inactive  </td>
+							<td style="padding:0 15px 0 15px;"> Active  </td>
 
 							{% endif %}
 
