@@ -20,8 +20,10 @@ function httpGet() {
         var pageString = "https://project302.herokuapp.com/main/getPatientdata/";
         var slash ="/";
         var page= pageString.concat(ptid);
+        page.trim();
         var pageFinal= page.concat(slash);
-        window.alert(pageFinal);
+        pageFinal.trim();
+      //  window.alert(pageFinal);
         xmlHttp.open("GET",pageFinal,false);
         xmlHttp.send(null);
 
