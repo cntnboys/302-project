@@ -1,5 +1,4 @@
 
-
 ul li{
 	margin: 20px 20px 20px 20px;
 }
@@ -12,62 +11,90 @@ ul {
 	    background-color:white;
 	    color:black;
 	    text-align:right;
-		padding:1px;
+			padding:1px;
 }
 #pTable{
 	-webkit-column-gap: 40px; /* Chrome, Safari, Opera */
     -moz-column-gap: 40px; /* Firefox */
 	coloumn-gap:50px;
 }
+.numbers{
+	background-color: black;
+	height:100%;
+	width:100%;
+
+}
+.floatable {
+	position:fixed;
+	z-index=100;
+}
+.slidedown{
+	margin-top:350px;
+}
+.numbers .bloodPressure h3 {
+	color:grey;
+	display:inline;
+	background-color:black;
+	height:100%;
+}
 div .bloodPressure{
-	background:black;
-	height: 100%;
+	display:inline;
+	width:100%;
+	float:left;
+	background-color:black;
+}
+.numbers .bpmClass p{
+		display:inline;
+		color:green;
+}
+.numbers .bpmClass h3{
+		display:inline;
+		color:grey;
+}
+.numbers .bloodPressure #bpmH3{
+	float:right;
+}
+.numbers .bloodPressure #hr{
+	float:right;
+	font-size:50px;
 
 }
-div .bloodPressure .oximeter{
+.numbers .bloodPressure p {
+	color:green;
 	display:inline;
+	background-color:black;
+	font-size:50px;
 
 }
-div .bloodPressure .oximeter #oxim{
-	text-align: right;
-	color:orange;
-}
-div .bloodPressure h3, p{
-	display:inline;
-}
-div .bloodPressure h3{
-	font-size:1.5em;
-	color:#E0E0E0;
-}
-div .bloodPressure p {
-	display:inline;
-	font-size:4em;
-}
-div .bloodPressure #dia{
-	color:#46b1f9;
-}
-div .bloodPressure #sys{
-	color:#ff00ff;
-}
+
 #panel{
 	float:left;
 	width:13%;
 }
-div .ecgbox{
-	background:black;
-	height: 300px;
-	width= 1000;
+#page {
+    padding: 100px;
+    width: 300px;
 }
-div .ecgbox .ecg{
-	background:black;
-	float: left;
-	height: 100%;
-	width: auto;
+
+#header,
+#header-inner { /* Note #1 */
+    height: 100px;
+    width: 100%;
+		background-color:black;
 }
-div .heartRate{
-	background:black;
-	height: 100%;
-	text-align: center;
+#header2,
+#header-inner2 { /* Note #1 */
+    height: 100px;
+    width: 100%;
+		background-color:black;
+}
+.scrolling { /* Note #2 */
+    position: fixed;
+    top: 0;
+}
+.scrolling2 { /* Note #2 */
+    position: fixed;
+    top: 300;
 }
 
 div.clear {
@@ -78,19 +105,6 @@ div.clear {
 	margin-top: -1px;
 }
 
-.heartRate #hr{
-	background-color: #black;
-	color:#00bd00;
-    font-size:10em;
-    display:inline;
-    background-color: black;
-}
-.heartRate h3{
-	background-color: #black;
-	color:#00bd00;
-    display: inline;
-
-}
 a:link, a:visited {
 	display: block;
 	font-weight: bold;
@@ -122,8 +136,9 @@ button a:link, a:visited {
 	text-transform: uppercase;
 }
 
-
 canvas {
     background:#000;
     cursor:crosshair;
+		margin:0;
+		padding:0;
 }
