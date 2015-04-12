@@ -11,8 +11,8 @@ var j=0;
 var i =0;
 var Trying = true;
 function httpGet() {
-      if (stopTrying){
-        try{
+    //  if (Trying){
+        //try{
           var xmlHttp= new XMLHttpRequest();
           var ptid=document.getElementById('pId');
           var ptString=1;
@@ -31,13 +31,13 @@ function httpGet() {
     //window.alert(xmlHttp.responseText);
         var dataString= xmlHttp.responseText;
         stringToData(dataString);
-        }
-        catch(err){
-          Trying = false;
-          var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
-          stringToData(dataString);
-        }
-      }
+    //    }
+      //  catch(err){
+        //  Trying = false;
+          //var dataString = "{'ecgobject': [[<ECG: patient_id: 1 mv: 12 pulse: 12 oxygen: 12 diastolicbp: 12systolicbp: 12map: 12timestamp: 2015-03-15 04:42:38.315322+00:00session_id: 123>]]}"
+          //stringToData(dataString);
+        //}
+      //}
 }
 var pulseRat,diaLoc,sysLoc,mapLoc,oxySub,diaCal,sysCal;
 function stringToData(requestString){
