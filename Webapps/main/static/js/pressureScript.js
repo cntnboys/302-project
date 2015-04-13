@@ -66,7 +66,6 @@ function stringToData(requestString){
 }
 var diaRate=0,sysRate=0,oxRate=0;
 function bploop(){
-    sleep(1000);
     httpGet();
     var dia=document.getElementById('dia');
     var sys=document.getElementById('sys');
