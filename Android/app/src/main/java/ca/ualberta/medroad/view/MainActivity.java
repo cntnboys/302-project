@@ -55,8 +55,13 @@ import ca.ualberta.medroad.view.fragment.PlaceholderFragment;
 import ca.ualberta.medroad.view.list_adapters.MainMenuAdapter;
 
 /**
- * The startup activity. This activity coordinates the view for the entire app. It's a little bit
- * of a god class but shit happens.
+ * To future developers: I'm so sorry.
+ * <p/>
+ * The startup activity. This activity coordinates the view for the entire app. The main principal
+ * for the application as a whole is that "User Activities" are displayed in
+ * {@link android.app.Fragment}s, so that ECG, BP and O2 data is never removed from the screen. As
+ * a result, this class has become the mother of all God Classes. It implements callback interfaces
+ * from each of it's child fragments, as well as coordinates things like worker threads.
  */
 public class MainActivity
 		extends Activity
@@ -232,6 +237,10 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * Get handles for the system BT devices and construct the handlers for our three primary
+	 * devices.
+	 */
 	private void initializeBtHandles()
 	{
 		bluetoothManager = (BluetoothManager) getSystemService( Context.BLUETOOTH_SERVICE );
@@ -242,6 +251,9 @@ public class MainActivity
 		oxometerHandler = new NoninOxometerHandler( this );
 	}
 
+	/**
+	 * Find our three primary devices from the list of paired devices.
+	 */
 	private void getPairedBtDevices()
 	{
 		/*
@@ -298,6 +310,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * An initial call to attempt to connect to the three primary devices.
+	 */
 	private void connectBtDevices()
 	{
 		if ( emotionEcg != null )
@@ -316,6 +331,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * A call to idle all of the connected primary devices.
+	 */
 	private void idleBtDevices()
 	{
 		if ( emotionEcg != null )
@@ -336,6 +354,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * A call to stop all three primary devices and disconnect from them.
+	 */
 	private void disconnectAndCleanupBtDevices()
 	{
 		if ( emotionEcg != null )
@@ -363,6 +384,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * Checks if BT is enabled on the device, and if not, prompt the user to turn it on.
+	 */
 	private void checkBtStatus()
 	{
 		// Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
@@ -374,9 +398,15 @@ public class MainActivity
 		}
 	}
 
-	private void onMainMenuSelect( int pos )
+	/**
+	 * Primary control for the left-side menu.
+	 *
+	 * @param menuItemID The ID of the fragment we want to navigate to.
+	 * @see MainMenuAdapter
+	 */
+	private void onMainMenuSelect( int menuItemID )
 	{
-		switch ( (int) menuAdapter.getItemId( pos ) )
+		switch ( (int) menuAdapter.getItemId( menuItemID ) )
 		{
 		case -1:
 			// Placeholder
@@ -439,10 +469,13 @@ public class MainActivity
 		default:
 			Log.w( LOG_TAG,
 				   " [WARN] > MainActivity.onMainMenuSelect defaulted on ID " + menuAdapter.getItemId(
-						   pos ) );
+						   menuItemID ) );
 		}
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler.EcgHandlerCallbacks
+	 */
 	@Override
 	public void onEcgBtConnected( BluetoothDevice device )
 	{
@@ -466,6 +499,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler.EcgHandlerCallbacks
+	 */
 	@Override
 	public void onEcgBtDisconnected( BluetoothDevice device )
 	{
@@ -474,6 +510,9 @@ public class MainActivity
 		view.ecgStatus.setBad();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler.EcgHandlerCallbacks
+	 */
 	@Override
 	public void onEcgPacketReceive( final EmotionEcg.EcgData data )
 	{
@@ -508,6 +547,9 @@ public class MainActivity
 		} );
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.EmotionEcgHandler.EcgHandlerCallbacks
+	 */
 	@Override
 	public void onEcgPulseReceive( int pulse )
 	{
@@ -527,6 +569,9 @@ public class MainActivity
 		} );
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks
+	 */
 	@Override
 	public void onBpGlucoseBtConnected( BluetoothDevice device )
 	{
@@ -544,6 +589,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks
+	 */
 	@Override
 	public void onBpGlucoseBtDisconnected( BluetoothDevice device )
 	{
@@ -554,6 +602,9 @@ public class MainActivity
 		view.bpStatus.setBad();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks
+	 */
 	@Override
 	public void onBpGlucosePacketReceive( final ForaBpGlucose.ForaData data )
 	{
@@ -568,7 +619,8 @@ public class MainActivity
 
 		int systolic = data.getSystolic();
 		int diastolic = data.getDiastolic();
-		if ( systolic < 10 ) return;
+		if ( systolic < 10 )
+			return;
 		final int map = (int) ( ( ( 2.0 / 3.0 ) * diastolic ) + ( ( 1.0 / 3.0 ) * systolic ) );
 		final String strSystolic = String.valueOf( systolic );
 		final String strDiastolic = String.valueOf( diastolic );
@@ -591,6 +643,9 @@ public class MainActivity
 		} );
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks
+	 */
 	@Override
 	public void onBpGlucoseDataError()
 	{
@@ -601,6 +656,9 @@ public class MainActivity
 						Toast.LENGTH_LONG ).show();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.ForaBpGlucoseHandler.BpGlucoseHandlerCallbacks
+	 */
 	@Override
 	public void onBpGlucoseDataAvailable()
 	{
@@ -611,6 +669,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler.OxometerHandlerCallbacks
+	 */
 	@Override
 	public void onOxometerBtConnected( BluetoothDevice device )
 	{
@@ -627,6 +688,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler.OxometerHandlerCallbacks
+	 */
 	@Override
 	public void onOxometerBtDisconnected( BluetoothDevice device )
 	{
@@ -635,6 +699,9 @@ public class MainActivity
 		view.o2Status.setBad();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.auxiliary.handlers.NoninOxometerHandler.OxometerHandlerCallbacks
+	 */
 	@Override
 	public void onOxometerPacketReceive( NoninOximeter.NoninData data )
 	{
@@ -666,6 +733,9 @@ public class MainActivity
 		} );
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.ConfigurationFragment.ConfigurationCallbacks
+	 */
 	@Override
 	public void onEcgDeviceChange()
 	{
@@ -679,6 +749,9 @@ public class MainActivity
 		emotionEcg.connect();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.ConfigurationFragment.ConfigurationCallbacks
+	 */
 	@Override
 	public void onBpDeviceChange()
 	{
@@ -700,6 +773,9 @@ public class MainActivity
 		foraBpGlucose.connect();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.ConfigurationFragment.ConfigurationCallbacks
+	 */
 	@Override
 	public void onO2DeviceChange()
 	{
@@ -722,6 +798,9 @@ public class MainActivity
 		noninOximeter.connect();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.PatientInfoFragment.FragmentCallbacks
+	 */
 	@Override
 	public void triggerPatientInfoFragmentReload()
 	{
@@ -732,24 +811,36 @@ public class MainActivity
 		menuSelection = MainMenuAdapter.ID_PATIENT_INFO;
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.DiagnosticsFragment.DiagnosticsCallbacks
+	 */
 	@Override
 	public void onDiagnosticsRefreshEcg()
 	{
 		onEcgDeviceChange();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.DiagnosticsFragment.DiagnosticsCallbacks
+	 */
 	@Override
 	public void onDiagnosticsRefreshBp()
 	{
 		onBpDeviceChange();
 	}
 
+	/**
+	 * @see ca.ualberta.medroad.view.fragment.DiagnosticsFragment.DiagnosticsCallbacks
+	 */
 	@Override
 	public void onDiagnosticsRefreshO2()
 	{
 		onO2DeviceChange();
 	}
 
+	/**
+	 * An auxiliary class that deals with loading and setting up the layout.
+	 */
 	protected class ViewHolder
 	{
 		public    GraphView                    ecgGraph;
@@ -834,6 +925,11 @@ public class MainActivity
 			} );
 		}
 
+		/**
+		 * A class that handles the "Data Status Indicators". In the main screen, there are
+		 * indicators for each of the three primary devices. This class handles transitions between
+		 * loading, OK and bad.
+		 */
 		public class DataStatusIndicator
 		{
 			public ImageView   bad;
@@ -1009,8 +1105,9 @@ public class MainActivity
 		}
 	}
 
-	/*
-		A class that manages worker threads.
+	/**
+	 * An auxiliary class that handles worker threads. Uses Android's
+	 * {@link ScheduledThreadPoolExecutor} as its backbone.
 	 */
 	private class WorkerPool
 	{
@@ -1067,7 +1164,8 @@ public class MainActivity
 		}
 
 		/**
-		 * Periodically posts data to the web server.
+		 * Worker that periodically posts data to the server. The only reason this exists is because
+		 * Heroku has a limit on server capabilities, so we can't truly send data in real-time.
 		 */
 		protected class HttpWorker
 				implements Runnable
@@ -1088,8 +1186,11 @@ public class MainActivity
 		}
 
 		/**
-		 * Periodically makes a call to the bpg to check for data.
+		 * A worker thread that would periodically poll the ForaBPG device for new data. However,
+		 * this was causing problems reading data from the device (eventually, garbage readings
+		 * would come up). Now the BPG must be polled manually.
 		 */
+		@Deprecated
 		protected class ForaBPGWorker
 				implements Runnable
 		{
